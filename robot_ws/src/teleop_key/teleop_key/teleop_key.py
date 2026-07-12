@@ -4,6 +4,7 @@ import sys
 import tty
 import termios
 import select
+import threading
 
 import rclpy
 from rclpy.node import Node
@@ -19,7 +20,7 @@ class WasdTeleop(Node):
 
         self.cmd_pub = self.create_publisher(
             Twist,
-            "/safe_cmd_vel",
+            "/cmd_vel",
             10
         )
 
@@ -33,9 +34,10 @@ class WasdTeleop(Node):
         self.angular_speed = 0.80
 
         self.current_cmd = "S"
+        self.running = True
 
-        # Publish continuously at 10 Hz
-        self.timer = self.create_timer(0.1, self.publish_command)
+        # Publish continuously (same behaviour as teleop_twist_keyboard)
+        self.timer = self.create_timer(0.5, self.publish_command)
 
         self.get_logger().info("")
         self.get_logger().info("====== WASDX TELEOP ======")
@@ -46,6 +48,10 @@ class WasdTeleop(Node):
         self.get_logger().info("S : Stop")
         self.get_logger().info("Q : Quit")
         self.get_logger().info("==========================")
+
+        self.keyboard_thread = threading.Thread(target=self.keyboard_loop)
+        self.keyboard_thread.daemon = True
+        self.keyboard_thread.start()
 
     def get_key(self):
 
@@ -70,32 +76,43 @@ class WasdTeleop(Node):
     def publish_command(self):
 
         twist = Twist()
-        motion = String()
 
         if self.current_cmd == "F":
             twist.linear.x = self.linear_speed
+            twist.angular.z = 0.0
 
         elif self.current_cmd == "B":
             twist.linear.x = -self.linear_speed
+            twist.angular.z = 0.0
 
         elif self.current_cmd == "L":
+            twist.linear.x = 0.0
             twist.angular.z = self.angular_speed
 
         elif self.current_cmd == "R":
+            twist.linear.x = 0.0
             twist.angular.z = -self.angular_speed
 
+        else:
+            twist.linear.x = 0.0
+            twist.angular.z = 0.0
+
+        motion = String()
         motion.data = self.current_cmd
 
         self.cmd_pub.publish(twist)
         self.motion_pub.publish(motion)
 
-    def run(self):
+    def keyboard_loop(self):
 
-        while rclpy.ok():
+        while self.running and rclpy.ok():
 
             key = self.get_key()
 
-            if key == "w":
+            if key == "":
+                continue
+
+            elif key == "w":
                 self.current_cmd = "F"
                 self.get_logger().info("Forward")
 
@@ -116,9 +133,9 @@ class WasdTeleop(Node):
                 self.get_logger().info("Stop")
 
             elif key == "q":
+                self.running = False
+                rclpy.shutdown()
                 break
-
-            rclpy.spin_once(self, timeout_sec=0.01)
 
 
 def main():
@@ -128,12 +145,15 @@ def main():
     node = WasdTeleop()
 
     try:
-        node.run()
+        rclpy.spin(node)
     except KeyboardInterrupt:
         pass
 
+    node.running = False
     node.destroy_node()
-    rclpy.shutdown()
+
+    if rclpy.ok():
+        rclpy.shutdown()
 
 
 if __name__ == "__main__":
