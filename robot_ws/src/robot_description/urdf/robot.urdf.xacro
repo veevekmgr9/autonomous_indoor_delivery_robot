@@ -1,0 +1,156 @@
+<?xml version="1.0"?>
+<robot name="delivery_robot" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <!--
+    robot_urdf.xacro — Elegoo Smart Car base
+    Frames:
+      base_footprint  (ground projection, odom → here via EKF)
+      base_link       (robot body centre)
+      laser           (RPLidar A1)
+      imu_link        (MPU6050 on Arduino Uno)
+      camera_link     (Pi Camera — add later for QR/ArUco)
+  -->
+
+  <!-- ============================================================ -->
+  <!-- BASE FOOTPRINT — ground plane projection                      -->
+  <!-- ============================================================ -->
+  <link name="base_footprint"/>
+
+  <joint name="base_footprint_to_base_link" type="fixed">
+    <parent link="base_footprint"/>
+    <child link="base_link"/>
+    <origin xyz="0 0 0.04" rpy="0 0 0"/>
+    <!-- 0.04m = approx height of Elegoo chassis off ground -->
+  </joint>
+
+  <!-- ============================================================ -->
+  <!-- BASE LINK — robot body                                        -->
+  <!-- Elegoo Smart Car chassis: ~20cm x 14cm                       -->
+  <!-- ============================================================ -->
+  <link name="base_link">
+    <visual>
+      <geometry>
+        <box size="0.20 0.14 0.05"/>
+      </geometry>
+      <material name="grey">
+        <color rgba="0.5 0.5 0.5 1.0"/>
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <box size="0.20 0.14 0.05"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0.8"/>
+      <!-- Simple box inertia for ~0.8kg robot -->
+      <inertia ixx="0.001" ixy="0" ixz="0"
+               iyy="0.001" iyz="0"
+               izz="0.002"/>
+    </inertial>
+  </link>
+
+  <!-- ============================================================ -->
+  <!-- LIDAR — RPLidar A1                                           -->
+  <!-- Mounted on top centre of chassis                             -->
+  <!-- ============================================================ -->
+  <link name="laser">
+    <visual>
+      <geometry>
+        <cylinder radius="0.035" length="0.04"/>
+      </geometry>
+      <material name="black">
+        <color rgba="0.1 0.1 0.1 1.0"/>
+      </material>
+    </visual>
+  </link>
+
+  <joint name="base_link_to_laser" type="fixed">
+    <parent link="base_link"/>
+    <child link="laser"/>
+    <!-- Centred on top of chassis, adjust x/y if your LiDAR is offset -->
+    <origin xyz="0.0 0.0 0.065" rpy="0 0 0"/>
+  </joint>
+
+  <!-- ============================================================ -->
+  <!-- IMU LINK — MPU6050 on Arduino Uno                            -->
+  <!-- Arduino sits on chassis, MPU6050 roughly at centre           -->
+  <!-- ============================================================ -->
+  <link name="imu_link">
+    <visual>
+      <geometry>
+        <box size="0.02 0.02 0.005"/>
+      </geometry>
+      <material name="blue">
+        <color rgba="0.0 0.0 0.8 1.0"/>
+      </material>
+    </visual>
+  </link>
+
+  <joint name="base_link_to_imu" type="fixed">
+    <parent link="base_link"/>
+    <child link="imu_link"/>
+    <!-- MPU6050 is roughly at the centre of the Arduino board -->
+    <!-- Adjust if your Arduino is offset from chassis centre   -->
+    <origin xyz="0.0 0.0 0.03" rpy="0 0 0"/>
+  </joint>
+
+  <!-- ============================================================ -->
+  <!-- CAMERA LINK — Pi Camera (placeholder for Phase 4)           -->
+  <!-- Will be used for QR code recipient verification             -->
+  <!-- ============================================================ -->
+  <link name="camera_link">
+    <visual>
+      <geometry>
+        <box size="0.025 0.024 0.01"/>
+      </geometry>
+      <material name="green">
+        <color rgba="0.0 0.6 0.0 1.0"/>
+      </material>
+    </visual>
+  </link>
+
+  <joint name="base_link_to_camera" type="fixed">
+    <parent link="base_link"/>
+    <child link="camera_link"/>
+    <!-- Front of robot, facing forward, at top -->
+    <origin xyz="0.10 0.0 0.06" rpy="0 0 0"/>
+  </joint>
+
+</robot>
+
+
+<!-- <?xml version="1.0"?>
+
+<robot name="my_robot" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <!-- BASE FOOTPRINT -->
+  <link name="base_footprint"/>
+
+  <!-- BASE LINK -->
+  <link name="base_link"/>
+
+  <joint name="base_footprint_to_base_link" type="fixed">
+    <parent link="base_footprint"/>
+    <child link="base_link"/>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+  </joint>
+
+  <!-- LIDAR -->
+  <link name="laser"/>
+
+  <joint name="base_link_to_laser" type="fixed">
+    <parent link="base_link"/>
+    <child link="laser"/>
+    <origin xyz="0 0 0.15" rpy="0 0 0"/>
+  </joint>
+
+  <!-- IMU LINK -->
+  <link name="imu_link"/>
+  <joint name="base_link_to_imu" type="fixed">
+    <parent link="base_link"/>
+    <child link="imu_link"/>
+    <origin xyz="0 0 0.05" rpy="0 0 0"/>
+  </joint>
+
+</robot> -->
