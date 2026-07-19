@@ -8,6 +8,7 @@ from flask import Flask, Response, render_template_string
 import rclpy
 from rclpy.node import Node
 from geometry_msgs.msg import Twist
+from std_msgs.msg import String
 import time
 
 
@@ -24,38 +25,88 @@ class RobotControl(Node):
 
         super().__init__("phone_dashboard")
 
+
         self.publisher = self.create_publisher(
             Twist,
             "/cmd_vel",
             10
         )
 
-        self.speed = 0.20
-        self.turn = 0.8
+
+        self.motion_pub = self.create_publisher(
+            String,
+            "/motion_state",
+            10
+        )
+
+
+        self.speed = 0.10
+        self.turn = 0.30
+
+
+        # Current robot state
+        self.current_command = "stop"
+
+
+        # Publish continuously
+        self.timer = self.create_timer(
+            0.1,
+            self.publish_command
+        )
 
 
     def move(self, command):
 
+        # only update command
+        # robot keeps this command until changed
+
+        self.current_command = command
+
+
+
+    def publish_command(self):
+
         msg = Twist()
 
-        if command == "forward":
+
+        if self.current_command == "forward":
+
             msg.linear.x = self.speed
+            msg.angular.z = 0.0
 
-        elif command == "backward":
+
+        elif self.current_command == "backward":
+
             msg.linear.x = -self.speed
+            msg.angular.z = 0.0
 
-        elif command == "left":
+
+        elif self.current_command == "left":
+
+            msg.linear.x = 0.0
             msg.angular.z = self.turn
 
-        elif command == "right":
+
+        elif self.current_command == "right":
+
+            msg.linear.x = 0.0
             msg.angular.z = -self.turn
 
-        elif command == "stop":
+
+        elif self.current_command == "stop":
+
             msg.linear.x = 0.0
             msg.angular.z = 0.0
 
 
+
         self.publisher.publish(msg)
+
+
+        state = String()
+        state.data = self.current_command
+
+        self.motion_pub.publish(state)
 
 
 
@@ -280,10 +331,54 @@ STOP
 
 function send(cmd){
 
-fetch("/move/"+cmd);
+    fetch("/move/"+cmd);
 
 }
 
+
+
+// Keyboard control
+
+document.addEventListener(
+"keydown",
+function(event){
+
+
+let key = event.key.toLowerCase();
+
+
+
+if(key=="w" || key=="arrowup")
+{
+    send("forward");
+}
+
+
+else if(key=="x" || key=="arrowdown")
+{
+    send("backward");
+}
+
+
+else if(key=="a" || key=="arrowleft")
+{
+    send("left");
+}
+
+
+else if(key=="d" || key=="arrowright")
+{
+    send("right");
+}
+
+
+else if(key=="s" || key==" ")
+{
+    send("stop");
+}
+
+
+});
 
 </script>
 

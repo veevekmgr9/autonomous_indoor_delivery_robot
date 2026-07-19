@@ -30,8 +30,8 @@ class WasdTeleop(Node):
             10
         )
 
-        self.linear_speed = 0.20
-        self.angular_speed = 0.80
+        self.linear_speed = 0.10
+        self.angular_speed = 0.30
 
         self.current_cmd = "S"
         self.running = True

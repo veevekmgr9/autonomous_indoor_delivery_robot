@@ -11,7 +11,7 @@ const int MPU_addr = 0x68;
 #define BIN2 10
 #define STBY 3
 
-int motorSpeed = 150;
+int motorSpeed = 80;
 
 // ---------------- IMU DATA ----------------
 int16_t ax, ay, az;

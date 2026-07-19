@@ -77,8 +77,8 @@ class SafetyNode(Node):
         if self.safe:
             cmd = self.latest_cmd
         else:
-            cmd.linear.x = 0.0
-            cmd.angular.z = 0.0
+            # cmd.linear.x = 0.0
+            # cmd.angular.z = 0.0
             self.get_logger().warn("Obstacle detected! STOP 🚨")
 
         self.pub_cmd.publish(cmd)

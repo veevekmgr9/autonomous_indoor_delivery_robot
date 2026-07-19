@@ -26,10 +26,6 @@ class ArduinoBridge(Node):
         self.linear_scale = 1.0      # scales msg.linear.x  -> PWM units
         self.angular_scale = 1.0     # scales msg.angular.z -> PWM units
 
-        # IMU watchdog: if no valid IMU line arrives within this window,
-        # assume the Arduino reset/reconnected and force a full re-open
-        # (not just a bare START) since a soft resend can't recover a
-        # genuinely stuck MCU/USB-CDC state.
         self.imu_timeout_sec = 2.0
         self.last_imu_time = time.time()
 
@@ -66,18 +62,12 @@ class ArduinoBridge(Node):
 
             self.ser = serial.Serial(self.serial_port, self.baud_rate, timeout=0.2)
 
-            # Explicitly force a low -> high DTR edge to guarantee a
-            # hardware reset pulse, no matter what state DTR was left
-            # in by whatever last touched this port.
             self.ser.dtr = False
             time.sleep(0.1)
             self.ser.dtr = True
 
             self.get_logger().info("Arduino port opened, forced hardware reset")
 
-            # Wait for the boot banner instead of blindly sleeping -
-            # more robust than a fixed delay and lets us detect a
-            # truly dead board quickly.
             if not self._wait_for_line("READY", timeout=5.0):
                 self.get_logger().warn("Did not see READY after reset - board may be unresponsive")
 
@@ -173,9 +163,6 @@ class ArduinoBridge(Node):
             )
 
     def _wait_for_line(self, expected_substr, timeout):
-        """Blocks briefly (used only during connect/reconnect, never
-        in the main timer loop) waiting for a specific line from the
-        Arduino."""
         start_time = time.time()
         while time.time() - start_time < timeout:
             if self.ser.in_waiting > 0:
@@ -187,13 +174,6 @@ class ArduinoBridge(Node):
         return False
 
     def check_imu_watchdog(self):
-        """
-        If we haven't seen a valid IMU packet in a while, don't just
-        resend START - that only helps if the MCU is alive and simply
-        forgot rosConnected. If it's actually wedged (stuck I2C,
-        stuck USB-CDC TX), only a full hardware reset via open_serial()
-        recovers it, same as your manual baud-toggle fix.
-        """
         if self.ser is None:
             self.get_logger().warn("Serial port not open, attempting reconnect...")
             self.open_serial()
@@ -243,8 +223,6 @@ class ArduinoBridge(Node):
             return
 
         try:
-            # Don't block the executor waiting for a newline that may
-            # never come - only read if data is actually available.
             if self.ser.in_waiting == 0:
                 return
 
