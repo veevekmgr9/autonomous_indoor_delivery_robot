@@ -19,6 +19,14 @@ def generate_launch_description():
         prefix='xterm -e',
         parameters=['/home/robot/Project/robot_ws/src/robot_bringup/config/ekf.yaml']
     )
+    slam_node = Node(
+        package='slam_toolbox',
+        executable='async_slam_toolbox_node',
+        name='slam_toolbox',
+        output='screen',
+        # prefix='xterm -e',
+        parameters=['/home/robot/Project/robot_ws/src/robot_bringup/config/slam_toolbox.yaml']
+    )
 
     # slam_node = Node(
     #     package='robot_localization',
@@ -61,7 +69,7 @@ def generate_launch_description():
 
     return LaunchDescription([
         ekf_node,
-        # slam_node,
+        slam_node,
         # map_node,
         # amcl_node,
         # lifecycle
