@@ -25,8 +25,27 @@ const int MPU_addr = 0x68;
 
 
 // Robot parameters
-float WHEEL_BASE = 0.25;          // meters
+float WHEEL_BASE = 0.125;          // meters
 float MAX_LINEAR_SPEED = 0.25;    // m/s
+
+// ================= ENCODERS =================
+
+#define LEFT_ENCODER A0
+#define RIGHT_ENCODER 13
+
+volatile long leftTicks = 0;
+volatile long rightTicks = 0;
+
+volatile byte lastPortB;
+volatile byte lastPortC;
+
+// Encoder direction is inferred from motor command.
+// This is required because these encoders provide only one signal.
+volatile int leftEncoderDirection = 0;
+volatile int rightEncoderDirection = 0;
+
+unsigned long lastEncoderTime = 0;
+const unsigned long ENCODER_INTERVAL = 50;   // 20 Hz
 
 
 
@@ -156,6 +175,26 @@ void setup()
 
 
 
+    // ---------------- ENCODERS ----------------
+
+    pinMode(LEFT_ENCODER, INPUT_PULLUP);
+    pinMode(RIGHT_ENCODER, INPUT_PULLUP);
+
+    lastPortB = PINB;
+    lastPortC = PINC;
+
+    // Enable pin-change interrupts
+    PCICR |= (1 << PCIE0);    // PORT B
+    PCICR |= (1 << PCIE1);    // PORT C
+
+    // D13 = PB5
+    PCMSK0 |= (1 << PCINT5);
+
+    // A0 = PC0
+    PCMSK1 |= (1 << PCINT8);
+
+    leftTicks = 0;
+    rightTicks = 0;
     Serial.println("READY");
 
 }
@@ -218,6 +257,17 @@ void loop()
 
         sendIMU();
 
+    }
+
+    // ENCODER STREAM
+
+    if (
+        rosConnected &&
+        millis() - lastEncoderTime >= ENCODER_INTERVAL
+    )
+    {
+        lastEncoderTime = millis();
+        sendEncoders();
     }
 
 
@@ -530,7 +580,20 @@ float angular
     linear +
     (angular * WHEEL_BASE / 2.0);
 
+    if (leftSpeed > 0.001)
+        leftEncoderDirection = 1;
+    else if (leftSpeed < -0.001)
+        leftEncoderDirection = -1;
+    else
+        leftEncoderDirection = 0;
 
+
+    if (rightSpeed > 0.001)
+        rightEncoderDirection = 1;
+    else if (rightSpeed < -0.001)
+        rightEncoderDirection = -1;
+    else
+        rightEncoderDirection = 0;
 
 
 
@@ -698,4 +761,62 @@ void stopRobot()
     digitalWrite(BIN2,LOW);
 
 
+}
+
+// =====================================================
+// ENCODER INTERRUPTS
+// =====================================================
+
+// RIGHT encoder D13 = PB5
+ISR(PCINT0_vect)
+{
+    byte currentPortB = PINB;
+
+    // Falling edge
+    if ((lastPortB & _BV(PB5)) &&
+        !(currentPortB & _BV(PB5)))
+    {
+        rightTicks += rightEncoderDirection;
+    }
+
+    lastPortB = currentPortB;
+}
+
+
+// LEFT encoder A0 = PC0
+ISR(PCINT1_vect)
+{
+    byte currentPortC = PINC;
+
+    // Falling edge
+    if ((lastPortC & _BV(PC0)) &&
+        !(currentPortC & _BV(PC0)))
+    {
+        leftTicks += leftEncoderDirection;
+    }
+
+    lastPortC = currentPortC;
+}
+
+// =====================================================
+// ENCODER STREAM
+// =====================================================
+
+void sendEncoders()
+{
+    long L;
+    long R;
+
+    noInterrupts();
+
+    L = leftTicks;
+    R = rightTicks;
+
+    interrupts();
+
+    Serial.print("$ENC,");
+    Serial.print(L);
+    Serial.print(",");
+    Serial.print(R);
+    Serial.println("*");
 }
