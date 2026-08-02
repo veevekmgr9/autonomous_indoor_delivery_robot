@@ -22,9 +22,13 @@ class ArduinoBridge(Node):
         self.baud_rate = 115200
 
         # Differential-drive mixing params (tune these for your robot)
-        self.max_pwm_speed = 150.0   # matches motorSpeed in firmware
-        self.linear_scale = 1.0      # scales msg.linear.x  -> PWM units
-        self.angular_scale = 1.0     # scales msg.angular.z -> PWM units
+        # Not used for PWM anymore
+        # Arduino handles motor conversion
+
+        self.max_pwm_speed = 255.0
+
+        self.linear_scale = 1.0
+        self.angular_scale = 1.0
 
         self.imu_timeout_sec = 2.0
         self.last_imu_time = time.time()
@@ -186,35 +190,76 @@ class ArduinoBridge(Node):
     # =========================================================
     # CMD -> Arduino
     # =========================================================
+    # def cmd_callback(self, msg):
+    #     x = msg.linear.x
+    #     z = msg.angular.z
+
+    #     left = (x * self.linear_scale) - (z * self.angular_scale)
+    #     right = (x * self.linear_scale) + (z * self.angular_scale)
+
+    #     cmd = "S"
+
+    #     if abs(left) < 1e-3 and abs(right) < 1e-3:
+    #         cmd = "S"
+    #     elif left > 0 and right > 0:
+    #         cmd = "W"
+    #     elif left < 0 and right < 0:
+    #         cmd = "X"
+    #     elif left < right:
+    #         cmd = "A"
+    #     elif right < left:
+    #         cmd = "D"
+
+    #     if self.ser is None:
+    #         return
+
+    #     try:
+    #         self.ser.write((cmd + "\n").encode())
+    #     except Exception as e:
+    #         self.get_logger().error(f"Write failed, reopening port: {e}")
+    #         self.open_serial()
+
+    # =========================================================
+# CMD -> Arduino Velocity Command
+# =========================================================
+
     def cmd_callback(self, msg):
-        x = msg.linear.x
-        z = msg.angular.z
 
-        left = (x * self.linear_scale) - (z * self.angular_scale)
-        right = (x * self.linear_scale) + (z * self.angular_scale)
+        linear = msg.linear.x
+        angular = msg.angular.z
 
-        cmd = "S"
-
-        if abs(left) < 1e-3 and abs(right) < 1e-3:
-            cmd = "S"
-        elif left > 0 and right > 0:
-            cmd = "W"
-        elif left < 0 and right < 0:
-            cmd = "X"
-        elif left < right:
-            cmd = "A"
-        elif right < left:
-            cmd = "D"
 
         if self.ser is None:
             return
 
-        try:
-            self.ser.write((cmd + "\n").encode())
-        except Exception as e:
-            self.get_logger().error(f"Write failed, reopening port: {e}")
-            self.open_serial()
 
+        try:
+
+            # Arduino format:
+            # V,linear,angular
+
+            command = (
+                f"V,{linear:.3f},{angular:.3f}\n"
+            )
+
+
+            self.ser.write(
+                command.encode()
+            )
+
+
+            self.get_logger().debug(
+                f"Sent Arduino: {command.strip()}"
+            )
+
+
+        except Exception as e:
+
+            self.get_logger().error(
+                f"Write failed, reopening port: {e}"
+            )
+
+            self.open_serial()
     # =========================================================
     # SERIAL READER (non-blocking)
     # =========================================================

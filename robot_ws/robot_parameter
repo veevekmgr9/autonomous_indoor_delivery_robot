@@ -1,0 +1,6 @@
+Wheel diameter       = 0.060 m
+Wheel radius         = 0.030 m
+Wheel separation     = 0.125 m
+Encoder ticks/rev    = 22
+Wheel circumference  ≈ 0.1885 m
+Distance/tick        ≈ 0.00857 m

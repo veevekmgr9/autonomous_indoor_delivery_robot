@@ -2,221 +2,700 @@
 
 const int MPU_addr = 0x68;
 
-// ---------------- MOTOR PINS ----------------
+
+// ================= MOTOR PINS =================
+
 #define PWMA 5
 #define PWMB 6
+
 #define AIN1 7
 #define AIN2 11
+
 #define BIN1 8
 #define BIN2 10
+
 #define STBY 3
 
-int motorSpeed = 60;
 
-// ---------------- IMU DATA ----------------
+
+// ================= MOTOR CONTROL =================
+
+// Maximum PWM output
+#define MAX_PWM 220
+
+
+// Robot parameters
+float WHEEL_BASE = 0.25;          // meters
+float MAX_LINEAR_SPEED = 0.25;    // m/s
+
+
+
+// ================= IMU DATA =================
+
 int16_t ax, ay, az;
 int16_t gx, gy, gz;
 
+
 unsigned long lastImuTime = 0;
-const unsigned long IMU_INTERVAL = 20; // 50Hz (20ms)
+
+const unsigned long IMU_INTERVAL = 20; 
+// 50Hz
+
+
+
+// ================= SERIAL =================
 
 String inputBuffer = "";
-bool rosConnected = false; // Controlled strictly by ROS2 node
+
+bool rosConnected = false;
+
+
 
 // =====================================================
 // I2C BUS RECOVERY
-// If a DTR-triggered reset lands mid I2C-transaction, the MPU6050
-// can be left holding SDA low (clock-stretching / partial ACK).
-// Wire.begin() -> beginTransmission() will then hang forever, since
-// Wire.setWireTimeout() only guards against the master (us) hanging,
-// not a slave holding the bus. This bit-bangs SCL to force the slave
-// to release SDA before the Wire library ever touches the bus.
 // =====================================================
+
 void i2cBusRecovery()
 {
-    pinMode(A5, INPUT); // SCL on Uno
-    pinMode(A4, INPUT); // SDA on Uno
 
-    if (digitalRead(A4) == LOW) // SDA stuck low -> bus is jammed
+    pinMode(A5, INPUT); 
+    pinMode(A4, INPUT);
+
+
+    if (digitalRead(A4) == LOW)
     {
+
         pinMode(A5, OUTPUT);
-        for (int i = 0; i < 9; i++)
+
+
+        for(int i=0;i<9;i++)
         {
-            digitalWrite(A5, HIGH);
+
+            digitalWrite(A5,HIGH);
             delayMicroseconds(5);
-            digitalWrite(A5, LOW);
+
+            digitalWrite(A5,LOW);
             delayMicroseconds(5);
+
         }
-        pinMode(A5, INPUT); // release, let Wire.begin() take over
+
+
+        pinMode(A5,INPUT);
+
     }
+
 }
+
+
+
+// =====================================================
+// SETUP
+// =====================================================
+
 
 void setup()
 {
+
     Serial.begin(115200);
+
+
 
     i2cBusRecovery();
 
-    Wire.begin();
-    Wire.setWireTimeout(3000, true); // Auto-recovers a locked I2C bus on timeout
 
-    // Initialize MPU6050
+    Wire.begin();
+
+    Wire.setWireTimeout(
+        3000,
+        true
+    );
+
+
+
+    // MPU6050 wake up
+
     Wire.beginTransmission(MPU_addr);
+
     Wire.write(0x6B);
+
     Wire.write(0);
+
     Wire.endTransmission(true);
 
-    // ---------------- MOTOR SETUP ----------------
-    pinMode(PWMA, OUTPUT);   pinMode(PWMB, OUTPUT);
-    pinMode(AIN1, OUTPUT);   pinMode(AIN2, OUTPUT);
-    pinMode(BIN1, OUTPUT);   pinMode(BIN2, OUTPUT);
-    pinMode(STBY, OUTPUT);
 
-    digitalWrite(STBY, HIGH);
+
+
+
+    // Motor pins
+
+    pinMode(PWMA,OUTPUT);
+    pinMode(PWMB,OUTPUT);
+
+
+    pinMode(AIN1,OUTPUT);
+    pinMode(AIN2,OUTPUT);
+
+
+    pinMode(BIN1,OUTPUT);
+    pinMode(BIN2,OUTPUT);
+
+
+    pinMode(STBY,OUTPUT);
+
+
+
+    digitalWrite(STBY,HIGH);
+
+
+
     stopRobot();
 
-    // rosConnected always starts false after any reset (power-on,
-    // watchdog, or DTR-triggered) so the ROS side must always
-    // re-handshake with START before it will see IMU data again.
-    rosConnected = false;
+
+
+    rosConnected=false;
+
+
 
     Serial.println("READY");
+
 }
+
+
+
+
+
+// =====================================================
+// LOOP
+// =====================================================
+
 
 void loop()
 {
-    // ---------------- NON-BLOCKING COMMAND RECEIVE ----------------
-    while (Serial.available() > 0)
-    {
-        char inChar = (char)Serial.read();
 
-        if (inChar == '\n' || inChar == '\r')
+
+    while(Serial.available()>0)
+    {
+
+        char c=(char)Serial.read();
+
+
+        if(c=='\n' || c=='\r')
         {
+
             inputBuffer.trim();
-            if (inputBuffer.length() > 0) {
+
+
+            if(inputBuffer.length()>0)
+            {
                 processCommand(inputBuffer);
             }
-            inputBuffer = "";
+
+
+            inputBuffer="";
+
         }
         else
         {
-            inputBuffer += inChar;
+
+            inputBuffer += c;
+
         }
+
     }
 
-    // ---------------- IMU STREAM (50Hz) ----------------
-    if (rosConnected && (millis() - lastImuTime >= IMU_INTERVAL))
+
+
+
+    // IMU STREAM
+
+    if(
+        rosConnected &&
+        millis()-lastImuTime >= IMU_INTERVAL
+    )
     {
-        lastImuTime = millis();
+
+        lastImuTime=millis();
+
         sendIMU();
+
     }
+
+
 }
+
+
+
+
+
 
 // =====================================================
 // COMMAND PROCESSOR
 // =====================================================
+
+
 void processCommand(String cmd)
 {
-    if (cmd == "START") {
-        resetMPU();            // Ensure the MPU6050 registers are completely clean
-        rosConnected = true;   // Instantly start streaming data packets
-        Serial.println("MPU_RESET_COMPLETE"); // ACK so ROS side can confirm sync
+
+
+    // ROS connection
+
+    if(cmd=="START")
+    {
+
+
+        resetMPU();
+
+
+        rosConnected=true;
+
+
+        Serial.println(
+            "MPU_RESET_COMPLETE"
+        );
+
+
         return;
+
     }
 
-    if (cmd == "W") forward();
-    else if (cmd == "X") backward();
-    else if (cmd == "A") left();
-    else if (cmd == "D") right();
-    else if (cmd == "S") stopRobot();
+
+
+
+
+    // Velocity command
+    //
+    // Format:
+    //
+    // V,linear,angular
+    //
+    // Example:
+    //
+    // V,0.08,0.0
+
+
+    if(cmd.startsWith("V"))
+    {
+
+
+        int comma1 =
+        cmd.indexOf(',');
+
+
+        int comma2 =
+        cmd.indexOf(
+            ',',
+            comma1+1
+        );
+
+
+
+        float linear =
+        cmd.substring(
+            comma1+1,
+            comma2
+        ).toFloat();
+
+
+
+        float angular =
+        cmd.substring(
+            comma2+1
+        ).toFloat();
+
+
+
+        driveRobot(
+            linear,
+            angular
+        );
+
+
+
+        return;
+
+    }
+
+
+
+
+    if(cmd=="STOP")
+    {
+
+        stopRobot();
+
+    }
+
+
 }
+
+
+
+
+
+
+// =====================================================
+// MPU RESET
+// =====================================================
+
 
 void resetMPU()
 {
-    // 1. Issue a full device reset via PWR_MGMT_1 (Bit 7 = 1)
+
+
     Wire.beginTransmission(MPU_addr);
+
     Wire.write(0x6B);
+
     Wire.write(0x80);
+
     Wire.endTransmission(true);
 
-    delay(100); // Wait for the MPU6050 internal registers to reset cleanly
 
-    // 2. Reset the signal paths for Gyro, Accel, and Temp (Bits 2, 1, 0 = 1)
+
+    delay(100);
+
+
+
+
     Wire.beginTransmission(MPU_addr);
+
     Wire.write(0x68);
+
     Wire.write(0x07);
+
     Wire.endTransmission(true);
 
-    delay(100); // Give the sensors a moment to clear their internal pipelines
 
-    // 3. Wake the MPU6050 up out of sleep mode and set clock source to internal 8MHz
+
+    delay(100);
+
+
+
+
+
     Wire.beginTransmission(MPU_addr);
+
     Wire.write(0x6B);
+
     Wire.write(0x00);
+
     Wire.endTransmission(true);
+
+
 }
+
+
+
+
+
+
+
 
 // =====================================================
 // IMU STREAM
 // =====================================================
+
+
 void sendIMU()
 {
-    // Safety check: Avoid buffer blocking if ROS2 disconnects
-//    if (Serial.availableForWrite() < 40) {
-//        rosConnected = false; // Kill stream until ROS2 flushes buffer
-//        return;
-//    }
+
 
     Wire.beginTransmission(MPU_addr);
-    Wire.write(0x3B);
-    if (Wire.endTransmission(false) != 0) return;
 
-    Wire.requestFrom(MPU_addr, 14, true);
-    if (Wire.available() >= 14) {
-        ax = Wire.read() << 8 | Wire.read();
-        ay = Wire.read() << 8 | Wire.read();
-        az = Wire.read() << 8 | Wire.read();
-        Wire.read(); Wire.read(); // Skip temp registers
-        gx = Wire.read() << 8 | Wire.read();
-        gy = Wire.read() << 8 | Wire.read();
-        gz = Wire.read() << 8 | Wire.read();
+
+    Wire.write(0x3B);
+
+
+
+    if(Wire.endTransmission(false)!=0)
+        return;
+
+
+
+    Wire.requestFrom(
+        MPU_addr,
+        14,
+        true
+    );
+
+
+
+    if(Wire.available()>=14)
+    {
+
+
+        ax =
+        Wire.read()<<8 |
+        Wire.read();
+
+
+
+        ay =
+        Wire.read()<<8 |
+        Wire.read();
+
+
+
+        az =
+        Wire.read()<<8 |
+        Wire.read();
+
+
+
+        // temperature skip
+
+        Wire.read();
+        Wire.read();
+
+
+
+        gx =
+        Wire.read()<<8 |
+        Wire.read();
+
+
+
+        gy =
+        Wire.read()<<8 |
+        Wire.read();
+
+
+
+        gz =
+        Wire.read()<<8 |
+        Wire.read();
+
+
+
 
         Serial.print("$IMU,");
-        Serial.print(ax); Serial.print(",");
-        Serial.print(ay); Serial.print(",");
-        Serial.print(az); Serial.print(",");
-        Serial.print(gx); Serial.print(",");
-        Serial.print(gy); Serial.print(",");
+
+
+        Serial.print(ax);
+        Serial.print(",");
+
+
+        Serial.print(ay);
+        Serial.print(",");
+
+
+        Serial.print(az);
+        Serial.print(",");
+
+
+        Serial.print(gx);
+        Serial.print(",");
+
+
+        Serial.print(gy);
+        Serial.print(",");
+
+
         Serial.print(gz);
+
+
         Serial.println("*");
+
     }
+
+
 }
 
+
+
+
+
+
+
+
 // =====================================================
-// MOTOR FUNCTIONS
+// DIFFERENTIAL DRIVE
 // =====================================================
-void forward() {
-    analogWrite(PWMA, motorSpeed); analogWrite(PWMB, motorSpeed);
-    digitalWrite(AIN1, HIGH); digitalWrite(AIN2, LOW);
-    digitalWrite(BIN1, HIGH); digitalWrite(BIN2, LOW);
+
+
+void driveRobot(
+float linear,
+float angular
+)
+{
+
+
+    float leftSpeed =
+    linear -
+    (angular * WHEEL_BASE / 2.0);
+
+
+
+    float rightSpeed =
+    linear +
+    (angular * WHEEL_BASE / 2.0);
+
+
+
+
+
+    int leftPWM =
+    abs(
+        leftSpeed /
+        MAX_LINEAR_SPEED *
+        MAX_PWM
+    );
+
+
+
+    int rightPWM =
+    abs(
+        rightSpeed /
+        MAX_LINEAR_SPEED *
+        MAX_PWM
+    );
+
+
+
+
+    leftPWM =
+    constrain(
+        leftPWM,
+        0,
+        MAX_PWM
+    );
+
+
+
+    rightPWM =
+    constrain(
+        rightPWM,
+        0,
+        MAX_PWM
+    );
+
+
+
+
+
+
+
+    // LEFT MOTOR
+
+
+    if(leftSpeed>0)
+    {
+
+        digitalWrite(AIN1,HIGH);
+
+        digitalWrite(AIN2,LOW);
+
+    }
+
+    else if(leftSpeed<0)
+    {
+
+        digitalWrite(AIN1,LOW);
+
+        digitalWrite(AIN2,HIGH);
+
+    }
+
+    else
+    {
+
+        digitalWrite(AIN1,LOW);
+
+        digitalWrite(AIN2,LOW);
+
+    }
+
+
+
+
+
+
+
+    // RIGHT MOTOR
+
+
+    if(rightSpeed>0)
+    {
+
+        digitalWrite(BIN1,HIGH);
+
+        digitalWrite(BIN2,LOW);
+
+    }
+
+    else if(rightSpeed<0)
+    {
+
+        digitalWrite(BIN1,LOW);
+
+        digitalWrite(BIN2,HIGH);
+
+    }
+
+    else
+    {
+
+        digitalWrite(BIN1,LOW);
+
+        digitalWrite(BIN2,LOW);
+
+    }
+
+
+
+
+// Minimum starting torque
+    if(leftPWM > 0 && leftPWM < 100)
+    {
+        leftPWM = 100;
+    }
+    
+    
+    if(rightPWM > 0 && rightPWM < 100)
+    {
+        rightPWM = 100;
+    }
+    
+    
+    analogWrite(PWMA,leftPWM);
+    analogWrite(PWMB,rightPWM);
+
+
+
 }
-void backward() {
-    analogWrite(PWMA, motorSpeed); analogWrite(PWMB, motorSpeed);
-    digitalWrite(AIN1, LOW); digitalWrite(AIN2, HIGH);
-    digitalWrite(BIN1, LOW); digitalWrite(BIN2, HIGH);
-}
-void left() {
-    analogWrite(PWMA, motorSpeed); analogWrite(PWMB, motorSpeed);
-    digitalWrite(AIN1, LOW); digitalWrite(AIN2, HIGH);
-    digitalWrite(BIN1, HIGH); digitalWrite(BIN2, LOW);
-}
-void right() {
-    analogWrite(PWMA, motorSpeed); analogWrite(PWMB, motorSpeed);
-    digitalWrite(AIN1, HIGH); digitalWrite(AIN2, LOW);
-    digitalWrite(BIN1, LOW); digitalWrite(BIN2, HIGH);
-}
-void stopRobot() {
-    analogWrite(PWMA, 0); analogWrite(PWMB, 0);
-    digitalWrite(AIN1, LOW); digitalWrite(AIN2, LOW);
-    digitalWrite(BIN1, LOW); digitalWrite(BIN2, LOW);
+
+
+
+
+
+
+
+
+
+// =====================================================
+// STOP
+// =====================================================
+
+
+void stopRobot()
+{
+
+
+    analogWrite(PWMA,0);
+
+    analogWrite(PWMB,0);
+
+
+
+    digitalWrite(AIN1,LOW);
+
+    digitalWrite(AIN2,LOW);
+
+
+
+    digitalWrite(BIN1,LOW);
+
+    digitalWrite(BIN2,LOW);
+
+
 }

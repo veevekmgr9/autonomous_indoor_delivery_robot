@@ -21,6 +21,9 @@ class OdomNode(Node):
         # Robot pose
         # -----------------
 
+        self.LINEAR_CALIBRATION = 10
+        self.ANGULAR_CALIBRATION = 10
+
         self.x = 0.0
         self.y = 0.0
         self.th = 0.0
@@ -63,10 +66,10 @@ class OdomNode(Node):
 
         # update 10Hz
         self.timer = self.create_timer(
-            0.1,
+            0.02,
             self.update
         )
-
+        self.get_logger().info("Calibrated Odometry Node Started ✔")
 
         self.get_logger().info(
             "Odometry using /safe_cmd_vel started ✔"
@@ -78,8 +81,8 @@ class OdomNode(Node):
 
         # Take real commanded velocity
 
-        self.v = msg.linear.x
-        self.w = msg.angular.z
+        self.v = msg.linear.x * self.LINEAR_CALIBRATION
+        self.w = msg.angular.z * self.ANGULAR_CALIBRATION
 
 
 
@@ -95,27 +98,36 @@ class OdomNode(Node):
 
         self.last_time = now
 
-
+        if dt > 0.1 or dt <= 0.0:
+            return
 
         # -----------------
         # Differential drive model
         # -----------------
 
-        self.th += self.w * dt
+        # self.th += self.w * dt
+        delta_theta = self.w * dt
+
+        delta_x = self.v * math.cos(self.th + delta_theta / 2.0) * dt
+        delta_y = self.v * math.sin(self.th + delta_theta / 2.0) * dt
+
+        self.x += delta_x
+        self.y += delta_y
+        self.th += delta_theta
 
 
-        self.x += (
-            self.v *
-            math.cos(self.th) *
-            dt
-        )
+        # self.x += (
+        #     self.v *
+        #     math.cos(self.th) *
+        #     dt
+        # )
 
 
-        self.y += (
-            self.v *
-            math.sin(self.th) *
-            dt
-        )
+        # self.y += (
+        #     self.v *
+        #     math.sin(self.th) *
+        #     dt
+        # )
 
 
 
@@ -145,17 +157,39 @@ class OdomNode(Node):
 
 
         odom.pose.pose.position.x = self.x
-
         odom.pose.pose.position.y = self.y
+        odom.pose.pose.position.z = 0.0
 
 
-        odom.pose.pose.orientation.x = q[0]
+        odom.pose.pose.orientation.x = float(q[0])
 
-        odom.pose.pose.orientation.y = q[1]
+        odom.pose.pose.orientation.y = float(q[1])
 
-        odom.pose.pose.orientation.z = q[2]
+        odom.pose.pose.orientation.z = float(q[2])
 
-        odom.pose.pose.orientation.w = q[3]
+        odom.pose.pose.orientation.w = float(q[3])
+
+        # Pose covariance
+        pose_cov = [0.0] * 36
+        pose_cov[0] = 0.05
+        pose_cov[7] = 0.05
+        pose_cov[35] = 0.10
+        odom.pose.covariance = pose_cov
+        # odom.pose.covariance = [0.0] * 36
+        # odom.pose.covariance[0] = 0.05      # x
+        # odom.pose.covariance[7] = 0.05      # y
+        # odom.pose.covariance[35] = 0.10     # yaw
+
+        # Twist covariance
+        twist_cov = [0.0] * 36
+        twist_cov[0] = 0.02
+        twist_cov[7] = 0.02
+        twist_cov[35] = 0.05
+        odom.twist.covariance = twist_cov
+        # odom.twist.covariance = [0.0] * 36
+        # odom.twist.covariance[0] = 0.02
+        # odom.twist.covariance[7] = 0.02
+        # odom.twist.covariance[35] = 0.05
 
 
 
@@ -194,13 +228,13 @@ class OdomNode(Node):
 
 
 
-        t.transform.rotation.x = q[0]
+        t.transform.rotation.x = float(q[0])
 
-        t.transform.rotation.y = q[1]
+        t.transform.rotation.y = float(q[1])
 
-        t.transform.rotation.z = q[2]
+        t.transform.rotation.z = float(q[2])
 
-        t.transform.rotation.w = q[3]
+        t.transform.rotation.w = float(q[3])
 
 
         self.tf_broadcaster.sendTransform(t)
