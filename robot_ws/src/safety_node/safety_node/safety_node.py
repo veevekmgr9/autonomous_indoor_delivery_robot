@@ -214,12 +214,12 @@ class SafetyNode(Node):
         #
         # Reverse and turning remain available.
 
-        if (
-            self.obstacle_front and
-            cmd.linear.x > 0.0
-        ):
+        # if (
+        #     self.obstacle_front and
+        #     cmd.linear.x > 0.0
+        # ):
 
-            cmd.linear.x = 0.0
+        #     cmd.linear.x = 0.0
 
 
         self.safe_cmd_pub.publish(cmd)

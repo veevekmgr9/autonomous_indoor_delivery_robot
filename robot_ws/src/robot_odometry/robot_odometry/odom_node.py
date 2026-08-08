@@ -214,8 +214,8 @@ class EncoderOdomNode(Node):
 
 
         delta_theta = (
-            right_distance -
-            left_distance
+            left_distance -
+            right_distance
         ) / self.WHEEL_SEPARATION
 
 
