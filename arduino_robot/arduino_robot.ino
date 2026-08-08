@@ -21,12 +21,12 @@ const int MPU_addr = 0x68;
 // ================= MOTOR CONTROL =================
 
 // Maximum PWM output
-#define MAX_PWM 220
+#define MAX_PWM 140
 
 
 // Robot parameters
 float WHEEL_BASE = 0.125;          // meters
-float MAX_LINEAR_SPEED = 0.25;    // m/s
+float MAX_LINEAR_SPEED = 0.20;    // m/s
 
 // ================= ENCODERS =================
 
@@ -568,16 +568,16 @@ float linear,
 float angular
 )
 {
-
+    angular *= 0.4;    // 40% turning sensitivity
 
     float leftSpeed =
-    linear -
+    linear +
     (angular * WHEEL_BASE / 2.0);
 
 
 
     float rightSpeed =
-    linear +
+    linear -
     (angular * WHEEL_BASE / 2.0);
 
     if (leftSpeed > 0.001)
@@ -707,17 +707,14 @@ float angular
 
 
 
-// Minimum starting torque
-    if(leftPWM > 0 && leftPWM < 100)
-    {
-        leftPWM = 100;
-    }
+    // Minimum starting torque
+    const int MIN_PWM = 80;
     
+    if(leftPWM > 0 && leftPWM < MIN_PWM)
+        leftPWM = MIN_PWM;
     
-    if(rightPWM > 0 && rightPWM < 100)
-    {
-        rightPWM = 100;
-    }
+    if(rightPWM > 0 && rightPWM < MIN_PWM)
+        rightPWM = MIN_PWM;
     
     
     analogWrite(PWMA,leftPWM);
