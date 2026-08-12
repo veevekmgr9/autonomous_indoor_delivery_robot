@@ -1,0 +1,40 @@
+running egg_info
+creating ../build/robot_navigation/robot_navigation.egg-info
+writing ../build/robot_navigation/robot_navigation.egg-info/PKG-INFO
+writing dependency_links to ../build/robot_navigation/robot_navigation.egg-info/dependency_links.txt
+writing requirements to ../build/robot_navigation/robot_navigation.egg-info/requires.txt
+writing top-level names to ../build/robot_navigation/robot_navigation.egg-info/top_level.txt
+writing manifest file '../build/robot_navigation/robot_navigation.egg-info/SOURCES.txt'
+reading manifest file '../build/robot_navigation/robot_navigation.egg-info/SOURCES.txt'
+writing manifest file '../build/robot_navigation/robot_navigation.egg-info/SOURCES.txt'
+running build
+running build_py
+creating /home/robot/Project/robot_ws/src/build/robot_navigation/build
+creating /home/robot/Project/robot_ws/src/build/robot_navigation/build/lib
+creating /home/robot/Project/robot_ws/src/build/robot_navigation/build/lib/robot_navigation
+copying robot_navigation/__init__.py -> /home/robot/Project/robot_ws/src/build/robot_navigation/build/lib/robot_navigation
+running install
+running install_lib
+creating /home/robot/Project/robot_ws/src/install/robot_navigation/lib/python3.12/site-packages/robot_navigation
+copying /home/robot/Project/robot_ws/src/build/robot_navigation/build/lib/robot_navigation/__init__.py -> /home/robot/Project/robot_ws/src/install/robot_navigation/lib/python3.12/site-packages/robot_navigation
+byte-compiling /home/robot/Project/robot_ws/src/install/robot_navigation/lib/python3.12/site-packages/robot_navigation/__init__.py to __init__.cpython-312.pyc
+running install_data
+creating /home/robot/Project/robot_ws/src/install/robot_navigation/share/ament_index
+creating /home/robot/Project/robot_ws/src/install/robot_navigation/share/ament_index/resource_index
+creating /home/robot/Project/robot_ws/src/install/robot_navigation/share/ament_index/resource_index/packages
+copying resource/robot_navigation -> /home/robot/Project/robot_ws/src/install/robot_navigation/share/ament_index/resource_index/packages
+copying package.xml -> /home/robot/Project/robot_ws/src/install/robot_navigation/share/robot_navigation
+creating /home/robot/Project/robot_ws/src/install/robot_navigation/share/robot_navigation/launch
+copying launch/nav2_localization.launch.py -> /home/robot/Project/robot_ws/src/install/robot_navigation/share/robot_navigation/launch
+copying launch/navigation.launch.py -> /home/robot/Project/robot_ws/src/install/robot_navigation/share/robot_navigation/launch
+creating /home/robot/Project/robot_ws/src/install/robot_navigation/share/robot_navigation/config
+copying config/amcl.yaml -> /home/robot/Project/robot_ws/src/install/robot_navigation/share/robot_navigation/config
+copying config/room.yaml -> /home/robot/Project/robot_ws/src/install/robot_navigation/share/robot_navigation/config
+copying config/room.pgm -> /home/robot/Project/robot_ws/src/install/robot_navigation/share/robot_navigation/config
+copying config/nav2_params.yaml -> /home/robot/Project/robot_ws/src/install/robot_navigation/share/robot_navigation/config
+copying config/whole_map.yaml -> /home/robot/Project/robot_ws/src/install/robot_navigation/share/robot_navigation/config
+copying config/whole_map.pgm -> /home/robot/Project/robot_ws/src/install/robot_navigation/share/robot_navigation/config
+running install_egg_info
+Copying ../build/robot_navigation/robot_navigation.egg-info to /home/robot/Project/robot_ws/src/install/robot_navigation/lib/python3.12/site-packages/robot_navigation-0.0.0-py3.12.egg-info
+running install_scripts
+writing list of installed files to '/home/robot/Project/robot_ws/src/build/robot_navigation/install.log'

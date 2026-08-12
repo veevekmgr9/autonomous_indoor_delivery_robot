@@ -1,0 +1,35 @@
+running egg_info
+creating ../build/robot_description/robot_description.egg-info
+writing ../build/robot_description/robot_description.egg-info/PKG-INFO
+writing dependency_links to ../build/robot_description/robot_description.egg-info/dependency_links.txt
+writing requirements to ../build/robot_description/robot_description.egg-info/requires.txt
+writing top-level names to ../build/robot_description/robot_description.egg-info/top_level.txt
+writing manifest file '../build/robot_description/robot_description.egg-info/SOURCES.txt'
+reading manifest file '../build/robot_description/robot_description.egg-info/SOURCES.txt'
+writing manifest file '../build/robot_description/robot_description.egg-info/SOURCES.txt'
+running build
+running build_py
+creating /home/robot/Project/robot_ws/src/build/robot_description/build
+creating /home/robot/Project/robot_ws/src/build/robot_description/build/lib
+creating /home/robot/Project/robot_ws/src/build/robot_description/build/lib/robot_description
+copying robot_description/__init__.py -> /home/robot/Project/robot_ws/src/build/robot_description/build/lib/robot_description
+running install
+running install_lib
+creating /home/robot/Project/robot_ws/src/install/robot_description/lib/python3.12/site-packages/robot_description
+copying /home/robot/Project/robot_ws/src/build/robot_description/build/lib/robot_description/__init__.py -> /home/robot/Project/robot_ws/src/install/robot_description/lib/python3.12/site-packages/robot_description
+byte-compiling /home/robot/Project/robot_ws/src/install/robot_description/lib/python3.12/site-packages/robot_description/__init__.py to __init__.cpython-312.pyc
+running install_data
+creating /home/robot/Project/robot_ws/src/install/robot_description/share/ament_index
+creating /home/robot/Project/robot_ws/src/install/robot_description/share/ament_index/resource_index
+creating /home/robot/Project/robot_ws/src/install/robot_description/share/ament_index/resource_index/packages
+copying resource/robot_description -> /home/robot/Project/robot_ws/src/install/robot_description/share/ament_index/resource_index/packages
+copying package.xml -> /home/robot/Project/robot_ws/src/install/robot_description/share/robot_description
+creating /home/robot/Project/robot_ws/src/install/robot_description/share/robot_description/urdf
+copying urdf/robot.urdf.xacro -> /home/robot/Project/robot_ws/src/install/robot_description/share/robot_description/urdf
+creating /home/robot/Project/robot_ws/src/install/robot_description/share/robot_description/launch
+copying launch/robot_launch.py -> /home/robot/Project/robot_ws/src/install/robot_description/share/robot_description/launch
+copying launch/rsp.launch.py -> /home/robot/Project/robot_ws/src/install/robot_description/share/robot_description/launch
+running install_egg_info
+Copying ../build/robot_description/robot_description.egg-info to /home/robot/Project/robot_ws/src/install/robot_description/lib/python3.12/site-packages/robot_description-0.0.0-py3.12.egg-info
+running install_scripts
+writing list of installed files to '/home/robot/Project/robot_ws/src/build/robot_description/install.log'

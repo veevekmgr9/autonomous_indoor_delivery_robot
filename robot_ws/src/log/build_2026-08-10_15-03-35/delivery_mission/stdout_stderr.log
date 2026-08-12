@@ -1,0 +1,19 @@
+running egg_info
+writing ../build/delivery_mission/delivery_mission.egg-info/PKG-INFO
+writing dependency_links to ../build/delivery_mission/delivery_mission.egg-info/dependency_links.txt
+writing entry points to ../build/delivery_mission/delivery_mission.egg-info/entry_points.txt
+writing requirements to ../build/delivery_mission/delivery_mission.egg-info/requires.txt
+writing top-level names to ../build/delivery_mission/delivery_mission.egg-info/top_level.txt
+reading manifest file '../build/delivery_mission/delivery_mission.egg-info/SOURCES.txt'
+writing manifest file '../build/delivery_mission/delivery_mission.egg-info/SOURCES.txt'
+running build
+running build_py
+running install
+running install_lib
+running install_data
+running install_egg_info
+removing '/home/robot/Project/robot_ws/src/install/delivery_mission/lib/python3.12/site-packages/delivery_mission-0.0.0-py3.12.egg-info' (and everything under it)
+Copying ../build/delivery_mission/delivery_mission.egg-info to /home/robot/Project/robot_ws/src/install/delivery_mission/lib/python3.12/site-packages/delivery_mission-0.0.0-py3.12.egg-info
+running install_scripts
+Installing delivery_mission script to /home/robot/Project/robot_ws/src/install/delivery_mission/lib/delivery_mission
+writing list of installed files to '/home/robot/Project/robot_ws/src/build/delivery_mission/install.log'

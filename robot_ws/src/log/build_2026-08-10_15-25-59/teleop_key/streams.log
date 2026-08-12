@@ -1,0 +1,39 @@
+[1.954s] Invoking command in '/home/robot/Project/robot_ws/src/teleop_key': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PYTHONPATH=/home/robot/Project/robot_ws/src/build/teleop_key/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/robot/Project/robot_ws/src/install/teleop_key/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../build/teleop_key build --build-base /home/robot/Project/robot_ws/src/build/teleop_key/build install --record /home/robot/Project/robot_ws/src/build/teleop_key/install.log --install-scripts $base/lib/teleop_key --single-version-externally-managed install_data
+[2.542s] running egg_info
+[2.542s] creating ../build/teleop_key/teleop_key.egg-info
+[2.576s] writing ../build/teleop_key/teleop_key.egg-info/PKG-INFO
+[2.578s] writing dependency_links to ../build/teleop_key/teleop_key.egg-info/dependency_links.txt
+[2.578s] writing entry points to ../build/teleop_key/teleop_key.egg-info/entry_points.txt
+[2.579s] writing requirements to ../build/teleop_key/teleop_key.egg-info/requires.txt
+[2.579s] writing top-level names to ../build/teleop_key/teleop_key.egg-info/top_level.txt
+[2.579s] writing manifest file '../build/teleop_key/teleop_key.egg-info/SOURCES.txt'
+[2.649s] reading manifest file '../build/teleop_key/teleop_key.egg-info/SOURCES.txt'
+[2.652s] writing manifest file '../build/teleop_key/teleop_key.egg-info/SOURCES.txt'
+[2.653s] running build
+[2.653s] running build_py
+[2.653s] creating /home/robot/Project/robot_ws/src/build/teleop_key/build
+[2.653s] creating /home/robot/Project/robot_ws/src/build/teleop_key/build/lib
+[2.653s] creating /home/robot/Project/robot_ws/src/build/teleop_key/build/lib/teleop_key
+[2.653s] copying teleop_key/teleop_key.py -> /home/robot/Project/robot_ws/src/build/teleop_key/build/lib/teleop_key
+[2.653s] copying teleop_key/__init__.py -> /home/robot/Project/robot_ws/src/build/teleop_key/build/lib/teleop_key
+[2.653s] running install
+[2.665s] running install_lib
+[2.708s] creating /home/robot/Project/robot_ws/src/install/teleop_key/lib/python3.12/site-packages/teleop_key
+[2.709s] copying /home/robot/Project/robot_ws/src/build/teleop_key/build/lib/teleop_key/teleop_key.py -> /home/robot/Project/robot_ws/src/install/teleop_key/lib/python3.12/site-packages/teleop_key
+[2.709s] copying /home/robot/Project/robot_ws/src/build/teleop_key/build/lib/teleop_key/__init__.py -> /home/robot/Project/robot_ws/src/install/teleop_key/lib/python3.12/site-packages/teleop_key
+[2.711s] byte-compiling /home/robot/Project/robot_ws/src/install/teleop_key/lib/python3.12/site-packages/teleop_key/teleop_key.py to teleop_key.cpython-312.pyc
+[2.713s] byte-compiling /home/robot/Project/robot_ws/src/install/teleop_key/lib/python3.12/site-packages/teleop_key/__init__.py to __init__.cpython-312.pyc
+[2.714s] running install_data
+[2.715s] creating /home/robot/Project/robot_ws/src/install/teleop_key/share/ament_index
+[2.715s] creating /home/robot/Project/robot_ws/src/install/teleop_key/share/ament_index/resource_index
+[2.715s] creating /home/robot/Project/robot_ws/src/install/teleop_key/share/ament_index/resource_index/packages
+[2.715s] copying resource/teleop_key -> /home/robot/Project/robot_ws/src/install/teleop_key/share/ament_index/resource_index/packages
+[2.715s] copying package.xml -> /home/robot/Project/robot_ws/src/install/teleop_key/share/teleop_key
+[2.715s] creating /home/robot/Project/robot_ws/src/install/teleop_key/share/teleop_key/launch
+[2.715s] copying launch/teleop.launch.py -> /home/robot/Project/robot_ws/src/install/teleop_key/share/teleop_key/launch
+[2.716s] running install_egg_info
+[2.763s] Copying ../build/teleop_key/teleop_key.egg-info to /home/robot/Project/robot_ws/src/install/teleop_key/lib/python3.12/site-packages/teleop_key-0.0.0-py3.12.egg-info
+[2.765s] running install_scripts
+[3.104s] Installing teleop_key script to /home/robot/Project/robot_ws/src/install/teleop_key/lib/teleop_key
+[3.104s] writing list of installed files to '/home/robot/Project/robot_ws/src/build/teleop_key/install.log'
+[3.210s] Invoked command in '/home/robot/Project/robot_ws/src/teleop_key' returned '0': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PYTHONPATH=/home/robot/Project/robot_ws/src/build/teleop_key/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/robot/Project/robot_ws/src/install/teleop_key/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../build/teleop_key build --build-base /home/robot/Project/robot_ws/src/build/teleop_key/build install --record /home/robot/Project/robot_ws/src/build/teleop_key/install.log --install-scripts $base/lib/teleop_key --single-version-externally-managed install_data

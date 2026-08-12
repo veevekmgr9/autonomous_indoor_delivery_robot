@@ -1,7 +1,7 @@
 ekf_filter_node:
   ros__parameters:
 
-    frequency: 30.0
+    frequency: 15.0
     sensor_timeout: 0.5
 
     two_d_mode: true
@@ -14,10 +14,9 @@ ekf_filter_node:
     base_link_frame: base_link
     world_frame: odom
 
-
-    # ==============================
-    # ENCODER ODOMETRY
-    # ==============================
+    # ==========================================================
+    # WHEEL ODOMETRY
+    # ==========================================================
 
     odom0: /wheel/odom
 
@@ -29,7 +28,7 @@ ekf_filter_node:
       false, false, false
     ]
 
-    odom0_queue_size: 20
+    odom0_queue_size: 10
     odom0_nodelay: false
     odom0_differential: false
     odom0_relative: false

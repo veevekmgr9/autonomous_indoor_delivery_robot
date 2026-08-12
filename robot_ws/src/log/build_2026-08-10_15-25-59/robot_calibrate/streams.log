@@ -1,0 +1,37 @@
+[2.813s] Invoking command in '/home/robot/Project/robot_ws/src/robot_calibrate': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PYTHONPATH=/home/robot/Project/robot_ws/src/build/robot_calibrate/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/robot/Project/robot_ws/src/install/robot_calibrate/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../build/robot_calibrate build --build-base /home/robot/Project/robot_ws/src/build/robot_calibrate/build install --record /home/robot/Project/robot_ws/src/build/robot_calibrate/install.log --install-scripts $base/lib/robot_calibrate --single-version-externally-managed install_data
+[3.386s] running egg_info
+[3.386s] creating ../build/robot_calibrate/robot_calibrate.egg-info
+[3.427s] writing ../build/robot_calibrate/robot_calibrate.egg-info/PKG-INFO
+[3.428s] writing dependency_links to ../build/robot_calibrate/robot_calibrate.egg-info/dependency_links.txt
+[3.428s] writing entry points to ../build/robot_calibrate/robot_calibrate.egg-info/entry_points.txt
+[3.429s] writing requirements to ../build/robot_calibrate/robot_calibrate.egg-info/requires.txt
+[3.430s] writing top-level names to ../build/robot_calibrate/robot_calibrate.egg-info/top_level.txt
+[3.431s] writing manifest file '../build/robot_calibrate/robot_calibrate.egg-info/SOURCES.txt'
+[3.501s] reading manifest file '../build/robot_calibrate/robot_calibrate.egg-info/SOURCES.txt'
+[3.501s] writing manifest file '../build/robot_calibrate/robot_calibrate.egg-info/SOURCES.txt'
+[3.502s] running build
+[3.502s] running build_py
+[3.503s] creating /home/robot/Project/robot_ws/src/build/robot_calibrate/build
+[3.503s] creating /home/robot/Project/robot_ws/src/build/robot_calibrate/build/lib
+[3.504s] creating /home/robot/Project/robot_ws/src/build/robot_calibrate/build/lib/robot_calibrate
+[3.504s] copying robot_calibrate/robot_calibrate.py -> /home/robot/Project/robot_ws/src/build/robot_calibrate/build/lib/robot_calibrate
+[3.505s] copying robot_calibrate/__init__.py -> /home/robot/Project/robot_ws/src/build/robot_calibrate/build/lib/robot_calibrate
+[3.506s] running install
+[3.519s] running install_lib
+[3.552s] creating /home/robot/Project/robot_ws/src/install/robot_calibrate/lib/python3.12/site-packages/robot_calibrate
+[3.552s] copying /home/robot/Project/robot_ws/src/build/robot_calibrate/build/lib/robot_calibrate/robot_calibrate.py -> /home/robot/Project/robot_ws/src/install/robot_calibrate/lib/python3.12/site-packages/robot_calibrate
+[3.554s] copying /home/robot/Project/robot_ws/src/build/robot_calibrate/build/lib/robot_calibrate/__init__.py -> /home/robot/Project/robot_ws/src/install/robot_calibrate/lib/python3.12/site-packages/robot_calibrate
+[3.554s] byte-compiling /home/robot/Project/robot_ws/src/install/robot_calibrate/lib/python3.12/site-packages/robot_calibrate/robot_calibrate.py to robot_calibrate.cpython-312.pyc
+[3.556s] byte-compiling /home/robot/Project/robot_ws/src/install/robot_calibrate/lib/python3.12/site-packages/robot_calibrate/__init__.py to __init__.cpython-312.pyc
+[3.556s] running install_data
+[3.558s] creating /home/robot/Project/robot_ws/src/install/robot_calibrate/share/ament_index
+[3.558s] creating /home/robot/Project/robot_ws/src/install/robot_calibrate/share/ament_index/resource_index
+[3.558s] creating /home/robot/Project/robot_ws/src/install/robot_calibrate/share/ament_index/resource_index/packages
+[3.558s] copying resource/robot_calibrate -> /home/robot/Project/robot_ws/src/install/robot_calibrate/share/ament_index/resource_index/packages
+[3.559s] copying package.xml -> /home/robot/Project/robot_ws/src/install/robot_calibrate/share/robot_calibrate
+[3.559s] running install_egg_info
+[3.630s] Copying ../build/robot_calibrate/robot_calibrate.egg-info to /home/robot/Project/robot_ws/src/install/robot_calibrate/lib/python3.12/site-packages/robot_calibrate-0.0.0-py3.12.egg-info
+[3.635s] running install_scripts
+[3.994s] Installing robot_calibrate script to /home/robot/Project/robot_ws/src/install/robot_calibrate/lib/robot_calibrate
+[4.007s] writing list of installed files to '/home/robot/Project/robot_ws/src/build/robot_calibrate/install.log'
+[4.239s] Invoked command in '/home/robot/Project/robot_ws/src/robot_calibrate' returned '0': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PYTHONPATH=/home/robot/Project/robot_ws/src/build/robot_calibrate/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/robot/Project/robot_ws/src/install/robot_calibrate/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../build/robot_calibrate build --build-base /home/robot/Project/robot_ws/src/build/robot_calibrate/build install --record /home/robot/Project/robot_ws/src/build/robot_calibrate/install.log --install-scripts $base/lib/robot_calibrate --single-version-externally-managed install_data

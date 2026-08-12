@@ -1,0 +1,39 @@
+[2.772s] Invoking command in '/home/robot/Project/robot_ws/src/robot_bringup': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PYTHONPATH=/home/robot/Project/robot_ws/src/build/robot_bringup/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/robot/Project/robot_ws/src/install/robot_bringup/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../build/robot_bringup build --build-base /home/robot/Project/robot_ws/src/build/robot_bringup/build install --record /home/robot/Project/robot_ws/src/build/robot_bringup/install.log --install-scripts $base/lib/robot_bringup --single-version-externally-managed install_data
+[3.345s] running egg_info
+[3.346s] creating ../build/robot_bringup/robot_bringup.egg-info
+[3.377s] writing ../build/robot_bringup/robot_bringup.egg-info/PKG-INFO
+[3.378s] writing dependency_links to ../build/robot_bringup/robot_bringup.egg-info/dependency_links.txt
+[3.379s] writing requirements to ../build/robot_bringup/robot_bringup.egg-info/requires.txt
+[3.379s] writing top-level names to ../build/robot_bringup/robot_bringup.egg-info/top_level.txt
+[3.380s] writing manifest file '../build/robot_bringup/robot_bringup.egg-info/SOURCES.txt'
+[3.449s] reading manifest file '../build/robot_bringup/robot_bringup.egg-info/SOURCES.txt'
+[3.450s] writing manifest file '../build/robot_bringup/robot_bringup.egg-info/SOURCES.txt'
+[3.451s] running build
+[3.451s] running build_py
+[3.451s] creating /home/robot/Project/robot_ws/src/build/robot_bringup/build
+[3.451s] creating /home/robot/Project/robot_ws/src/build/robot_bringup/build/lib
+[3.454s] creating /home/robot/Project/robot_ws/src/build/robot_bringup/build/lib/robot_bringup
+[3.454s] copying robot_bringup/__init__.py -> /home/robot/Project/robot_ws/src/build/robot_bringup/build/lib/robot_bringup
+[3.454s] running install
+[3.463s] running install_lib
+[3.497s] creating /home/robot/Project/robot_ws/src/install/robot_bringup/lib/python3.12/site-packages/robot_bringup
+[3.499s] copying /home/robot/Project/robot_ws/src/build/robot_bringup/build/lib/robot_bringup/__init__.py -> /home/robot/Project/robot_ws/src/install/robot_bringup/lib/python3.12/site-packages/robot_bringup
+[3.499s] byte-compiling /home/robot/Project/robot_ws/src/install/robot_bringup/lib/python3.12/site-packages/robot_bringup/__init__.py to __init__.cpython-312.pyc
+[3.503s] running install_data
+[3.503s] creating /home/robot/Project/robot_ws/src/install/robot_bringup/share/ament_index
+[3.503s] creating /home/robot/Project/robot_ws/src/install/robot_bringup/share/ament_index/resource_index
+[3.503s] creating /home/robot/Project/robot_ws/src/install/robot_bringup/share/ament_index/resource_index/packages
+[3.503s] copying resource/robot_bringup -> /home/robot/Project/robot_ws/src/install/robot_bringup/share/ament_index/resource_index/packages
+[3.503s] copying package.xml -> /home/robot/Project/robot_ws/src/install/robot_bringup/share/robot_bringup
+[3.504s] creating /home/robot/Project/robot_ws/src/install/robot_bringup/share/robot_bringup/maps
+[3.504s] creating /home/robot/Project/robot_ws/src/install/robot_bringup/share/robot_bringup/launch
+[3.504s] copying launch/localization.launch.py -> /home/robot/Project/robot_ws/src/install/robot_bringup/share/robot_bringup/launch
+[3.505s] creating /home/robot/Project/robot_ws/src/install/robot_bringup/share/robot_bringup/config
+[3.505s] copying config/ekf.yaml -> /home/robot/Project/robot_ws/src/install/robot_bringup/share/robot_bringup/config
+[3.505s] copying config/slam_toolbox.yaml -> /home/robot/Project/robot_ws/src/install/robot_bringup/share/robot_bringup/config
+[3.505s] copying config/amcl.yaml -> /home/robot/Project/robot_ws/src/install/robot_bringup/share/robot_bringup/config
+[3.511s] running install_egg_info
+[3.548s] Copying ../build/robot_bringup/robot_bringup.egg-info to /home/robot/Project/robot_ws/src/install/robot_bringup/lib/python3.12/site-packages/robot_bringup-0.0.0-py3.12.egg-info
+[3.549s] running install_scripts
+[3.885s] writing list of installed files to '/home/robot/Project/robot_ws/src/build/robot_bringup/install.log'
+[4.193s] Invoked command in '/home/robot/Project/robot_ws/src/robot_bringup' returned '0': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PYTHONPATH=/home/robot/Project/robot_ws/src/build/robot_bringup/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/robot/Project/robot_ws/src/install/robot_bringup/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../build/robot_bringup build --build-base /home/robot/Project/robot_ws/src/build/robot_bringup/build install --record /home/robot/Project/robot_ws/src/build/robot_bringup/install.log --install-scripts $base/lib/robot_bringup --single-version-externally-managed install_data

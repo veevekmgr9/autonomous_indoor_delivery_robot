@@ -3,6 +3,7 @@
 <robot name="delivery_robot"
        xmlns:xacro="http://www.ros.org/wiki/xacro">
 
+
   <!-- ========================================================== -->
   <!-- BASE LINK                                                   -->
   <!-- ========================================================== -->
@@ -19,11 +20,13 @@
       </material>
     </visual>
 
+
     <collision>
       <geometry>
         <box size="0.20 0.14 0.05"/>
       </geometry>
     </collision>
+
 
     <inertial>
       <mass value="0.8"/>
@@ -41,15 +44,45 @@
 
 
   <!-- ========================================================== -->
-  <!-- RPLIDAR A1                                                  -->
+  <!-- ULTRASONIC SENSOR                                          -->
+  <!-- ========================================================== -->
+
+  <link name="ultrasonic_link"/>
+
+
+  <joint name="ultrasonic_joint"
+         type="fixed">
+
+    <parent link="base_link"/>
+
+    <child link="ultrasonic_link"/>
+
+    
+      <!-- Ultrasonic sensor position relative to base_link
+
+      X = 12.0 cm forward
+      Y = 6.0 cm left
+      Z = 8.6 cm above floor -->
+
+
+    <origin
+      xyz="0.120 0.060 0.086"
+      rpy="0 0 0"/>
+
+  </joint>
+
+
+  <!-- ========================================================== -->
+  <!-- RPLIDAR A1                                                 -->
   <!-- ========================================================== -->
 
   <link name="laser">
 
     <visual>
       <geometry>
-        <cylinder radius="0.035"
-                  length="0.04"/>
+        <cylinder
+          radius="0.035"
+          length="0.04"/>
       </geometry>
 
       <material name="black">
@@ -64,6 +97,7 @@
          type="fixed">
 
     <parent link="base_link"/>
+
     <child link="laser"/>
 
     <origin
@@ -96,6 +130,7 @@
          type="fixed">
 
     <parent link="base_link"/>
+
     <child link="imu_link"/>
 
     <origin
@@ -128,6 +163,7 @@
          type="fixed">
 
     <parent link="base_link"/>
+
     <child link="camera_link"/>
 
     <origin
@@ -135,5 +171,6 @@
       rpy="0 0 0"/>
 
   </joint>
+
 
 </robot>

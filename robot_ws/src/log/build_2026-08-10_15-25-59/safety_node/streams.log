@@ -1,0 +1,39 @@
+[2.488s] Invoking command in '/home/robot/Project/robot_ws/src/safety_node': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PYTHONPATH=/home/robot/Project/robot_ws/src/build/safety_node/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/robot/Project/robot_ws/src/install/safety_node/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../build/safety_node build --build-base /home/robot/Project/robot_ws/src/build/safety_node/build install --record /home/robot/Project/robot_ws/src/build/safety_node/install.log --install-scripts $base/lib/safety_node --single-version-externally-managed install_data
+[2.968s] running egg_info
+[2.970s] creating ../build/safety_node/safety_node.egg-info
+[3.009s] writing ../build/safety_node/safety_node.egg-info/PKG-INFO
+[3.010s] writing dependency_links to ../build/safety_node/safety_node.egg-info/dependency_links.txt
+[3.013s] writing entry points to ../build/safety_node/safety_node.egg-info/entry_points.txt
+[3.013s] writing requirements to ../build/safety_node/safety_node.egg-info/requires.txt
+[3.013s] writing top-level names to ../build/safety_node/safety_node.egg-info/top_level.txt
+[3.013s] writing manifest file '../build/safety_node/safety_node.egg-info/SOURCES.txt'
+[3.080s] reading manifest file '../build/safety_node/safety_node.egg-info/SOURCES.txt'
+[3.081s] writing manifest file '../build/safety_node/safety_node.egg-info/SOURCES.txt'
+[3.085s] running build
+[3.085s] running build_py
+[3.085s] creating /home/robot/Project/robot_ws/src/build/safety_node/build
+[3.085s] creating /home/robot/Project/robot_ws/src/build/safety_node/build/lib
+[3.085s] creating /home/robot/Project/robot_ws/src/build/safety_node/build/lib/safety_node
+[3.086s] copying safety_node/safety_node.py -> /home/robot/Project/robot_ws/src/build/safety_node/build/lib/safety_node
+[3.089s] copying safety_node/__init__.py -> /home/robot/Project/robot_ws/src/build/safety_node/build/lib/safety_node
+[3.089s] running install
+[3.094s] running install_lib
+[3.128s] creating /home/robot/Project/robot_ws/src/install/safety_node/lib/python3.12/site-packages/safety_node
+[3.129s] copying /home/robot/Project/robot_ws/src/build/safety_node/build/lib/safety_node/safety_node.py -> /home/robot/Project/robot_ws/src/install/safety_node/lib/python3.12/site-packages/safety_node
+[3.129s] copying /home/robot/Project/robot_ws/src/build/safety_node/build/lib/safety_node/__init__.py -> /home/robot/Project/robot_ws/src/install/safety_node/lib/python3.12/site-packages/safety_node
+[3.132s] byte-compiling /home/robot/Project/robot_ws/src/install/safety_node/lib/python3.12/site-packages/safety_node/safety_node.py to safety_node.cpython-312.pyc
+[3.132s] byte-compiling /home/robot/Project/robot_ws/src/install/safety_node/lib/python3.12/site-packages/safety_node/__init__.py to __init__.cpython-312.pyc
+[3.132s] running install_data
+[3.132s] creating /home/robot/Project/robot_ws/src/install/safety_node/share/ament_index
+[3.133s] creating /home/robot/Project/robot_ws/src/install/safety_node/share/ament_index/resource_index
+[3.133s] creating /home/robot/Project/robot_ws/src/install/safety_node/share/ament_index/resource_index/packages
+[3.133s] copying resource/safety_node -> /home/robot/Project/robot_ws/src/install/safety_node/share/ament_index/resource_index/packages
+[3.133s] copying package.xml -> /home/robot/Project/robot_ws/src/install/safety_node/share/safety_node
+[3.134s] creating /home/robot/Project/robot_ws/src/install/safety_node/share/safety_node/launch
+[3.134s] copying launch/safety.launch.py -> /home/robot/Project/robot_ws/src/install/safety_node/share/safety_node/launch
+[3.134s] running install_egg_info
+[3.188s] Copying ../build/safety_node/safety_node.egg-info to /home/robot/Project/robot_ws/src/install/safety_node/lib/python3.12/site-packages/safety_node-0.0.0-py3.12.egg-info
+[3.191s] running install_scripts
+[3.612s] Installing safety_node script to /home/robot/Project/robot_ws/src/install/safety_node/lib/safety_node
+[3.613s] writing list of installed files to '/home/robot/Project/robot_ws/src/build/safety_node/install.log'
+[3.992s] Invoked command in '/home/robot/Project/robot_ws/src/safety_node' returned '0': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PYTHONPATH=/home/robot/Project/robot_ws/src/build/safety_node/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/robot/Project/robot_ws/src/install/safety_node/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../build/safety_node build --build-base /home/robot/Project/robot_ws/src/build/safety_node/build install --record /home/robot/Project/robot_ws/src/build/safety_node/install.log --install-scripts $base/lib/safety_node --single-version-externally-managed install_data

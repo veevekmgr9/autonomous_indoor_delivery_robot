@@ -1,0 +1,39 @@
+[3.306s] Invoking command in '/home/robot/Project/robot_ws/src/robot_odometry': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PYTHONPATH=/home/robot/Project/robot_ws/src/build/robot_odometry/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/robot/Project/robot_ws/src/install/robot_odometry/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../build/robot_odometry build --build-base /home/robot/Project/robot_ws/src/build/robot_odometry/build install --record /home/robot/Project/robot_ws/src/build/robot_odometry/install.log --install-scripts $base/lib/robot_odometry --single-version-externally-managed install_data
+[3.921s] running egg_info
+[3.925s] creating ../build/robot_odometry/robot_odometry.egg-info
+[3.958s] writing ../build/robot_odometry/robot_odometry.egg-info/PKG-INFO
+[3.961s] writing dependency_links to ../build/robot_odometry/robot_odometry.egg-info/dependency_links.txt
+[3.961s] writing entry points to ../build/robot_odometry/robot_odometry.egg-info/entry_points.txt
+[3.961s] writing requirements to ../build/robot_odometry/robot_odometry.egg-info/requires.txt
+[3.961s] writing top-level names to ../build/robot_odometry/robot_odometry.egg-info/top_level.txt
+[3.962s] writing manifest file '../build/robot_odometry/robot_odometry.egg-info/SOURCES.txt'
+[4.029s] reading manifest file '../build/robot_odometry/robot_odometry.egg-info/SOURCES.txt'
+[4.030s] writing manifest file '../build/robot_odometry/robot_odometry.egg-info/SOURCES.txt'
+[4.031s] running build
+[4.031s] running build_py
+[4.031s] creating /home/robot/Project/robot_ws/src/build/robot_odometry/build
+[4.031s] creating /home/robot/Project/robot_ws/src/build/robot_odometry/build/lib
+[4.032s] creating /home/robot/Project/robot_ws/src/build/robot_odometry/build/lib/robot_odometry
+[4.032s] copying robot_odometry/__init__.py -> /home/robot/Project/robot_ws/src/build/robot_odometry/build/lib/robot_odometry
+[4.035s] copying robot_odometry/odom_node.py -> /home/robot/Project/robot_ws/src/build/robot_odometry/build/lib/robot_odometry
+[4.035s] running install
+[4.044s] running install_lib
+[4.076s] creating /home/robot/Project/robot_ws/src/install/robot_odometry/lib/python3.12/site-packages/robot_odometry
+[4.077s] copying /home/robot/Project/robot_ws/src/build/robot_odometry/build/lib/robot_odometry/__init__.py -> /home/robot/Project/robot_ws/src/install/robot_odometry/lib/python3.12/site-packages/robot_odometry
+[4.077s] copying /home/robot/Project/robot_ws/src/build/robot_odometry/build/lib/robot_odometry/odom_node.py -> /home/robot/Project/robot_ws/src/install/robot_odometry/lib/python3.12/site-packages/robot_odometry
+[4.077s] byte-compiling /home/robot/Project/robot_ws/src/install/robot_odometry/lib/python3.12/site-packages/robot_odometry/__init__.py to __init__.cpython-312.pyc
+[4.080s] byte-compiling /home/robot/Project/robot_ws/src/install/robot_odometry/lib/python3.12/site-packages/robot_odometry/odom_node.py to odom_node.cpython-312.pyc
+[4.080s] running install_data
+[4.081s] creating /home/robot/Project/robot_ws/src/install/robot_odometry/share/ament_index
+[4.081s] creating /home/robot/Project/robot_ws/src/install/robot_odometry/share/ament_index/resource_index
+[4.081s] creating /home/robot/Project/robot_ws/src/install/robot_odometry/share/ament_index/resource_index/packages
+[4.081s] copying resource/robot_odometry -> /home/robot/Project/robot_ws/src/install/robot_odometry/share/ament_index/resource_index/packages
+[4.081s] copying package.xml -> /home/robot/Project/robot_ws/src/install/robot_odometry/share/robot_odometry
+[4.082s] creating /home/robot/Project/robot_ws/src/install/robot_odometry/share/robot_odometry/launch
+[4.082s] copying launch/odom.launch.py -> /home/robot/Project/robot_ws/src/install/robot_odometry/share/robot_odometry/launch
+[4.082s] running install_egg_info
+[4.126s] Copying ../build/robot_odometry/robot_odometry.egg-info to /home/robot/Project/robot_ws/src/install/robot_odometry/lib/python3.12/site-packages/robot_odometry-0.0.0-py3.12.egg-info
+[4.126s] running install_scripts
+[4.418s] Installing odom_node script to /home/robot/Project/robot_ws/src/install/robot_odometry/lib/robot_odometry
+[4.418s] writing list of installed files to '/home/robot/Project/robot_ws/src/build/robot_odometry/install.log'
+[4.545s] Invoked command in '/home/robot/Project/robot_ws/src/robot_odometry' returned '0': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PYTHONPATH=/home/robot/Project/robot_ws/src/build/robot_odometry/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/robot/Project/robot_ws/src/install/robot_odometry/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../build/robot_odometry build --build-base /home/robot/Project/robot_ws/src/build/robot_odometry/build install --record /home/robot/Project/robot_ws/src/build/robot_odometry/install.log --install-scripts $base/lib/robot_odometry --single-version-externally-managed install_data

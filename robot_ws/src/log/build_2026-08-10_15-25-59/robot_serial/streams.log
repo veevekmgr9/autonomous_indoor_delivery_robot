@@ -1,0 +1,39 @@
+[3.729s] Invoking command in '/home/robot/Project/robot_ws/src/robot_serial': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PYTHONPATH=/home/robot/Project/robot_ws/src/build/robot_serial/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/robot/Project/robot_ws/src/install/robot_serial/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../build/robot_serial build --build-base /home/robot/Project/robot_ws/src/build/robot_serial/build install --record /home/robot/Project/robot_ws/src/build/robot_serial/install.log --install-scripts $base/lib/robot_serial --single-version-externally-managed install_data
+[4.240s] running egg_info
+[4.241s] creating ../build/robot_serial/robot_serial.egg-info
+[4.273s] writing ../build/robot_serial/robot_serial.egg-info/PKG-INFO
+[4.276s] writing dependency_links to ../build/robot_serial/robot_serial.egg-info/dependency_links.txt
+[4.281s] writing entry points to ../build/robot_serial/robot_serial.egg-info/entry_points.txt
+[4.282s] writing requirements to ../build/robot_serial/robot_serial.egg-info/requires.txt
+[4.282s] writing top-level names to ../build/robot_serial/robot_serial.egg-info/top_level.txt
+[4.283s] writing manifest file '../build/robot_serial/robot_serial.egg-info/SOURCES.txt'
+[4.413s] reading manifest file '../build/robot_serial/robot_serial.egg-info/SOURCES.txt'
+[4.415s] writing manifest file '../build/robot_serial/robot_serial.egg-info/SOURCES.txt'
+[4.416s] running build
+[4.417s] running build_py
+[4.421s] creating /home/robot/Project/robot_ws/src/build/robot_serial/build
+[4.424s] creating /home/robot/Project/robot_ws/src/build/robot_serial/build/lib
+[4.427s] creating /home/robot/Project/robot_ws/src/build/robot_serial/build/lib/robot_serial
+[4.427s] copying robot_serial/arduino_bridge.py -> /home/robot/Project/robot_ws/src/build/robot_serial/build/lib/robot_serial
+[4.431s] copying robot_serial/__init__.py -> /home/robot/Project/robot_ws/src/build/robot_serial/build/lib/robot_serial
+[4.433s] running install
+[4.469s] running install_lib
+[4.523s] creating /home/robot/Project/robot_ws/src/install/robot_serial/lib/python3.12/site-packages/robot_serial
+[4.524s] copying /home/robot/Project/robot_ws/src/build/robot_serial/build/lib/robot_serial/arduino_bridge.py -> /home/robot/Project/robot_ws/src/install/robot_serial/lib/python3.12/site-packages/robot_serial
+[4.524s] copying /home/robot/Project/robot_ws/src/build/robot_serial/build/lib/robot_serial/__init__.py -> /home/robot/Project/robot_ws/src/install/robot_serial/lib/python3.12/site-packages/robot_serial
+[4.527s] byte-compiling /home/robot/Project/robot_ws/src/install/robot_serial/lib/python3.12/site-packages/robot_serial/arduino_bridge.py to arduino_bridge.cpython-312.pyc
+[4.531s] byte-compiling /home/robot/Project/robot_ws/src/install/robot_serial/lib/python3.12/site-packages/robot_serial/__init__.py to __init__.cpython-312.pyc
+[4.531s] running install_data
+[4.532s] creating /home/robot/Project/robot_ws/src/install/robot_serial/share/ament_index
+[4.532s] creating /home/robot/Project/robot_ws/src/install/robot_serial/share/ament_index/resource_index
+[4.532s] creating /home/robot/Project/robot_ws/src/install/robot_serial/share/ament_index/resource_index/packages
+[4.533s] copying resource/robot_serial -> /home/robot/Project/robot_ws/src/install/robot_serial/share/ament_index/resource_index/packages
+[4.533s] copying package.xml -> /home/robot/Project/robot_ws/src/install/robot_serial/share/robot_serial
+[4.533s] creating /home/robot/Project/robot_ws/src/install/robot_serial/share/robot_serial/launch
+[4.534s] copying launch/bridge.launch.py -> /home/robot/Project/robot_ws/src/install/robot_serial/share/robot_serial/launch
+[4.534s] running install_egg_info
+[4.678s] Copying ../build/robot_serial/robot_serial.egg-info to /home/robot/Project/robot_ws/src/install/robot_serial/lib/python3.12/site-packages/robot_serial-0.0.0-py3.12.egg-info
+[4.682s] running install_scripts
+[5.233s] Installing arduino_bridge script to /home/robot/Project/robot_ws/src/install/robot_serial/lib/robot_serial
+[5.234s] writing list of installed files to '/home/robot/Project/robot_ws/src/build/robot_serial/install.log'
+[5.369s] Invoked command in '/home/robot/Project/robot_ws/src/robot_serial' returned '0': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PYTHONPATH=/home/robot/Project/robot_ws/src/build/robot_serial/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/robot/Project/robot_ws/src/install/robot_serial/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../build/robot_serial build --build-base /home/robot/Project/robot_ws/src/build/robot_serial/build install --record /home/robot/Project/robot_ws/src/build/robot_serial/install.log --install-scripts $base/lib/robot_serial --single-version-externally-managed install_data

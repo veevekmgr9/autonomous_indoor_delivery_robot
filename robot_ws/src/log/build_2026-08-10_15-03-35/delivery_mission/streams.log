@@ -1,0 +1,21 @@
+[1.665s] Invoking command in '/home/robot/Project/robot_ws/src/delivery_mission': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PYTHONPATH=/home/robot/Project/robot_ws/src/build/delivery_mission/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/robot/Project/robot_ws/src/install/delivery_mission/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../build/delivery_mission build --build-base /home/robot/Project/robot_ws/src/build/delivery_mission/build install --record /home/robot/Project/robot_ws/src/build/delivery_mission/install.log --install-scripts $base/lib/delivery_mission --single-version-externally-managed install_data
+[2.155s] running egg_info
+[2.184s] writing ../build/delivery_mission/delivery_mission.egg-info/PKG-INFO
+[2.184s] writing dependency_links to ../build/delivery_mission/delivery_mission.egg-info/dependency_links.txt
+[2.191s] writing entry points to ../build/delivery_mission/delivery_mission.egg-info/entry_points.txt
+[2.192s] writing requirements to ../build/delivery_mission/delivery_mission.egg-info/requires.txt
+[2.193s] writing top-level names to ../build/delivery_mission/delivery_mission.egg-info/top_level.txt
+[2.272s] reading manifest file '../build/delivery_mission/delivery_mission.egg-info/SOURCES.txt'
+[2.273s] writing manifest file '../build/delivery_mission/delivery_mission.egg-info/SOURCES.txt'
+[2.273s] running build
+[2.273s] running build_py
+[2.274s] running install
+[2.284s] running install_lib
+[2.327s] running install_data
+[2.327s] running install_egg_info
+[2.361s] removing '/home/robot/Project/robot_ws/src/install/delivery_mission/lib/python3.12/site-packages/delivery_mission-0.0.0-py3.12.egg-info' (and everything under it)
+[2.364s] Copying ../build/delivery_mission/delivery_mission.egg-info to /home/robot/Project/robot_ws/src/install/delivery_mission/lib/python3.12/site-packages/delivery_mission-0.0.0-py3.12.egg-info
+[2.365s] running install_scripts
+[2.623s] Installing delivery_mission script to /home/robot/Project/robot_ws/src/install/delivery_mission/lib/delivery_mission
+[2.624s] writing list of installed files to '/home/robot/Project/robot_ws/src/build/delivery_mission/install.log'
+[2.732s] Invoked command in '/home/robot/Project/robot_ws/src/delivery_mission' returned '0': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PYTHONPATH=/home/robot/Project/robot_ws/src/build/delivery_mission/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/robot/Project/robot_ws/src/install/delivery_mission/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../build/delivery_mission build --build-base /home/robot/Project/robot_ws/src/build/delivery_mission/build install --record /home/robot/Project/robot_ws/src/build/delivery_mission/install.log --install-scripts $base/lib/delivery_mission --single-version-externally-managed install_data

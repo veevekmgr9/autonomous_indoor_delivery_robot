@@ -1,0 +1,37 @@
+running egg_info
+creating ../build/robot_serial/robot_serial.egg-info
+writing ../build/robot_serial/robot_serial.egg-info/PKG-INFO
+writing dependency_links to ../build/robot_serial/robot_serial.egg-info/dependency_links.txt
+writing entry points to ../build/robot_serial/robot_serial.egg-info/entry_points.txt
+writing requirements to ../build/robot_serial/robot_serial.egg-info/requires.txt
+writing top-level names to ../build/robot_serial/robot_serial.egg-info/top_level.txt
+writing manifest file '../build/robot_serial/robot_serial.egg-info/SOURCES.txt'
+reading manifest file '../build/robot_serial/robot_serial.egg-info/SOURCES.txt'
+writing manifest file '../build/robot_serial/robot_serial.egg-info/SOURCES.txt'
+running build
+running build_py
+creating /home/robot/Project/robot_ws/src/build/robot_serial/build
+creating /home/robot/Project/robot_ws/src/build/robot_serial/build/lib
+creating /home/robot/Project/robot_ws/src/build/robot_serial/build/lib/robot_serial
+copying robot_serial/arduino_bridge.py -> /home/robot/Project/robot_ws/src/build/robot_serial/build/lib/robot_serial
+copying robot_serial/__init__.py -> /home/robot/Project/robot_ws/src/build/robot_serial/build/lib/robot_serial
+running install
+running install_lib
+creating /home/robot/Project/robot_ws/src/install/robot_serial/lib/python3.12/site-packages/robot_serial
+copying /home/robot/Project/robot_ws/src/build/robot_serial/build/lib/robot_serial/arduino_bridge.py -> /home/robot/Project/robot_ws/src/install/robot_serial/lib/python3.12/site-packages/robot_serial
+copying /home/robot/Project/robot_ws/src/build/robot_serial/build/lib/robot_serial/__init__.py -> /home/robot/Project/robot_ws/src/install/robot_serial/lib/python3.12/site-packages/robot_serial
+byte-compiling /home/robot/Project/robot_ws/src/install/robot_serial/lib/python3.12/site-packages/robot_serial/arduino_bridge.py to arduino_bridge.cpython-312.pyc
+byte-compiling /home/robot/Project/robot_ws/src/install/robot_serial/lib/python3.12/site-packages/robot_serial/__init__.py to __init__.cpython-312.pyc
+running install_data
+creating /home/robot/Project/robot_ws/src/install/robot_serial/share/ament_index
+creating /home/robot/Project/robot_ws/src/install/robot_serial/share/ament_index/resource_index
+creating /home/robot/Project/robot_ws/src/install/robot_serial/share/ament_index/resource_index/packages
+copying resource/robot_serial -> /home/robot/Project/robot_ws/src/install/robot_serial/share/ament_index/resource_index/packages
+copying package.xml -> /home/robot/Project/robot_ws/src/install/robot_serial/share/robot_serial
+creating /home/robot/Project/robot_ws/src/install/robot_serial/share/robot_serial/launch
+copying launch/bridge.launch.py -> /home/robot/Project/robot_ws/src/install/robot_serial/share/robot_serial/launch
+running install_egg_info
+Copying ../build/robot_serial/robot_serial.egg-info to /home/robot/Project/robot_ws/src/install/robot_serial/lib/python3.12/site-packages/robot_serial-0.0.0-py3.12.egg-info
+running install_scripts
+Installing arduino_bridge script to /home/robot/Project/robot_ws/src/install/robot_serial/lib/robot_serial
+writing list of installed files to '/home/robot/Project/robot_ws/src/build/robot_serial/install.log'

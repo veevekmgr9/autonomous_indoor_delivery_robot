@@ -12,11 +12,16 @@ setup(
         ('share/robot_navigation', ['package.xml']),
         ('share/robot_navigation/launch',
             ['launch/nav2_localization.launch.py']),
+        ('share/robot_navigation/launch',
+            ['launch/navigation.launch.py']),
         ('share/robot_navigation/config',
             [
                 'config/amcl.yaml',
                 'config/room.yaml',
-                'config/room.pgm'
+                'config/room.pgm',
+                'config/nav2_params.yaml',
+                'config/whole_map.yaml',
+                'config/whole_map.pgm',
             ]),
     ],
     install_requires=['setuptools'],

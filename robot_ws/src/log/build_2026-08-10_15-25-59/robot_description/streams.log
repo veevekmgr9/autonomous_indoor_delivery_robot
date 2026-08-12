@@ -1,0 +1,37 @@
+[2.907s] Invoking command in '/home/robot/Project/robot_ws/src/robot_description': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PYTHONPATH=/home/robot/Project/robot_ws/src/build/robot_description/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/robot/Project/robot_ws/src/install/robot_description/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../build/robot_description build --build-base /home/robot/Project/robot_ws/src/build/robot_description/build install --record /home/robot/Project/robot_ws/src/build/robot_description/install.log --install-scripts $base/lib/robot_description --single-version-externally-managed install_data
+[3.417s] running egg_info
+[3.419s] creating ../build/robot_description/robot_description.egg-info
+[3.452s] writing ../build/robot_description/robot_description.egg-info/PKG-INFO
+[3.453s] writing dependency_links to ../build/robot_description/robot_description.egg-info/dependency_links.txt
+[3.454s] writing requirements to ../build/robot_description/robot_description.egg-info/requires.txt
+[3.454s] writing top-level names to ../build/robot_description/robot_description.egg-info/top_level.txt
+[3.457s] writing manifest file '../build/robot_description/robot_description.egg-info/SOURCES.txt'
+[3.527s] reading manifest file '../build/robot_description/robot_description.egg-info/SOURCES.txt'
+[3.528s] writing manifest file '../build/robot_description/robot_description.egg-info/SOURCES.txt'
+[3.530s] running build
+[3.530s] running build_py
+[3.530s] creating /home/robot/Project/robot_ws/src/build/robot_description/build
+[3.531s] creating /home/robot/Project/robot_ws/src/build/robot_description/build/lib
+[3.531s] creating /home/robot/Project/robot_ws/src/build/robot_description/build/lib/robot_description
+[3.534s] copying robot_description/__init__.py -> /home/robot/Project/robot_ws/src/build/robot_description/build/lib/robot_description
+[3.534s] running install
+[3.546s] running install_lib
+[3.581s] creating /home/robot/Project/robot_ws/src/install/robot_description/lib/python3.12/site-packages/robot_description
+[3.581s] copying /home/robot/Project/robot_ws/src/build/robot_description/build/lib/robot_description/__init__.py -> /home/robot/Project/robot_ws/src/install/robot_description/lib/python3.12/site-packages/robot_description
+[3.586s] byte-compiling /home/robot/Project/robot_ws/src/install/robot_description/lib/python3.12/site-packages/robot_description/__init__.py to __init__.cpython-312.pyc
+[3.586s] running install_data
+[3.587s] creating /home/robot/Project/robot_ws/src/install/robot_description/share/ament_index
+[3.587s] creating /home/robot/Project/robot_ws/src/install/robot_description/share/ament_index/resource_index
+[3.587s] creating /home/robot/Project/robot_ws/src/install/robot_description/share/ament_index/resource_index/packages
+[3.589s] copying resource/robot_description -> /home/robot/Project/robot_ws/src/install/robot_description/share/ament_index/resource_index/packages
+[3.589s] copying package.xml -> /home/robot/Project/robot_ws/src/install/robot_description/share/robot_description
+[3.590s] creating /home/robot/Project/robot_ws/src/install/robot_description/share/robot_description/urdf
+[3.590s] copying urdf/robot.urdf.xacro -> /home/robot/Project/robot_ws/src/install/robot_description/share/robot_description/urdf
+[3.590s] creating /home/robot/Project/robot_ws/src/install/robot_description/share/robot_description/launch
+[3.590s] copying launch/robot_launch.py -> /home/robot/Project/robot_ws/src/install/robot_description/share/robot_description/launch
+[3.590s] copying launch/rsp.launch.py -> /home/robot/Project/robot_ws/src/install/robot_description/share/robot_description/launch
+[3.593s] running install_egg_info
+[3.643s] Copying ../build/robot_description/robot_description.egg-info to /home/robot/Project/robot_ws/src/install/robot_description/lib/python3.12/site-packages/robot_description-0.0.0-py3.12.egg-info
+[3.643s] running install_scripts
+[4.149s] writing list of installed files to '/home/robot/Project/robot_ws/src/build/robot_description/install.log'
+[5.442s] Invoked command in '/home/robot/Project/robot_ws/src/robot_description' returned '0': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PYTHONPATH=/home/robot/Project/robot_ws/src/build/robot_description/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/robot/Project/robot_ws/src/install/robot_description/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../build/robot_description build --build-base /home/robot/Project/robot_ws/src/build/robot_description/build install --record /home/robot/Project/robot_ws/src/build/robot_description/install.log --install-scripts $base/lib/robot_description --single-version-externally-managed install_data

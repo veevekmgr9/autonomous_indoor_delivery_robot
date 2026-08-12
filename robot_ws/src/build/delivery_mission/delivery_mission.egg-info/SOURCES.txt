@@ -1,0 +1,16 @@
+package.xml
+setup.cfg
+setup.py
+../build/delivery_mission/delivery_mission.egg-info/PKG-INFO
+../build/delivery_mission/delivery_mission.egg-info/SOURCES.txt
+../build/delivery_mission/delivery_mission.egg-info/dependency_links.txt
+../build/delivery_mission/delivery_mission.egg-info/entry_points.txt
+../build/delivery_mission/delivery_mission.egg-info/requires.txt
+../build/delivery_mission/delivery_mission.egg-info/top_level.txt
+../build/delivery_mission/delivery_mission.egg-info/zip-safe
+delivery_mission/__init__.py
+delivery_mission/delivery_mission.py
+resource/delivery_mission
+test/test_copyright.py
+test/test_flake8.py
+test/test_pep257.py

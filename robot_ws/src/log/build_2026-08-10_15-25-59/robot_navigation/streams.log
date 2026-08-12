@@ -1,0 +1,42 @@
+[3.493s] Invoking command in '/home/robot/Project/robot_ws/src/robot_navigation': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PYTHONPATH=/home/robot/Project/robot_ws/src/build/robot_navigation/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/robot/Project/robot_ws/src/install/robot_navigation/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../build/robot_navigation build --build-base /home/robot/Project/robot_ws/src/build/robot_navigation/build install --record /home/robot/Project/robot_ws/src/build/robot_navigation/install.log --install-scripts $base/lib/robot_navigation --single-version-externally-managed install_data
+[4.073s] running egg_info
+[4.075s] creating ../build/robot_navigation/robot_navigation.egg-info
+[4.107s] writing ../build/robot_navigation/robot_navigation.egg-info/PKG-INFO
+[4.108s] writing dependency_links to ../build/robot_navigation/robot_navigation.egg-info/dependency_links.txt
+[4.108s] writing requirements to ../build/robot_navigation/robot_navigation.egg-info/requires.txt
+[4.109s] writing top-level names to ../build/robot_navigation/robot_navigation.egg-info/top_level.txt
+[4.109s] writing manifest file '../build/robot_navigation/robot_navigation.egg-info/SOURCES.txt'
+[4.181s] reading manifest file '../build/robot_navigation/robot_navigation.egg-info/SOURCES.txt'
+[4.184s] writing manifest file '../build/robot_navigation/robot_navigation.egg-info/SOURCES.txt'
+[4.184s] running build
+[4.184s] running build_py
+[4.184s] creating /home/robot/Project/robot_ws/src/build/robot_navigation/build
+[4.191s] creating /home/robot/Project/robot_ws/src/build/robot_navigation/build/lib
+[4.191s] creating /home/robot/Project/robot_ws/src/build/robot_navigation/build/lib/robot_navigation
+[4.191s] copying robot_navigation/__init__.py -> /home/robot/Project/robot_ws/src/build/robot_navigation/build/lib/robot_navigation
+[4.191s] running install
+[4.200s] running install_lib
+[4.234s] creating /home/robot/Project/robot_ws/src/install/robot_navigation/lib/python3.12/site-packages/robot_navigation
+[4.234s] copying /home/robot/Project/robot_ws/src/build/robot_navigation/build/lib/robot_navigation/__init__.py -> /home/robot/Project/robot_ws/src/install/robot_navigation/lib/python3.12/site-packages/robot_navigation
+[4.235s] byte-compiling /home/robot/Project/robot_ws/src/install/robot_navigation/lib/python3.12/site-packages/robot_navigation/__init__.py to __init__.cpython-312.pyc
+[4.240s] running install_data
+[4.243s] creating /home/robot/Project/robot_ws/src/install/robot_navigation/share/ament_index
+[4.244s] creating /home/robot/Project/robot_ws/src/install/robot_navigation/share/ament_index/resource_index
+[4.244s] creating /home/robot/Project/robot_ws/src/install/robot_navigation/share/ament_index/resource_index/packages
+[4.244s] copying resource/robot_navigation -> /home/robot/Project/robot_ws/src/install/robot_navigation/share/ament_index/resource_index/packages
+[4.244s] copying package.xml -> /home/robot/Project/robot_ws/src/install/robot_navigation/share/robot_navigation
+[4.244s] creating /home/robot/Project/robot_ws/src/install/robot_navigation/share/robot_navigation/launch
+[4.244s] copying launch/nav2_localization.launch.py -> /home/robot/Project/robot_ws/src/install/robot_navigation/share/robot_navigation/launch
+[4.247s] copying launch/navigation.launch.py -> /home/robot/Project/robot_ws/src/install/robot_navigation/share/robot_navigation/launch
+[4.247s] creating /home/robot/Project/robot_ws/src/install/robot_navigation/share/robot_navigation/config
+[4.247s] copying config/amcl.yaml -> /home/robot/Project/robot_ws/src/install/robot_navigation/share/robot_navigation/config
+[4.247s] copying config/room.yaml -> /home/robot/Project/robot_ws/src/install/robot_navigation/share/robot_navigation/config
+[4.247s] copying config/room.pgm -> /home/robot/Project/robot_ws/src/install/robot_navigation/share/robot_navigation/config
+[4.248s] copying config/nav2_params.yaml -> /home/robot/Project/robot_ws/src/install/robot_navigation/share/robot_navigation/config
+[4.248s] copying config/whole_map.yaml -> /home/robot/Project/robot_ws/src/install/robot_navigation/share/robot_navigation/config
+[4.248s] copying config/whole_map.pgm -> /home/robot/Project/robot_ws/src/install/robot_navigation/share/robot_navigation/config
+[4.248s] running install_egg_info
+[4.284s] Copying ../build/robot_navigation/robot_navigation.egg-info to /home/robot/Project/robot_ws/src/install/robot_navigation/lib/python3.12/site-packages/robot_navigation-0.0.0-py3.12.egg-info
+[4.285s] running install_scripts
+[4.716s] writing list of installed files to '/home/robot/Project/robot_ws/src/build/robot_navigation/install.log'
+[5.355s] Invoked command in '/home/robot/Project/robot_ws/src/robot_navigation' returned '0': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PYTHONPATH=/home/robot/Project/robot_ws/src/build/robot_navigation/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/robot/Project/robot_ws/src/install/robot_navigation/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../build/robot_navigation build --build-base /home/robot/Project/robot_ws/src/build/robot_navigation/build install --record /home/robot/Project/robot_ws/src/build/robot_navigation/install.log --install-scripts $base/lib/robot_navigation --single-version-externally-managed install_data

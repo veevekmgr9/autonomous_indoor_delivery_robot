@@ -10,7 +10,7 @@ import rclpy
 from rclpy.node import Node
 
 from geometry_msgs.msg import Twist
-from sensor_msgs.msg import Imu
+from sensor_msgs.msg import Imu, Range
 from std_msgs.msg import Int64MultiArray, String
 
 import serial
@@ -19,6 +19,7 @@ import serial
 class ArduinoBridge(Node):
 
     def __init__(self):
+
         super().__init__('arduino_bridge')
 
         # =====================================================
@@ -31,9 +32,12 @@ class ArduinoBridge(Node):
         self.ser = None
 
         self.imu_timeout_sec = 3.0
-        self.last_imu_time = time.time()
+        self.encoder_timeout_sec = 3.0
+        self.ultrasonic_timeout_sec = 1.0
 
+        self.last_imu_time = time.time()
         self.last_encoder_time = time.time()
+        self.last_ultrasonic_time = time.time()
 
         self.open_serial()
 
@@ -42,21 +46,37 @@ class ArduinoBridge(Node):
         # ROS PUBLISHERS
         # =====================================================
 
+        # IMU
         self.imu_pub = self.create_publisher(
             Imu,
             '/imu/data_raw',
             10
         )
 
+
+        # Wheel encoder ticks
         self.encoder_pub = self.create_publisher(
             Int64MultiArray,
             '/wheel_ticks',
             20
         )
 
+
+        # Motion state
         self.motion_pub = self.create_publisher(
             String,
             '/motion_state',
+            10
+        )
+
+
+        # =====================================================
+        # ULTRASONIC PUBLISHER
+        # =====================================================
+
+        self.ultrasonic_pub = self.create_publisher(
+            Range,
+            '/ultrasonic',
             10
         )
 
@@ -77,25 +97,27 @@ class ArduinoBridge(Node):
         # TIMERS
         # =====================================================
 
-        # Serial polling
         self.timer = self.create_timer(
             0.01,
             self.read_serial
         )
 
-        # Serial/IMU watchdog
+
         self.watchdog_timer = self.create_timer(
             1.0,
             self.check_watchdog
         )
+
 
         self.recovering = False
         self.last_recovery_time = 0.0
 
         self.recovery_cooldown = 10.0
 
+
         self.get_logger().info(
-            "Arduino Bridge Started - IMU + ENCODER MODE"
+            "Arduino Bridge Started - "
+            "IMU + ENCODER + ULTRASONIC MODE"
         )
 
 
@@ -106,8 +128,11 @@ class ArduinoBridge(Node):
     def open_serial(self):
 
         try:
-            # Close previous serial connection
+
+            # Close previous connection
+
             if self.ser is not None:
+
                 try:
                     self.ser.close()
                 except Exception:
@@ -115,9 +140,10 @@ class ArduinoBridge(Node):
 
                 self.ser = None
 
-            # =============================================
+
+            # =================================================
             # USB RESET
-            # =============================================
+            # =================================================
 
             self.get_logger().info(
                 "Resetting Arduino USB device..."
@@ -125,18 +151,22 @@ class ArduinoBridge(Node):
 
             self.reset_usb_device()
 
-            # Give Linux time to recreate ttyACM0
+
             time.sleep(2.0)
 
-            # =============================================
+
+            # =================================================
             # WAIT FOR SERIAL DEVICE
-            # =============================================
+            # =================================================
 
             device_found = False
 
+
             for attempt in range(10):
 
-                if os.path.exists(self.serial_port):
+                if os.path.exists(
+                    self.serial_port
+                ):
 
                     device_found = True
 
@@ -147,8 +177,10 @@ class ArduinoBridge(Node):
 
                     break
 
+
                 self.get_logger().info(
-                    f"Waiting for {self.serial_port}..."
+                    f"Waiting for "
+                    f"{self.serial_port}..."
                 )
 
                 time.sleep(0.5)
@@ -157,16 +189,16 @@ class ArduinoBridge(Node):
             if not device_found:
 
                 self.get_logger().error(
-                    f"{self.serial_port} did not reappear "
-                    "after USB reset"
+                    f"{self.serial_port} did not "
+                    "reappear after USB reset"
                 )
 
                 return
 
 
-            # =============================================
+            # =================================================
             # OPEN SERIAL
-            # =============================================
+            # =================================================
 
             self.ser = serial.Serial(
                 self.serial_port,
@@ -175,8 +207,9 @@ class ArduinoBridge(Node):
                 write_timeout=0.2
             )
 
-            # Opening serial resets many Arduino boards.
-            # Give setup() time to finish.
+
+            # Arduino reset delay
+
             time.sleep(2.0)
 
 
@@ -185,15 +218,19 @@ class ArduinoBridge(Node):
 
 
             self.get_logger().info(
-                f"Serial connected: {self.serial_port}"
+                f"Serial connected: "
+                f"{self.serial_port}"
             )
 
 
-            # =============================================
+            # =================================================
             # START HANDSHAKE
-            # =============================================
+            # =================================================
 
-            self.ser.write(b"START\n")
+            self.ser.write(
+                b"START\n"
+            )
+
             self.ser.flush()
 
 
@@ -229,11 +266,6 @@ class ArduinoBridge(Node):
                     continue
 
 
-                # self.get_logger().info(
-                #     f"Arduino: {raw}"
-                # )
-
-
                 if raw == "MPU_RESET_COMPLETE":
 
                     handshake_ok = True
@@ -254,9 +286,13 @@ class ArduinoBridge(Node):
                 )
 
 
-            self.last_imu_time = time.time()
+            # Reset stream timers
 
-            self.last_encoder_time = time.time()
+            now = time.time()
+
+            self.last_imu_time = now
+            self.last_encoder_time = now
+            self.last_ultrasonic_time = now
 
 
         except Exception as e:
@@ -265,6 +301,7 @@ class ArduinoBridge(Node):
                 f"Serial connection failed: {e}"
             )
 
+
             if self.ser is not None:
 
                 try:
@@ -272,11 +309,12 @@ class ArduinoBridge(Node):
                 except Exception:
                     pass
 
+
             self.ser = None
 
 
     # =========================================================
-    # OPTIONAL USB RESET
+    # USB RESET
     # =========================================================
 
     def reset_usb_device(self):
@@ -286,26 +324,44 @@ class ArduinoBridge(Node):
             vid = "04d9"
             pid = "b534"
 
+
             devices = glob.glob(
                 "/sys/bus/usb/devices/*/idVendor"
             )
 
+
             usb_device = None
+
 
             for dev in devices:
 
                 try:
 
-                    with open(dev, "r") as f:
-                        device_vid = f.read().strip()
+                    with open(
+                        dev,
+                        "r"
+                    ) as f:
+
+                        device_vid = (
+                            f.read().strip()
+                        )
+
 
                     product_file = dev.replace(
                         "idVendor",
                         "idProduct"
                     )
 
-                    with open(product_file, "r") as f:
-                        device_pid = f.read().strip()
+
+                    with open(
+                        product_file,
+                        "r"
+                    ) as f:
+
+                        device_pid = (
+                            f.read().strip()
+                        )
+
 
                     if (
                         device_vid == vid and
@@ -319,15 +375,20 @@ class ArduinoBridge(Node):
 
                         break
 
+
                 except Exception:
+
                     pass
 
 
             if usb_device is None:
+
                 return
 
 
-            device_name = usb_device.split("/")[-1]
+            device_name = (
+                usb_device.split("/")[-1]
+            )
 
 
             subprocess.run(
@@ -340,6 +401,7 @@ class ArduinoBridge(Node):
                 ],
                 check=False
             )
+
 
             time.sleep(1)
 
@@ -355,6 +417,7 @@ class ArduinoBridge(Node):
                 check=False
             )
 
+
             time.sleep(2)
 
 
@@ -366,26 +429,31 @@ class ArduinoBridge(Node):
 
 
     # =========================================================
-    # ROS CMD_VEL -> ARDUINO
+    # SAFE CMD_VEL -> ARDUINO
     # =========================================================
 
     def cmd_callback(self, msg):
 
         if self.ser is None:
+
             return
+
 
         linear = msg.linear.x
         angular = msg.angular.z
 
+
         command = (
             f"V,{linear:.3f},{angular:.3f}\n"
         )
+
 
         try:
 
             self.ser.write(
                 command.encode('utf-8')
             )
+
 
         except Exception as e:
 
@@ -403,18 +471,18 @@ class ArduinoBridge(Node):
     def read_serial(self):
 
         if self.ser is None:
+
             return
+
 
         try:
 
-            # Read several available packets per callback
-            # so IMU traffic does not delay encoder packets.
-
             lines_processed = 0
+
 
             while (
                 self.ser.in_waiting > 0 and
-                lines_processed < 20
+                lines_processed < 30
             ):
 
                 raw = (
@@ -426,11 +494,18 @@ class ArduinoBridge(Node):
                     .strip()
                 )
 
+
                 lines_processed += 1
 
+
                 if not raw:
+
                     continue
 
+
+                # =================================================
+                # IMU
+                # =================================================
 
                 if (
                     raw.startswith("$IMU,") and
@@ -440,6 +515,10 @@ class ArduinoBridge(Node):
                     self.process_imu(raw)
 
 
+                # =================================================
+                # ENCODER
+                # =================================================
+
                 elif (
                     raw.startswith("$ENC,") and
                     raw.endswith("*")
@@ -447,6 +526,22 @@ class ArduinoBridge(Node):
 
                     self.process_encoder(raw)
 
+
+                # =================================================
+                # ULTRASONIC
+                # =================================================
+
+                elif (
+                    raw.startswith("$ULTRA,") and
+                    raw.endswith("*")
+                ):
+
+                    self.process_ultrasonic(raw)
+
+
+                # =================================================
+                # STATUS
+                # =================================================
 
                 elif raw == "READY":
 
@@ -502,9 +597,12 @@ class ArduinoBridge(Node):
                 .replace("*", "")
             )
 
+
             parts = data.split(",")
 
+
             if len(parts) != 6:
+
                 return
 
 
@@ -516,53 +614,62 @@ class ArduinoBridge(Node):
 
             imu = Imu()
 
+
             imu.header.stamp = (
                 self.get_clock()
                 .now()
                 .to_msg()
             )
 
+
             imu.header.frame_id = "imu_link"
 
 
-            # MPU6050 default accelerometer:
-            # +/-2g = 16384 LSB/g
+            # =================================================
+            # ACCELERATION
+            # =================================================
 
             g = 9.80665
+
 
             imu.linear_acceleration.x = (
                 ax / 16384.0
             ) * g
 
+
             imu.linear_acceleration.y = (
                 ay / 16384.0
             ) * g
+
 
             imu.linear_acceleration.z = (
                 az / 16384.0
             ) * g
 
 
-            # MPU6050 default gyro:
-            # +/-250 deg/s = 131 LSB/(deg/s)
+            # =================================================
+            # GYROSCOPE
+            # =================================================
 
             deg_to_rad = math.pi / 180.0
+
 
             imu.angular_velocity.x = (
                 gx / 131.0
             ) * deg_to_rad
 
+
             imu.angular_velocity.y = (
                 gy / 131.0
             ) * deg_to_rad
+
 
             imu.angular_velocity.z = (
                 gz / 131.0
             ) * deg_to_rad
 
 
-            # No orientation estimate is produced by
-            # this Arduino firmware.
+            # No orientation from Arduino
 
             imu.orientation_covariance[0] = -1.0
 
@@ -581,7 +688,10 @@ class ArduinoBridge(Node):
             ]
 
 
-            self.imu_pub.publish(imu)
+            self.imu_pub.publish(
+                imu
+            )
+
 
             self.last_imu_time = time.time()
 
@@ -589,12 +699,13 @@ class ArduinoBridge(Node):
         except Exception as e:
 
             self.get_logger().warn(
-                f"Bad IMU packet: {raw} - {e}"
+                f"Bad IMU packet: "
+                f"{raw} - {e}"
             )
 
 
     # =========================================================
-    # PROCESS ENCODERS
+    # PROCESS ENCODER
     # =========================================================
 
     def process_encoder(self, raw):
@@ -607,17 +718,27 @@ class ArduinoBridge(Node):
                 .replace("*", "")
             )
 
+
             parts = data.split(",")
 
+
             if len(parts) != 2:
+
                 return
 
 
-            left_ticks = int(parts[0])
-            right_ticks = int(parts[1])
+            left_ticks = int(
+                parts[0]
+            )
+
+
+            right_ticks = int(
+                parts[1]
+            )
 
 
             msg = Int64MultiArray()
+
 
             msg.data = [
                 left_ticks,
@@ -625,29 +746,125 @@ class ArduinoBridge(Node):
             ]
 
 
-            self.encoder_pub.publish(msg)
+            self.encoder_pub.publish(
+                msg
+            )
 
-            self.last_encoder_time = time.time()
+
+            self.last_encoder_time = (
+                time.time()
+            )
 
 
         except Exception as e:
 
             self.get_logger().warn(
-                f"Bad encoder packet: {raw} - {e}"
+                f"Bad encoder packet: "
+                f"{raw} - {e}"
+            )
+
+
+    # =========================================================
+    # PROCESS ULTRASONIC
+    # =========================================================
+
+    def process_ultrasonic(self, raw):
+
+        try:
+
+            data = (
+                raw
+                .replace("$ULTRA,", "")
+                .replace("*", "")
+                .strip()
+            )
+
+
+            distance_cm = float(data)
+
+
+            # =================================================
+            # ROS RANGE MESSAGE
+            # =================================================
+
+            msg = Range()
+
+
+            msg.header.stamp = (
+                self.get_clock()
+                .now()
+                .to_msg()
+            )
+
+
+            msg.header.frame_id = (
+                "ultrasonic_link"
+            )
+
+
+            # HC-SR04 style ultrasonic sensor
+
+            msg.radiation_type = (
+                Range.ULTRASOUND
+            )
+
+
+            msg.field_of_view = (
+                math.radians(15.0)
+            )
+
+
+            msg.min_range = 0.02
+
+            msg.max_range = 4.0
+
+
+            # =================================================
+            # INVALID READING
+            # =================================================
+
+            if distance_cm < 0:
+
+                msg.range = float('nan')
+
+
+            else:
+
+                msg.range = (
+                    distance_cm / 100.0
+                )
+
+
+            self.ultrasonic_pub.publish(
+                msg
+            )
+
+
+            self.last_ultrasonic_time = (
+                time.time()
+            )
+
+
+        except Exception as e:
+
+            self.get_logger().warn(
+                f"Bad ultrasonic packet: "
+                f"{raw} - {e}"
             )
 
 
     # =========================================================
     # WATCHDOG
     # =========================================================
+
     def check_watchdog(self):
 
         now = time.time()
 
 
-        # ---------------------------------------------
-        # SERIAL COMPLETELY DISCONNECTED
-        # ---------------------------------------------
+        # =================================================
+        # SERIAL DISCONNECTED
+        # =================================================
 
         if self.ser is None:
 
@@ -662,11 +879,14 @@ class ArduinoBridge(Node):
                     "performing USB recovery"
                 )
 
+
                 self.recovering = True
+
 
                 try:
 
                     self.open_serial()
+
 
                 finally:
 
@@ -676,12 +896,13 @@ class ArduinoBridge(Node):
 
                     self.recovering = False
 
+
             return
 
 
-        # ---------------------------------------------
-        # CHECK BOTH STREAMS
-        # ---------------------------------------------
+        # =================================================
+        # STREAM TIMEOUTS
+        # =================================================
 
         imu_timeout = (
             now -
@@ -689,18 +910,43 @@ class ArduinoBridge(Node):
             self.imu_timeout_sec
         )
 
+
         encoder_timeout = (
             now -
             self.last_encoder_time >
-            self.imu_timeout_sec
+            self.encoder_timeout_sec
         )
 
 
-        # Only perform a full USB recovery when BOTH
-        # streams have stopped.
+        ultrasonic_timeout = (
+            now -
+            self.last_ultrasonic_time >
+            self.ultrasonic_timeout_sec
+        )
+
+
+        # =================================================
+        # LOG ULTRASONIC TIMEOUT
+        # =================================================
+
+        if ultrasonic_timeout:
+
+            self.get_logger().warn(
+                "Ultrasonic stream timeout"
+            )
+
+
+        # =================================================
+        # FULL RECOVERY
+        # =================================================
         #
-        # This prevents an MPU issue from unnecessarily
-        # destroying a working encoder connection.
+        # Keep your existing behaviour:
+        # only recover USB if IMU + encoder both stop.
+        #
+        # Ultrasonic failure alone should NOT reset
+        # the Arduino because the robot's existing
+        # navigation sensors can continue working.
+        # =================================================
 
         if imu_timeout and encoder_timeout:
 
@@ -715,13 +961,16 @@ class ArduinoBridge(Node):
                     "performing USB reset"
                 )
 
+
                 self.recovering = True
+
 
                 try:
 
                     self.close_serial()
 
                     self.open_serial()
+
 
                 finally:
 
@@ -747,28 +996,48 @@ class ArduinoBridge(Node):
                 "IMU still alive"
             )
 
+
+    # =========================================================
+    # CLOSE SERIAL
+    # =========================================================
+
     def close_serial(self):
 
         if self.ser is not None:
 
             try:
+
                 self.ser.close()
+
             except Exception:
+
                 pass
+
 
         self.ser = None
 
+
+    # =========================================================
+    # DESTROY
+    # =========================================================
 
     def destroy_node(self):
 
         if self.ser is not None:
 
             try:
-                self.ser.write(b"STOP\n")
+
+                self.ser.write(
+                    b"STOP\n"
+                )
+
             except Exception:
+
                 pass
 
+
         self.close_serial()
+
 
         super().destroy_node()
 
@@ -779,25 +1048,34 @@ class ArduinoBridge(Node):
 
 def main(args=None):
 
-    rclpy.init(args=args)
+    rclpy.init(
+        args=args
+    )
+
 
     node = ArduinoBridge()
+
 
     try:
 
         rclpy.spin(node)
 
+
     except KeyboardInterrupt:
 
         pass
+
 
     finally:
 
         node.destroy_node()
 
+
         if rclpy.ok():
+
             rclpy.shutdown()
 
 
 if __name__ == '__main__':
+
     main()
