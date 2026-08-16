@@ -10,6 +10,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@tensorflow/tfjs": "^4.22.0",
+    "face-api.js": "^0.22.2",
     "firebase": "^12.17.1",
     "react": "^19.2.8",
     "react-dom": "^19.2.8"

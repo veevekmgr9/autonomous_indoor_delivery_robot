@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import FaceVerification from "../components/FaceVerification";
+import FaceRegistration from "../components/FaceRegistration";
 
 import {
     listenToReceiverDeliveries
@@ -12,6 +14,12 @@ function ReceiverDashboard({
 }) {
 
     const [deliveries, setDeliveries] = useState([]);
+
+    const [verificationDelivery, setVerificationDelivery] =
+    useState(null);
+
+    const [showFaceRegistration, setShowFaceRegistration] =
+    useState(false);
 
 
     /*
@@ -52,18 +60,6 @@ function ReceiverDashboard({
 
 
     /*
-     * Determine whether receiver can verify
-     */
-    const canVerify = (status) => {
-
-        return (
-            status === "ARRIVED" ||
-            status === "VERIFYING"
-        );
-    };
-
-
-    /*
      * Display friendly status
      */
     const getStatusText = (status) => {
@@ -100,11 +96,40 @@ function ReceiverDashboard({
     };
 
 
+    /*
+     * Open verification camera
+     */
+    const openVerification =
+        (delivery) => {
+
+            console.log(
+                "Opening verification for:",
+                delivery
+            );
+
+            setVerificationDelivery(
+                delivery
+            );
+        };
+
+
+    /*
+     * Close verification
+     */
+    const closeVerification =
+        () => {
+
+            setVerificationDelivery(null);
+        };
+
+
     return (
 
         <div className="app-layout">
 
-            {/* SIDEBAR */}
+            {/* ================================
+                SIDEBAR
+            ================================= */}
 
             <aside className="sidebar">
 
@@ -136,18 +161,15 @@ function ReceiverDashboard({
                         Dashboard
                     </div>
 
-
                     <div className="nav-item">
                         <span>📦</span>
                         My Deliveries
                     </div>
 
-
                     <div className="nav-item">
                         <span>🔐</span>
                         Verification
                     </div>
-
 
                     <div className="nav-item">
                         <span>⚙</span>
@@ -184,7 +206,9 @@ function ReceiverDashboard({
             </aside>
 
 
-            {/* MAIN CONTENT */}
+            {/* ================================
+                MAIN CONTENT
+            ================================= */}
 
             <main className="main-content">
 
@@ -250,7 +274,9 @@ function ReceiverDashboard({
                 </header>
 
 
-                {/* WELCOME */}
+                {/* ================================
+                    WELCOME
+                ================================= */}
 
                 <section className="welcome-section">
 
@@ -271,9 +297,45 @@ function ReceiverDashboard({
                     </div>
 
                 </section>
+                {!profile?.faceRegistered && (
+                <section className="panel security-panel">
+
+                    <div className="security-icon">
+                        🔐
+                    </div>
+
+                    <div style={{ flex: 1 }}>
+
+                        <h3>
+                            Identity Verification
+                        </h3>
+
+                        <p>
+                            Register your face to securely
+                            collect autonomous robot deliveries.
+                        </p>
+
+                    </div>
+
+                    <button
+                        className="primary-button"
+                        onClick={() =>
+                            setShowFaceRegistration(true)
+                        }
+                    >
+                        {profile?.faceRegistered
+                            ? "Update Face"
+                            : "Register Face"
+                        }
+                    </button>
+
+                </section>
+                )}
 
 
-                {/* STATISTICS */}
+                {/* ================================
+                    STATISTICS
+                ================================= */}
 
                 <section className="stats-grid">
 
@@ -342,7 +404,9 @@ function ReceiverDashboard({
                 </section>
 
 
-                {/* DELIVERY PANEL */}
+                {/* ================================
+                    DELIVERY PANEL
+                ================================= */}
 
                 <section className="panel">
 
@@ -488,7 +552,9 @@ function ReceiverDashboard({
                                         </div>
 
 
-                                        {/* ARRIVED */}
+                                        {/* ================================
+                                            ARRIVED
+                                        ================================= */}
 
                                         {delivery.status ===
                                             "ARRIVED" && (
@@ -513,11 +579,10 @@ function ReceiverDashboard({
 
 
                                                 <button
-                                                    className="verify-button"
+                                                    className="primary-button"
                                                     onClick={() =>
-                                                        console.log(
-                                                            "Verification requested:",
-                                                            delivery.id
+                                                        openVerification(
+                                                            delivery
                                                         )
                                                     }
                                                 >
@@ -529,7 +594,9 @@ function ReceiverDashboard({
                                         )}
 
 
-                                        {/* VERIFYING */}
+                                        {/* ================================
+                                            VERIFYING
+                                        ================================= */}
 
                                         {delivery.status ===
                                             "VERIFYING" && (
@@ -562,7 +629,9 @@ function ReceiverDashboard({
                                         )}
 
 
-                                        {/* VERIFIED */}
+                                        {/* ================================
+                                            VERIFIED
+                                        ================================= */}
 
                                         {delivery.status ===
                                             "VERIFIED" && (
@@ -591,7 +660,9 @@ function ReceiverDashboard({
                                         )}
 
 
-                                        {/* DOOR OPENED */}
+                                        {/* ================================
+                                            DOOR OPENED
+                                        ================================= */}
 
                                         {delivery.status ===
                                             "DOOR_OPENED" && (
@@ -629,7 +700,9 @@ function ReceiverDashboard({
                 </section>
 
 
-                {/* SECURITY PANEL */}
+                {/* ================================
+                    SECURITY PANEL
+                ================================= */}
 
                 <section className="panel security-panel">
 
@@ -656,6 +729,71 @@ function ReceiverDashboard({
                 </section>
 
             </main>
+
+
+            {/* ========================================
+                FACE VERIFICATION MODAL
+
+                IMPORTANT:
+                This MUST be inside the return.
+            ========================================= */}
+
+            {verificationDelivery && (
+
+                <FaceVerification
+
+                    delivery={
+                        verificationDelivery
+                    }
+
+                    onClose={
+                        closeVerification
+                    }
+
+                    onVerified={() => {
+
+                        console.log(
+                            "Test verification completed"
+                        );
+
+                        setVerificationDelivery(
+                            null
+                        );
+
+                    }}
+
+                />
+
+            )}
+
+            {showFaceRegistration && (
+
+                <FaceRegistration
+
+                    user={user}
+
+                    onClose={() =>
+                        setShowFaceRegistration(false)
+                    }
+
+                    onComplete={() => {
+
+                        setShowFaceRegistration(false);
+
+                        setProfile(prev => ({
+                            ...prev,
+                            faceRegistered: true
+                        }));
+
+                        console.log(
+                            "Face registration completed."
+                        );
+
+                    }}
+
+                />
+
+            )}
 
         </div>
     );
