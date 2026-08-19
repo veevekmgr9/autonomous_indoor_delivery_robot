@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 import * as faceapi from "face-api.js";
+
 import {
-    getRegisteredFaceDescriptor
-} from "../services/auth";
-import {
-    updateDeliveryStatus
+    getRegisteredFaceDescriptor,
+    updateDeliveryStatus,
+    reportAuthenticationFailure
 } from "../services/auth";
 
 export default function FaceVerification({
@@ -378,7 +378,7 @@ export default function FaceVerification({
                     onClose();
                 }
 
-            } else {
+            }  else {
 
                 setRecognitionResult(
                     "NO_MATCH"
@@ -391,6 +391,28 @@ export default function FaceVerification({
                 console.log(
                     "❌ FACE DOES NOT MATCH"
                 );
+
+                try {
+
+                    await reportAuthenticationFailure(
+                        delivery.id
+                    );
+
+                    console.log(
+                        "🔴 Authentication failure reported to Firebase"
+                    );
+
+                } catch (firebaseError) {
+
+                    console.error(
+                        "Failed to report authentication failure:",
+                        firebaseError
+                    );
+
+                    setError(
+                        "Face was not recognised, but the authentication status could not be reported."
+                    );
+                }
             }
 
         } catch (err) {

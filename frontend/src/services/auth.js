@@ -149,6 +149,24 @@ export async function updateDeliveryStatus(
     );
 }
 
+export async function reportAuthenticationFailure(
+    deliveryId
+) {
+    const deliveryRef = doc(
+        db,
+        "deliveries",
+        deliveryId
+    );
+
+    await updateDoc(
+        deliveryRef,
+        {
+            authenticationAttemptAt:
+                Date.now()
+        }
+    );
+}
+
 
 export async function logoutUser() {
     await signOut(auth);

@@ -1,4 +1,5 @@
 #include <Wire.h>
+#include <Adafruit_NeoPixel.h>
 
 const int MPU_addr = 0x68;
 
@@ -18,12 +19,20 @@ const int MPU_addr = 0x68;
 
 #define STBY 3
 
+#define ULTRASONIC_TRIG 13
+#define ULTRASONIC_ECHO 12
+
+#define LEFT_ENCODER  A1
+#define RIGHT_ENCODER A2
+
+#define RGB_PIN 4
+#define RGB_COUNT 1
+
+#define MAX_PWM 140
 
 // =====================================================
 // MOTOR CONTROL
 // =====================================================
-
-#define MAX_PWM 140
 
 float WHEEL_BASE = 0.125;          // metres
 float MAX_LINEAR_SPEED = 0.20;     // m/s
@@ -45,9 +54,6 @@ float MAX_LINEAR_SPEED = 0.20;     // m/s
 //
 // Both encoders are on PORT C.
 // =====================================================
-
-#define LEFT_ENCODER  A1
-#define RIGHT_ENCODER A2
 
 volatile long leftTicks = 0;
 volatile long rightTicks = 0;
@@ -83,10 +89,6 @@ const unsigned long ENCODER_INTERVAL = 50;
 // TRIG = D13
 // ECHO = D12
 // =====================================================
-
-#define ULTRASONIC_TRIG 13
-#define ULTRASONIC_ECHO 12
-
 
 // Ultrasonic measurement interval
 unsigned long lastUltrasonicTrigger = 0;
@@ -144,6 +146,21 @@ String inputBuffer = "";
 bool rosConnected = false;
 
 
+Adafruit_NeoPixel rgb(
+    RGB_COUNT,
+    RGB_PIN,
+    NEO_GRB + NEO_KHZ800
+);
+
+// ==========================================
+// AUTHENTICATION LED STATE
+// ==========================================
+
+unsigned long ledStateStartedAt = 0;
+
+const unsigned long AUTH_LED_DURATION = 5000;
+
+bool temporaryLedState = false;
 // =====================================================
 // I2C BUS RECOVERY
 // =====================================================
@@ -300,6 +317,12 @@ void setup()
 
     rosConnected = false;
 
+    rgb.begin();
+    rgb.setBrightness(50);
+    rgb.clear();
+    rgb.show();
+    
+    setWaitingLED();
 
     Serial.println("READY");
 }
@@ -381,6 +404,17 @@ void loop()
     {
         updateUltrasonic();
     }
+
+    if (
+        temporaryLedState &&
+        millis() - ledStateStartedAt >= AUTH_LED_DURATION
+    )
+    {
+        setWaitingLED();
+    
+        temporaryLedState = false;
+    }
+
 }
 
 
@@ -488,6 +522,52 @@ void processCommand(String cmd)
     if (cmd == "STOP")
     {
         stopRobot();
+    }
+
+    // ==========================================
+    // DELIVERY ARRIVED
+    // ==========================================
+    
+    if (cmd == "DELIVERY_ARRIVED")
+    {
+        setWaitingLED();
+    
+        temporaryLedState = false;
+    
+        Serial.println("ARRIVED_ACK");
+    
+        return;
+    }
+
+    if (cmd == "AUTHENTICATED")
+    {
+        setAuthenticatedLED();
+    
+        ledStateStartedAt = millis();
+    
+        temporaryLedState = true;
+    
+        Serial.println("AUTH_ACK");
+    
+        return;
+    }
+    
+    
+    // ==========================================
+    // AUTHENTICATION FAILED
+    // ==========================================
+    
+    if (cmd == "AUTH_FAILED")
+    {
+        setFailedLED();
+    
+        ledStateStartedAt = millis();
+    
+        temporaryLedState = true;
+    
+        Serial.println("AUTH_FAILED_ACK");
+    
+        return;
     }
 }
 
@@ -1209,4 +1289,41 @@ void sendUltrasonic()
 
 
     Serial.println("*");
+}
+
+//==========================================================
+//LED
+//==========================================================
+void setRobotRGB(uint8_t r, uint8_t g, uint8_t b)
+{
+    rgb.setPixelColor(
+        0,
+        rgb.Color(r, g, b)
+    );
+
+    rgb.show();
+}
+
+
+void setWaitingLED()
+{
+    setRobotRGB(0, 0, 80);       // Blue
+}
+
+
+void setAuthenticatedLED()
+{
+    setRobotRGB(0, 120, 0);      // Green
+}
+
+
+void setFailedLED()
+{
+    setRobotRGB(120, 0, 0);      // Red
+}
+
+
+void setLEDOff()
+{
+    setRobotRGB(0, 0, 0);
 }

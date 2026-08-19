@@ -2,27 +2,40 @@ import {
     collection,
     addDoc,
     doc,
+    getDoc,
     updateDoc,
     serverTimestamp,
     query,
     where,
-    orderBy,
     onSnapshot,
-    getDocs
+    getDocs,
+    setDoc
 } from "firebase/firestore";
 
 import { db } from "./firebase";
 
 
-/*
- * ============================================
- * FIND USER BY EMAIL
- * ============================================
- */
+// ============================================================
+// ROBOT STATE
+// ============================================================
+
+const ROBOT_STATE_DOC = doc(
+    db,
+    "robotState",
+    "current"
+);
+
+
+// ============================================================
+// FIND USER BY EMAIL
+// ============================================================
 
 export async function findUserByEmail(email) {
 
-    const usersRef = collection(db, "users");
+    const usersRef = collection(
+        db,
+        "users"
+    );
 
     const q = query(
         usersRef,
@@ -33,13 +46,16 @@ export async function findUserByEmail(email) {
         )
     );
 
-    const snapshot = await getDocs(q);
+    const snapshot =
+        await getDocs(q);
 
     if (snapshot.empty) {
+
         return null;
     }
 
-    const userDoc = snapshot.docs[0];
+    const userDoc =
+        snapshot.docs[0];
 
     return {
         uid: userDoc.id,
@@ -48,11 +64,34 @@ export async function findUserByEmail(email) {
 }
 
 
-/*
- * ============================================
- * CREATE DELIVERY
- * ============================================
- */
+// ============================================================
+// GET CURRENT ROBOT STATE
+// ============================================================
+
+export async function getRobotState() {
+
+    const snapshot =
+        await getDoc(
+            ROBOT_STATE_DOC
+        );
+
+    if (!snapshot.exists()) {
+
+        return {
+            activeDeliveryId: null,
+            ticketId: null,
+            status: "IDLE",
+            robotId: null
+        };
+    }
+
+    return snapshot.data();
+}
+
+
+// ============================================================
+// CREATE DELIVERY
+// ============================================================
 
 export async function createDelivery({
     senderId,
@@ -62,16 +101,16 @@ export async function createDelivery({
     destination
 }) {
 
-    /*
-     * Find receiver using their email
-     */
+    // --------------------------------------------------------
+    // Find receiver
+    // --------------------------------------------------------
+
     const receiver =
-        await findUserByEmail(receiverEmail);
+        await findUserByEmail(
+            receiverEmail
+        );
 
 
-    /*
-     * Receiver does not exist
-     */
     if (!receiver) {
 
         throw new Error(
@@ -80,10 +119,13 @@ export async function createDelivery({
     }
 
 
-    /*
-     * Make sure receiver has receiver role
-     */
-    if (receiver.role !== "receiver") {
+    // --------------------------------------------------------
+    // Make sure receiver has correct role
+    // --------------------------------------------------------
+
+    if (
+        receiver.role !== "receiver"
+    ) {
 
         throw new Error(
             "This user is not registered as a receiver."
@@ -91,9 +133,30 @@ export async function createDelivery({
     }
 
 
-    /*
-     * Generate delivery ticket
-     */
+    // --------------------------------------------------------
+    // Check robot state
+    // --------------------------------------------------------
+
+    const robotState =
+        await getRobotState();
+
+
+    if (
+        robotState.activeDeliveryId
+    ) {
+
+        throw new Error(
+            `The robot is currently handling delivery ${
+                robotState.ticketId || ""
+            }. Please wait until it is completed.`
+        );
+    }
+
+
+    // --------------------------------------------------------
+    // Generate ticket
+    // --------------------------------------------------------
+
     const ticketId =
         "DLV-" +
         Math.random()
@@ -102,9 +165,10 @@ export async function createDelivery({
             .toUpperCase();
 
 
-    /*
-     * Delivery document
-     */
+    // --------------------------------------------------------
+    // Delivery document
+    // --------------------------------------------------------
+
     const delivery = {
 
         ticketId,
@@ -124,11 +188,12 @@ export async function createDelivery({
         // Robot
         robotId: null,
 
-        // Current state
+        // State
         status: "PENDING",
 
         // Timestamps
-        createdAt: serverTimestamp(),
+        createdAt:
+            serverTimestamp(),
 
         arrivedAt: null,
 
@@ -140,12 +205,42 @@ export async function createDelivery({
     };
 
 
-    /*
-     * Save to Firestore
-     */
-    const docRef = await addDoc(
-        collection(db, "deliveries"),
-        delivery
+    // --------------------------------------------------------
+    // Create delivery
+    // --------------------------------------------------------
+
+    const docRef =
+        await addDoc(
+            collection(
+                db,
+                "deliveries"
+            ),
+            delivery
+        );
+
+
+    // --------------------------------------------------------
+    // Set robot as busy
+    // --------------------------------------------------------
+
+    await setDoc(
+        ROBOT_STATE_DOC,
+        {
+            activeDeliveryId:
+                docRef.id,
+
+            ticketId,
+
+            status: "PENDING",
+
+            robotId: null,
+
+            updatedAt:
+                serverTimestamp()
+        },
+        {
+            merge: true
+        }
     );
 
 
@@ -156,29 +251,30 @@ export async function createDelivery({
 }
 
 
-/*
- * ============================================
- * LISTEN TO SENDER DELIVERIES
- * ============================================
- */
+// ============================================================
+// LISTEN TO SENDER ACTIVE DELIVERY
+// ============================================================
 
 export function listenToSenderDeliveries(
     senderId,
     callback
 ) {
 
+    console.log(
+        "Sender active delivery listener started"
+    );
+
+
     const q = query(
-        collection(db, "deliveries"),
+        collection(
+            db,
+            "deliveries"
+        ),
 
         where(
             "senderId",
             "==",
             senderId
-        ),
-
-        orderBy(
-            "createdAt",
-            "desc"
         )
     );
 
@@ -187,18 +283,53 @@ export function listenToSenderDeliveries(
 
         q,
 
-        (snapshot) => {
+        async (snapshot) => {
 
-            const deliveries =
-                snapshot.docs.map(
-                    (doc) => ({
-                        id: doc.id,
-                        ...doc.data()
-                    })
+            try {
+
+                const robotState =
+                    await getRobotState();
+
+
+                // No active delivery
+                if (
+                    !robotState.activeDeliveryId
+                ) {
+
+                    callback([]);
+
+                    return;
+                }
+
+
+                const activeDelivery =
+                    snapshot.docs
+                        .map((doc) => ({
+                            id: doc.id,
+                            ...doc.data()
+                        }))
+                        .find(
+                            delivery =>
+                                delivery.id ===
+                                robotState.activeDeliveryId
+                        );
+
+
+                callback(
+                    activeDelivery
+                        ? [activeDelivery]
+                        : []
                 );
 
+            } catch (error) {
 
-            callback(deliveries);
+                console.error(
+                    "Error reading robot state:",
+                    error
+                );
+
+                callback([]);
+            }
         },
 
         (error) => {
@@ -212,18 +343,17 @@ export function listenToSenderDeliveries(
 }
 
 
-/*
- * ============================================
- * LISTEN TO RECEIVER DELIVERIES
- * ============================================
- */
+// ============================================================
+// LISTEN TO RECEIVER ACTIVE DELIVERY
+// ============================================================
+
 export function listenToReceiverDeliveries(
     receiverId,
     callback
 ) {
 
     console.log(
-        "Receiver listener started"
+        "Receiver active delivery listener started"
     );
 
     console.log(
@@ -233,7 +363,11 @@ export function listenToReceiverDeliveries(
 
 
     const q = query(
-        collection(db, "deliveries"),
+        collection(
+            db,
+            "deliveries"
+        ),
+
         where(
             "receiverId",
             "==",
@@ -246,49 +380,69 @@ export function listenToReceiverDeliveries(
 
         q,
 
-        (snapshot) => {
+        async (snapshot) => {
 
-            console.log(
-                "Receiver deliveries found:",
-                snapshot.size
-            );
+            try {
 
-
-            const deliveries =
-                snapshot.docs.map((doc) => {
-
-                    console.log(
-                        "Delivery:",
-                        doc.id,
-                        doc.data()
-                    );
-
-                    return {
-                        id: doc.id,
-                        ...doc.data()
-                    };
-                });
+                const robotState =
+                    await getRobotState();
 
 
-            callback(deliveries);
+                // No active delivery
+                if (
+                    !robotState.activeDeliveryId
+                ) {
+
+                    callback([]);
+
+                    return;
+                }
+
+
+                const activeDelivery =
+                    snapshot.docs
+                        .map((doc) => ({
+                            id: doc.id,
+                            ...doc.data()
+                        }))
+                        .find(
+                            delivery =>
+                                delivery.id ===
+                                robotState.activeDeliveryId
+                        );
+
+
+                callback(
+                    activeDelivery
+                        ? [activeDelivery]
+                        : []
+                );
+
+            } catch (error) {
+
+                console.error(
+                    "Error reading robot state:",
+                    error
+                );
+
+                callback([]);
+            }
         },
 
         (error) => {
 
             console.error(
-                "🔥 RECEIVER FIRESTORE ERROR:",
+                "Receiver delivery listener error:",
                 error
             );
-
         }
     );
 }
 
-/*
- * ============================================
- * UPDATE DELIVERY STATUS
- * ============================================
- */
+
+// ============================================================
+// UPDATE DELIVERY STATUS
+// ============================================================
 
 export async function updateDeliveryStatus(
     deliveryId,
@@ -308,48 +462,109 @@ export async function updateDeliveryStatus(
     };
 
 
-    /*
-     * Robot arrived
-     */
-    if (status === "ARRIVED") {
+    // --------------------------------------------------------
+    // ARRIVED
+    // --------------------------------------------------------
+
+    if (
+        status === "ARRIVED"
+    ) {
 
         update.arrivedAt =
             serverTimestamp();
     }
 
 
-    /*
-     * Receiver verified
-     */
-    if (status === "VERIFIED") {
+    // --------------------------------------------------------
+    // VERIFIED
+    // --------------------------------------------------------
+
+    if (
+        status === "VERIFIED"
+    ) {
 
         update.verifiedAt =
             serverTimestamp();
     }
 
 
-    /*
-     * Door opened
-     */
-    if (status === "DOOR_OPENED") {
+    // --------------------------------------------------------
+    // DOOR OPENED
+    // --------------------------------------------------------
+
+    if (
+        status === "DOOR_OPENED"
+    ) {
 
         update.doorOpenedAt =
             serverTimestamp();
     }
 
 
-    /*
-     * Delivery completed
-     */
-    if (status === "COMPLETED") {
+    // --------------------------------------------------------
+    // COMPLETED
+    // --------------------------------------------------------
+
+    if (
+        status === "COMPLETED"
+    ) {
 
         update.completedAt =
             serverTimestamp();
     }
 
 
+    // --------------------------------------------------------
+    // Update delivery
+    // --------------------------------------------------------
+
     await updateDoc(
         deliveryRef,
         update
     );
+
+
+    // --------------------------------------------------------
+    // Update robot state
+    // --------------------------------------------------------
+
+    if (
+        status === "COMPLETED"
+    ) {
+
+        // Robot becomes available
+        await setDoc(
+            ROBOT_STATE_DOC,
+            {
+                activeDeliveryId: null,
+                ticketId: null,
+                status: "IDLE",
+                robotId: null,
+                updatedAt:
+                    serverTimestamp()
+            },
+            {
+                merge: true
+            }
+        );
+
+    } else {
+
+        // Robot continues handling this delivery
+        await setDoc(
+            ROBOT_STATE_DOC,
+            {
+                activeDeliveryId:
+                    deliveryId,
+
+                status,
+
+                updatedAt:
+                    serverTimestamp()
+            },
+            {
+                merge: true
+            }
+        );
+    }
 }

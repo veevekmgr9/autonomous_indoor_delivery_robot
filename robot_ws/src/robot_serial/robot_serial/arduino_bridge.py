@@ -12,6 +12,7 @@ from rclpy.node import Node
 from geometry_msgs.msg import Twist
 from sensor_msgs.msg import Imu, Range
 from std_msgs.msg import Int64MultiArray, String
+from std_srvs.srv import Trigger
 
 import serial
 
@@ -80,7 +81,6 @@ class ArduinoBridge(Node):
             10
         )
 
-
         # =====================================================
         # ROS SUBSCRIBERS
         # =====================================================
@@ -92,6 +92,36 @@ class ArduinoBridge(Node):
             10
         )
 
+        # =====================================================
+        # AUTHENTICATION SERVICE
+        # =====================================================
+
+        self.auth_service = self.create_service(
+            Trigger,
+            '/authenticate_receiver',
+            self.authenticate_receiver
+        )
+
+        # =====================================================
+        # DELIVERY ARRIVED SERVICE
+        # =====================================================
+
+        self.arrived_service = self.create_service(
+            Trigger,
+            '/delivery_arrived',
+            self.delivery_arrived
+        )
+
+
+        # =====================================================
+        # AUTHENTICATION FAILED SERVICE
+        # =====================================================
+
+        self.failed_service = self.create_service(
+            Trigger,
+            '/authentication_failed',
+            self.authentication_failed
+        )
 
         # =====================================================
         # TIMERS
@@ -463,7 +493,500 @@ class ArduinoBridge(Node):
 
             self.close_serial()
 
+    # =========================================================
+    # AUTHENTICATION HANDSHAKE
+    # =========================================================
 
+    def authenticate_receiver(self, request, response):
+
+        if self.ser is None:
+
+            response.success = False
+
+            response.message = (
+                "Arduino serial connection unavailable"
+            )
+
+            self.get_logger().error(
+                "Authentication failed: "
+                "Arduino is not connected"
+            )
+
+            return response
+
+
+        try:
+
+            self.get_logger().info(
+                "Sending AUTHENTICATED to Arduino..."
+            )
+
+
+            # -------------------------------------------------
+            # Send authentication command
+            # -------------------------------------------------
+
+            self.ser.write(
+                b"AUTHENTICATED\n"
+            )
+
+            self.ser.flush()
+
+
+            # -------------------------------------------------
+            # Wait for Arduino acknowledgement
+            # -------------------------------------------------
+
+            timeout = 3.0
+
+            start_time = time.time()
+
+
+            while (
+                time.time() - start_time
+                < timeout
+            ):
+
+                if self.ser.in_waiting <= 0:
+
+                    time.sleep(0.01)
+
+                    continue
+
+
+                raw = (
+                    self.ser.readline()
+                    .decode(
+                        'utf-8',
+                        errors='ignore'
+                    )
+                    .strip()
+                )
+
+
+                if not raw:
+
+                    continue
+
+
+                # ---------------------------------------------
+                # Authentication acknowledgement
+                # ---------------------------------------------
+
+                if raw == "AUTH_ACK":
+
+                    self.get_logger().info(
+                        "Authentication handshake successful"
+                    )
+
+
+                    response.success = True
+
+                    response.message = (
+                        "Authentication handshake successful"
+                    )
+
+                    return response
+
+
+                # ---------------------------------------------
+                # Keep processing normal robot data
+                # ---------------------------------------------
+
+                if (
+                    raw.startswith("$IMU,") and
+                    raw.endswith("*")
+                ):
+
+                    self.process_imu(raw)
+
+
+                elif (
+                    raw.startswith("$ENC,") and
+                    raw.endswith("*")
+                ):
+
+                    self.process_encoder(raw)
+
+
+                elif (
+                    raw.startswith("$ULTRA,") and
+                    raw.endswith("*")
+                ):
+
+                    self.process_ultrasonic(raw)
+
+
+                elif raw == "READY":
+
+                    self.get_logger().info(
+                        "Arduino READY"
+                    )
+
+
+                elif raw == "MPU_RESET_COMPLETE":
+
+                    self.get_logger().info(
+                        "MPU reset complete"
+                    )
+
+
+                elif raw == "ENCODERS_RESET":
+
+                    self.get_logger().info(
+                        "Encoders reset"
+                    )
+
+
+            # -------------------------------------------------
+            # Timeout
+            # -------------------------------------------------
+
+            self.get_logger().error(
+                "Authentication handshake timeout"
+            )
+
+
+            response.success = False
+
+            response.message = (
+                "Arduino did not acknowledge authentication"
+            )
+
+
+            return response
+
+
+        except Exception as e:
+
+            self.get_logger().error(
+                f"Authentication handshake failed: {e}"
+            )
+
+
+            response.success = False
+
+            response.message = (
+                f"Authentication failed: {e}"
+            )
+
+
+            return response
+
+    # =========================================================
+    # DELIVERY ARRIVED -> BLUE LED
+    # =========================================================
+
+    def delivery_arrived(self, request, response):
+
+        if self.ser is None:
+
+            response.success = False
+
+            response.message = (
+                "Arduino serial connection unavailable"
+            )
+
+            self.get_logger().error(
+                "Cannot set ARRIVED LED: "
+                "Arduino is not connected"
+            )
+
+            return response
+
+
+        try:
+
+            self.get_logger().info(
+                "Sending DELIVERY_ARRIVED to Arduino..."
+            )
+
+
+            # -------------------------------------------------
+            # Send command
+            # -------------------------------------------------
+
+            self.ser.write(
+                b"DELIVERY_ARRIVED\n"
+            )
+
+            self.ser.flush()
+
+
+            # -------------------------------------------------
+            # Wait for acknowledgement
+            # -------------------------------------------------
+
+            timeout = 3.0
+
+            start_time = time.time()
+
+
+            while (
+                time.time() - start_time
+                < timeout
+            ):
+
+                if self.ser.in_waiting <= 0:
+
+                    time.sleep(0.01)
+
+                    continue
+
+
+                raw = (
+                    self.ser.readline()
+                    .decode(
+                        'utf-8',
+                        errors='ignore'
+                    )
+                    .strip()
+                )
+
+
+                if not raw:
+
+                    continue
+
+
+                # -------------------------------------------------
+                # Expected acknowledgement
+                # -------------------------------------------------
+
+                if raw == "ARRIVED_ACK":
+
+                    self.get_logger().info(
+                        "Delivery-arrived LED successful"
+                    )
+
+
+                    response.success = True
+
+                    response.message = (
+                        "Delivery arrived - LED set to blue"
+                    )
+
+                    return response
+
+
+                # -------------------------------------------------
+                # Keep processing normal robot data
+                # -------------------------------------------------
+
+                if (
+                    raw.startswith("$IMU,") and
+                    raw.endswith("*")
+                ):
+
+                    self.process_imu(raw)
+
+
+                elif (
+                    raw.startswith("$ENC,") and
+                    raw.endswith("*")
+                ):
+
+                    self.process_encoder(raw)
+
+
+                elif (
+                    raw.startswith("$ULTRA,") and
+                    raw.endswith("*")
+                ):
+
+                    self.process_ultrasonic(raw)
+
+
+            # -------------------------------------------------
+            # Timeout
+            # -------------------------------------------------
+
+            self.get_logger().error(
+                "Delivery-arrived LED handshake timeout"
+            )
+
+
+            response.success = False
+
+            response.message = (
+                "Arduino did not acknowledge DELIVERY_ARRIVED"
+            )
+
+            return response
+
+
+        except Exception as e:
+
+            self.get_logger().error(
+                f"Delivery-arrived LED failed: {e}"
+            )
+
+
+            response.success = False
+
+            response.message = (
+                f"Delivery-arrived LED failed: {e}"
+            )
+
+            return response
+
+    # =========================================================
+    # AUTHENTICATION FAILED -> RED LED
+    # =========================================================
+
+    def authentication_failed(self, request, response):
+
+        if self.ser is None:
+
+            response.success = False
+
+            response.message = (
+                "Arduino serial connection unavailable"
+            )
+
+            self.get_logger().error(
+                "Cannot set authentication error LED: "
+                "Arduino is not connected"
+            )
+
+            return response
+
+
+        try:
+
+            self.get_logger().info(
+                "Sending AUTH_FAILED to Arduino..."
+            )
+
+
+            # -------------------------------------------------
+            # Send command
+            # -------------------------------------------------
+
+            self.ser.write(
+                b"AUTH_FAILED\n"
+            )
+
+            self.ser.flush()
+
+
+            # -------------------------------------------------
+            # Wait for acknowledgement
+            # -------------------------------------------------
+
+            timeout = 3.0
+
+            start_time = time.time()
+
+
+            while (
+                time.time() - start_time
+                < timeout
+            ):
+
+                if self.ser.in_waiting <= 0:
+
+                    time.sleep(0.01)
+
+                    continue
+
+
+                raw = (
+                    self.ser.readline()
+                    .decode(
+                        'utf-8',
+                        errors='ignore'
+                    )
+                    .strip()
+                )
+
+
+                if not raw:
+
+                    continue
+
+
+                # -------------------------------------------------
+                # Expected acknowledgement
+                # -------------------------------------------------
+
+                if raw == "AUTH_FAILED_ACK":
+
+                    self.get_logger().info(
+                        "Authentication error LED successful"
+                    )
+
+
+                    response.success = True
+
+                    response.message = (
+                        "Authentication failed - LED set to red"
+                    )
+
+                    return response
+
+
+                # -------------------------------------------------
+                # Keep processing normal robot data
+                # -------------------------------------------------
+
+                if (
+                    raw.startswith("$IMU,") and
+                    raw.endswith("*")
+                ):
+
+                    self.process_imu(raw)
+
+
+                elif (
+                    raw.startswith("$ENC,") and
+                    raw.endswith("*")
+                ):
+
+                    self.process_encoder(raw)
+
+
+                elif (
+                    raw.startswith("$ULTRA,") and
+                    raw.endswith("*")
+                ):
+
+                    self.process_ultrasonic(raw)
+
+
+            # -------------------------------------------------
+            # Timeout
+            # -------------------------------------------------
+
+            self.get_logger().error(
+                "Authentication-failed LED handshake timeout"
+            )
+
+
+            response.success = False
+
+            response.message = (
+                "Arduino did not acknowledge AUTH_FAILED"
+            )
+
+            return response
+
+
+        except Exception as e:
+
+            self.get_logger().error(
+                f"Authentication error LED failed: {e}"
+            )
+
+
+            response.success = False
+
+            response.message = (
+                f"Authentication error LED failed: {e}"
+            )
+
+            return response
+        
     # =========================================================
     # SERIAL READER
     # =========================================================
