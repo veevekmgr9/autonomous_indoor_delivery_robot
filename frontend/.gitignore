@@ -1,27 +1,25 @@
-# Logs
-logs
-*.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
-lerna-debug.log*
 
-node_modules
 dist
 dist-ssr
-*.local
-
+.DS_Store
 # Editor directories and files
+.env
+.idea
+lerna-debug.log*
+*.local
+*.log
+logs
+# Logs
+*.njsproj
+node_modules
+npm-debug.log*
+*.ntvs*
+pnpm-debug.log*
+robot_ws/robot_credentials/firebase-service-account.json
+*.sln
+*.suo
+*.sw?
 .vscode/*
 !.vscode/extensions.json
-.idea
-.DS_Store
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-*.sw?
-.env
-robot_ws/robot_credentials/firebase-service-account.json
-robot_ws/robot_credentials/firebase-service-account.json
+yarn-debug.log*
+yarn-error.log*
