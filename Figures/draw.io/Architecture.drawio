@@ -1,0 +1,285 @@
+<mxfile host="app.diagrams.net">
+  <diagram name="Page-1" id="2KmQ6rSkcMu9OYeWn7gX">
+    <mxGraphModel dx="1664" dy="1039" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="RZ6BMhslj8wrz7knngCg-109" edge="1" parent="1" source="RZ6BMhslj8wrz7knngCg-1" style="edgeStyle=none;curved=1;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=12;startSize=8;endSize=8;strokeWidth=3;" target="RZ6BMhslj8wrz7knngCg-22">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="RZ6BMhslj8wrz7knngCg-1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;hachureGap=4;fontFamily=Architects Daughter;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DArchitects%2BDaughter;labelBackgroundColor=none;fillColor=light-dark(#FFFFFF, #effcff);strokeColor=light-dark(#000000,#99CCFF);strokeWidth=2;" value="" vertex="1">
+          <mxGeometry height="220" width="670" x="40" y="40" as="geometry" />
+        </mxCell>
+        <mxCell id="RZ6BMhslj8wrz7knngCg-3" parent="1" style="rounded=1;whiteSpace=wrap;html=1;hachureGap=4;fontFamily=Architects Daughter;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DArchitects%2BDaughter;labelBackgroundColor=none;fillColor=light-dark(#FFFFFF,#999999);fillStyle=solid;gradientColor=none;strokeColor=light-dark(#000000,#666666);strokeWidth=2;" value="&lt;b&gt;&lt;font face=&quot;Times New Roman&quot; style=&quot;font-size: 11px; color: light-dark(rgb(0, 0, 0), rgb(0, 0, 0));&quot;&gt;Compute Unit&lt;/font&gt;&lt;font face=&quot;Times New Roman&quot; style=&quot;font-size: 11px; color: light-dark(rgb(0, 0, 0), rgb(0, 0, 0));&quot;&gt; (Raspberry Pi 5)&lt;/font&gt;&lt;/b&gt;&lt;div style=&quot;&quot;&gt;&lt;ul&gt;&lt;li style=&quot;text-align: left;&quot;&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(0, 0, 0)); font-family: &amp;quot;Times New Roman&amp;quot;; font-size: 11px;&quot;&gt;ROS 2 Jazzy&lt;/span&gt;&lt;/li&gt;&lt;li style=&quot;text-align: left;&quot;&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(0, 0, 0)); font-family: &amp;quot;Times New Roman&amp;quot;; font-size: 11px;&quot;&gt;SLAM Toolbox&lt;/span&gt;&lt;/li&gt;&lt;li style=&quot;text-align: left;&quot;&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(0, 0, 0)); font-family: &amp;quot;Times New Roman&amp;quot;; font-size: 11px;&quot;&gt;NAV2&lt;/span&gt;&lt;/li&gt;&lt;li style=&quot;text-align: left;&quot;&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(0, 0, 0)); font-family: &amp;quot;Times New Roman&amp;quot;; font-size: 11px;&quot;&gt;EKF Localization&lt;/span&gt;&lt;/li&gt;&lt;li style=&quot;text-align: left;&quot;&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(0, 0, 0)); font-family: &amp;quot;Times New Roman&amp;quot;; font-size: 11px;&quot;&gt;RF2O (LiDAR Odometry)&lt;/span&gt;&lt;/li&gt;&lt;li style=&quot;text-align: left;&quot;&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(0, 0, 0)); font-family: &amp;quot;Times New Roman&amp;quot;; font-size: 11px;&quot;&gt;Safety Node&lt;/span&gt;&lt;/li&gt;&lt;li style=&quot;text-align: left;&quot;&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(0, 0, 0)); font-family: &amp;quot;Times New Roman&amp;quot;; font-size: 11px;&quot;&gt;Robot State Publisher&lt;/span&gt;&lt;/li&gt;&lt;li style=&quot;text-align: left;&quot;&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(0, 0, 0)); font-family: &amp;quot;Times New Roman&amp;quot;; font-size: 11px;&quot;&gt;Arduino Bridge&lt;/span&gt;&lt;/li&gt;&lt;/ul&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="160" width="170" x="70" y="70" as="geometry" />
+        </mxCell>
+        <mxCell id="RZ6BMhslj8wrz7knngCg-4" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=1;fontFamily=Architects Daughter;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DArchitects%2BDaughter;labelBackgroundColor=none;" value="&lt;font face=&quot;Times New Roman&quot; style=&quot;color: light-dark(rgb(0, 0, 0), rgb(0, 0, 0));&quot;&gt;&lt;b&gt;ROBOT PLATFORM&lt;/b&gt;&lt;/font&gt;" vertex="1">
+          <mxGeometry height="30" width="140" x="305" y="40" as="geometry" />
+        </mxCell>
+        <mxCell id="RZ6BMhslj8wrz7knngCg-5" parent="1" style="rounded=1;whiteSpace=wrap;html=1;hachureGap=4;fontFamily=Architects Daughter;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DArchitects%2BDaughter;labelBackgroundColor=none;fillColor=light-dark(#FFFFFF,#CCFFE6);strokeColor=light-dark(#000000,#CCFF99);strokeWidth=2;" value="" vertex="1">
+          <mxGeometry height="160" width="120" x="270" y="70" as="geometry" />
+        </mxCell>
+        <mxCell id="RZ6BMhslj8wrz7knngCg-6" parent="1" style="rounded=1;whiteSpace=wrap;html=1;hachureGap=4;fontFamily=Architects Daughter;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DArchitects%2BDaughter;labelBackgroundColor=none;fillColor=light-dark(#FFFFFF,#FFE6CC);strokeColor=light-dark(#000000,#FFCC99);strokeWidth=2;" value="" vertex="1">
+          <mxGeometry height="160" width="120" x="415" y="70" as="geometry" />
+        </mxCell>
+        <mxCell id="RZ6BMhslj8wrz7knngCg-7" parent="1" style="rounded=1;whiteSpace=wrap;html=1;hachureGap=4;fontFamily=Architects Daughter;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DArchitects%2BDaughter;labelBackgroundColor=none;fillColor=light-dark(#FFFFFF,#FFCCCC);strokeColor=light-dark(#000000,#FF9999);strokeWidth=2;" value="" vertex="1">
+          <mxGeometry height="160" width="120" x="560" y="70" as="geometry" />
+        </mxCell>
+        <mxCell id="RZ6BMhslj8wrz7knngCg-9" edge="1" parent="1" source="RZ6BMhslj8wrz7knngCg-3" style="endArrow=classic;html=1;rounded=0;fontSize=12;startSize=8;endSize=8;curved=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;strokeWidth=2;strokeColor=light-dark(#000000,#050505);entryX=-0.017;entryY=0.507;entryDx=0;entryDy=0;entryPerimeter=0;" target="RZ6BMhslj8wrz7knngCg-5" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="560" y="410" as="sourcePoint" />
+            <mxPoint x="260" y="155" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="RZ6BMhslj8wrz7knngCg-10" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="&lt;font face=&quot;Times New Roman&quot; style=&quot;color: light-dark(rgb(0, 0, 0), rgb(3, 3, 3)); font-size: 10px;&quot;&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; &lt;b&gt;&amp;nbsp; &amp;nbsp;Sensors&lt;/b&gt;&lt;/font&gt;&lt;div style=&quot;text-align: left; font-family: &amp;quot;Architects Daughter&amp;quot;;&quot;&gt;&lt;ul&gt;&lt;li&gt;&lt;span style=&quot;color: light-dark(rgb(0, 0, 0), rgb(3, 3, 3)); font-family: &amp;quot;Times New Roman&amp;quot;; background-color: transparent;&quot;&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;RPLiDAR A1 360 degree&lt;/font&gt;&lt;/span&gt;&lt;/li&gt;&lt;li&gt;&lt;span style=&quot;color: light-dark(rgb(0, 0, 0), rgb(3, 3, 3)); font-family: &amp;quot;Times New Roman&amp;quot;; background-color: transparent;&quot;&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;MPU6050 IMU&lt;/font&gt;&lt;/span&gt;&lt;/li&gt;&lt;li&gt;&lt;span style=&quot;color: light-dark(rgb(0, 0, 0), rgb(3, 3, 3)); font-family: &amp;quot;Times New Roman&amp;quot;; background-color: transparent;&quot;&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;Wheel Encoders(Left and Right)&lt;/font&gt;&lt;/span&gt;&lt;/li&gt;&lt;li&gt;&lt;span style=&quot;color: light-dark(rgb(0, 0, 0), rgb(3, 3, 3)); font-family: &amp;quot;Times New Roman&amp;quot;; background-color: transparent;&quot;&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;Ultrasonic Sensor&lt;/font&gt;&lt;/span&gt;&lt;/li&gt;&lt;/ul&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="160" width="140" x="250" y="70" as="geometry" />
+        </mxCell>
+        <mxCell id="RZ6BMhslj8wrz7knngCg-11" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="&lt;font face=&quot;Times New Roman&quot; style=&quot;font-size: 10px; color: light-dark(rgb(0, 0, 0), rgb(0, 0, 0));&quot;&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp;&lt;/font&gt;&lt;font face=&quot;Times New Roman&quot; style=&quot;font-size: 10px; color: light-dark(rgb(0, 0, 0), rgb(255, 153, 51));&quot;&gt;&lt;b&gt; Motor and&amp;nbsp;&lt;/b&gt;&lt;/font&gt;&lt;div&gt;&lt;font face=&quot;Times New Roman&quot; style=&quot;font-size: 10px; color: light-dark(rgb(0, 0, 0), rgb(255, 153, 51));&quot;&gt;&lt;b&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp;Control (Arduino Uno)&lt;/b&gt;&lt;/font&gt;&lt;div style=&quot;font-family: &amp;quot;Architects Daughter&amp;quot;;&quot;&gt;&lt;ul&gt;&lt;li style=&quot;text-align: left;&quot;&gt;&lt;span style=&quot;font-size: 10px; font-family: &amp;quot;Times New Roman&amp;quot;; background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(0, 0, 0));&quot;&gt;Read Encoders&lt;/span&gt;&lt;/li&gt;&lt;li style=&quot;text-align: left;&quot;&gt;&lt;span style=&quot;font-size: 10px; font-family: &amp;quot;Times New Roman&amp;quot;; background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(0, 0, 0));&quot;&gt;Motor PWM Control&lt;/span&gt;&lt;/li&gt;&lt;li style=&quot;text-align: left;&quot;&gt;&lt;span style=&quot;font-size: 10px; font-family: &amp;quot;Times New Roman&amp;quot;; background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(0, 0, 0));&quot;&gt;Safety Stop&lt;/span&gt;&lt;/li&gt;&lt;li style=&quot;text-align: left;&quot;&gt;&lt;span style=&quot;font-size: 10px; font-family: &amp;quot;Times New Roman&amp;quot;; background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(0, 0, 0));&quot;&gt;Status Feedback&lt;/span&gt;&lt;/li&gt;&lt;/ul&gt;&lt;/div&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="160" width="140" x="395" y="70" as="geometry" />
+        </mxCell>
+        <mxCell id="RZ6BMhslj8wrz7knngCg-12" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="&lt;font face=&quot;Times New Roman&quot; style=&quot;font-size: 11px; color: light-dark(rgb(0, 0, 0), rgb(255, 0, 0));&quot;&gt;&lt;b&gt;Drive System&lt;/b&gt;&lt;/font&gt;&lt;div style=&quot;font-family: &amp;quot;Architects Daughter&amp;quot;; text-align: left;&quot;&gt;&lt;ul&gt;&lt;li&gt;&lt;font face=&quot;Times New Roman&quot; style=&quot;font-size: 11px; color: light-dark(rgb(0, 0, 0), rgb(0, 0, 0));&quot;&gt;Elegoo Smart Car shield V1.1&lt;/font&gt;&lt;/li&gt;&lt;li&gt;&lt;font face=&quot;Times New Roman&quot; style=&quot;font-size: 11px; color: light-dark(rgb(0, 0, 0), rgb(0, 0, 0));&quot;&gt;4xTT DC Motors&lt;/font&gt;&lt;/li&gt;&lt;/ul&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="160" width="140" x="550" y="70" as="geometry" />
+        </mxCell>
+        <mxCell id="RZ6BMhslj8wrz7knngCg-13" edge="1" parent="1" source="RZ6BMhslj8wrz7knngCg-10" style="endArrow=classic;html=1;rounded=0;fontSize=12;startSize=8;endSize=8;curved=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;strokeWidth=2;strokeColor=light-dark(#000000,#CCFF99);entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="RZ6BMhslj8wrz7knngCg-6" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="330" y="220" as="sourcePoint" />
+            <mxPoint x="380" y="170" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="RZ6BMhslj8wrz7knngCg-14" edge="1" parent="1" source="RZ6BMhslj8wrz7knngCg-6" style="endArrow=classic;html=1;rounded=0;fontSize=12;startSize=8;endSize=8;curved=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=light-dark(#000000,#FFB366);strokeWidth=2;" target="RZ6BMhslj8wrz7knngCg-7" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="550" y="175" as="sourcePoint" />
+            <mxPoint x="600" y="125" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="RZ6BMhslj8wrz7knngCg-18" edge="1" parent="1" source="RZ6BMhslj8wrz7knngCg-3" style="endArrow=classic;startArrow=classic;html=1;rounded=0;fontSize=12;startSize=8;endSize=8;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;edgeStyle=orthogonalEdgeStyle;strokeWidth=2;strokeColor=light-dark(#000000,#666666);" target="RZ6BMhslj8wrz7knngCg-11" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <Array as="points">
+              <mxPoint x="155" y="250.03" />
+              <mxPoint x="465" y="250.03" />
+            </Array>
+            <mxPoint x="370" y="180" as="sourcePoint" />
+            <mxPoint x="420" y="130" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="RZ6BMhslj8wrz7knngCg-20" edge="1" parent="1" source="RZ6BMhslj8wrz7knngCg-12" style="endArrow=classic;html=1;rounded=0;fontSize=12;startSize=8;endSize=8;entryX=0.75;entryY=1;entryDx=0;entryDy=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;edgeStyle=orthogonalEdgeStyle;strokeWidth=2;strokeColor=light-dark(#000000,#FF6666);" target="RZ6BMhslj8wrz7knngCg-11" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <Array as="points">
+              <mxPoint x="620.03" y="250.03" />
+              <mxPoint x="500.03" y="250.03" />
+            </Array>
+            <mxPoint x="530" y="237.5" as="sourcePoint" />
+            <mxPoint x="420" y="130" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="RZ6BMhslj8wrz7knngCg-110" edge="1" parent="1" source="RZ6BMhslj8wrz7knngCg-21" style="edgeStyle=none;curved=1;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=12;startSize=8;endSize=8;strokeWidth=3;" target="RZ6BMhslj8wrz7knngCg-44">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="RZ6BMhslj8wrz7knngCg-21" parent="1" style="rounded=1;whiteSpace=wrap;html=1;strokeColor=light-dark(#000000,#66B2FF);fillColor=light-dark(#FFFFFF,#EFFCFF);fillStyle=auto;gradientColor=none;" value="" vertex="1">
+          <mxGeometry height="110" width="670" x="40" y="300" as="geometry" />
+        </mxCell>
+        <mxCell id="RZ6BMhslj8wrz7knngCg-22" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="&lt;span style=&quot;color: light-dark(rgb(0, 0, 0), rgb(0, 0, 0));&quot;&gt;&lt;b&gt;NAVIGATION STACK (ROS2)&lt;/b&gt;&lt;/span&gt;" vertex="1">
+          <mxGeometry height="30" width="215" x="267.5" y="300" as="geometry" />
+        </mxCell>
+        <mxCell id="RZ6BMhslj8wrz7knngCg-34" edge="1" parent="1" source="RZ6BMhslj8wrz7knngCg-23" style="edgeStyle=none;curved=1;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontSize=12;startSize=8;endSize=8;strokeColor=light-dark(#000000,#000000);" target="RZ6BMhslj8wrz7knngCg-30">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="RZ6BMhslj8wrz7knngCg-23" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=none;strokeColor=light-dark(#000000,#66B2FF);strokeWidth=2;" value="&lt;font style=&quot;font-size: 10px; color: light-dark(rgb(0, 0, 0), rgb(0, 0, 0));&quot;&gt;LiDAR SCAN&lt;/font&gt;&lt;div&gt;&lt;font style=&quot;font-size: 10px; color: light-dark(rgb(0, 0, 0), rgb(0, 0, 0));&quot;&gt;/scan&lt;/font&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="60" width="50" x="60" y="340" as="geometry" />
+        </mxCell>
+        <mxCell id="RZ6BMhslj8wrz7knngCg-24" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="Text" vertex="1">
+          <mxGeometry height="30" width="60" x="370" y="200" as="geometry" />
+        </mxCell>
+        <mxCell id="RZ6BMhslj8wrz7knngCg-38" edge="1" parent="1" source="RZ6BMhslj8wrz7knngCg-25" style="edgeStyle=none;curved=1;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontSize=12;startSize=8;endSize=8;strokeColor=light-dark(#000000,#0F0F0F);strokeWidth=0;" target="RZ6BMhslj8wrz7knngCg-26">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="RZ6BMhslj8wrz7knngCg-25" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=none;strokeColor=light-dark(#000000,#66B2FF);strokeWidth=2;" value="&lt;font style=&quot;font-size: 10px; color: light-dark(rgb(0, 0, 0), rgb(5, 5, 5));&quot;&gt;AMCL&lt;/font&gt;&lt;div&gt;&lt;font style=&quot;font-size: 10px; color: light-dark(rgb(0, 0, 0), rgb(5, 5, 5));&quot;&gt;(Localization Against Map)&lt;/font&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="60" width="60" x="385" y="340" as="geometry" />
+        </mxCell>
+        <mxCell id="RZ6BMhslj8wrz7knngCg-39" edge="1" parent="1" source="RZ6BMhslj8wrz7knngCg-26" style="edgeStyle=none;curved=1;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontSize=12;startSize=8;endSize=8;" target="RZ6BMhslj8wrz7knngCg-27">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="RZ6BMhslj8wrz7knngCg-40" edge="1" parent="1" source="RZ6BMhslj8wrz7knngCg-26" style="edgeStyle=none;curved=1;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontSize=12;startSize=8;endSize=8;strokeWidth=0;strokeColor=light-dark(#000000,#000000);" target="RZ6BMhslj8wrz7knngCg-27">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="RZ6BMhslj8wrz7knngCg-26" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=none;strokeColor=light-dark(#000000,#66B2FF);strokeWidth=2;" value="&lt;font style=&quot;font-size: 10px; color: light-dark(rgb(0, 0, 0), rgb(0, 0, 0));&quot;&gt;Nav2 Navigation Stack&lt;/font&gt;&lt;div&gt;&lt;font style=&quot;font-size: 10px; color: light-dark(rgb(0, 0, 0), rgb(0, 0, 0));&quot;&gt;Global Planner&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font style=&quot;font-size: 10px; color: light-dark(rgb(0, 0, 0), rgb(0, 0, 0));&quot;&gt;Local Controller&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font style=&quot;font-size: 10px; color: light-dark(rgb(0, 0, 0), rgb(0, 0, 0));&quot;&gt;Costmaps&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;&lt;/font&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="60" width="105" x="455" y="340" as="geometry" />
+        </mxCell>
+        <mxCell id="RZ6BMhslj8wrz7knngCg-41" edge="1" parent="1" source="RZ6BMhslj8wrz7knngCg-27" style="edgeStyle=none;curved=1;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontSize=12;startSize=8;endSize=8;strokeWidth=0;strokeColor=light-dark(#000000,#000000);" target="RZ6BMhslj8wrz7knngCg-28">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="RZ6BMhslj8wrz7knngCg-27" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=none;strokeColor=light-dark(#000000,#66B2FF);strokeWidth=2;" value="&lt;font style=&quot;font-size: 10px; color: light-dark(rgb(0, 0, 0), rgb(13, 13, 13));&quot;&gt;Safety Node&lt;/font&gt;&lt;div&gt;&lt;font style=&quot;font-size: 10px; color: light-dark(rgb(0, 0, 0), rgb(13, 13, 13));&quot;&gt;(Obstacle Check)&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;&lt;/font&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="60" width="60" x="570" y="340" as="geometry" />
+        </mxCell>
+        <mxCell id="RZ6BMhslj8wrz7knngCg-28" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=none;strokeColor=light-dark(#000000,#66B2FF);strokeWidth=2;" value="&lt;font style=&quot;font-size: 10px; color: light-dark(rgb(0, 0, 0), rgb(23, 23, 23));&quot;&gt;Velocity Command&lt;/font&gt;&lt;div&gt;&lt;font style=&quot;font-size: 10px; color: light-dark(rgb(0, 0, 0), rgb(23, 23, 23));&quot;&gt;/cmd_vel&lt;/font&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="60" width="50" x="640" y="340" as="geometry" />
+        </mxCell>
+        <mxCell id="RZ6BMhslj8wrz7knngCg-35" edge="1" parent="1" source="RZ6BMhslj8wrz7knngCg-30" style="edgeStyle=none;curved=1;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontSize=12;startSize=8;endSize=8;strokeColor=light-dark(#000000,#0A0A0A);" target="RZ6BMhslj8wrz7knngCg-31">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="RZ6BMhslj8wrz7knngCg-30" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=none;strokeColor=light-dark(#000000,#66B2FF);strokeWidth=2;" value="&lt;font style=&quot;font-size: 10px; color: light-dark(rgb(0, 0, 0), rgb(0, 0, 0));&quot;&gt;Odometry&lt;/font&gt;&lt;div&gt;&lt;font style=&quot;font-size: 10px; color: light-dark(rgb(0, 0, 0), rgb(0, 0, 0));&quot;&gt;(LiDAR + Encoders)&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font style=&quot;font-size: 10px; color: light-dark(rgb(0, 0, 0), rgb(0, 0, 0));&quot;&gt;/wheel/odom&lt;/font&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="60" width="75" x="124" y="340" as="geometry" />
+        </mxCell>
+        <mxCell id="RZ6BMhslj8wrz7knngCg-36" edge="1" parent="1" source="RZ6BMhslj8wrz7knngCg-31" style="edgeStyle=none;curved=1;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontSize=12;startSize=8;endSize=8;strokeColor=light-dark(#000000,#000000);" target="RZ6BMhslj8wrz7knngCg-32">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="RZ6BMhslj8wrz7knngCg-31" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=none;strokeColor=light-dark(#000000,#66B2FF);strokeWidth=2;" value="&lt;font style=&quot;font-size: 10px; color: light-dark(rgb(0, 0, 0), rgb(0, 0, 0));&quot;&gt;EKF Localization&lt;/font&gt;&lt;div&gt;&lt;font style=&quot;font-size: 10px; color: light-dark(rgb(0, 0, 0), rgb(0, 0, 0));&quot;&gt;/odometry/filtered&lt;/font&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="60" width="85" x="213" y="340" as="geometry" />
+        </mxCell>
+        <mxCell id="RZ6BMhslj8wrz7knngCg-37" edge="1" parent="1" source="RZ6BMhslj8wrz7knngCg-32" style="edgeStyle=none;curved=1;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontSize=12;startSize=8;endSize=8;strokeColor=light-dark(#000000,#000000);" target="RZ6BMhslj8wrz7knngCg-25">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="RZ6BMhslj8wrz7knngCg-32" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=none;strokeColor=light-dark(#000000,#66B2FF);strokeWidth=2;" value="&lt;font style=&quot;font-size: 10px; color: light-dark(rgb(0, 0, 0), rgb(3, 3, 3));&quot;&gt;SLAM Toolbox&lt;/font&gt;&lt;div&gt;&lt;span style=&quot;color: light-dark(rgb(0, 0, 0), rgb(3, 3, 3));&quot;&gt;&lt;span style=&quot;font-size: 10px; background-color: transparent;&quot;&gt;&amp;nbsp; (Mapping)&lt;/span&gt;&lt;span style=&quot;font-size: 10px; background-color: transparent; white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;&lt;/span&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="60" width="60" x="313" y="340" as="geometry" />
+        </mxCell>
+        <mxCell id="RZ6BMhslj8wrz7knngCg-42" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=light-dark(#FFFFFF,#EFFCFF);" value="" vertex="1">
+          <mxGeometry height="120" width="670" x="50" y="460" as="geometry" />
+        </mxCell>
+        <mxCell id="RZ6BMhslj8wrz7knngCg-43" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=light-dark(#FFFFFF,#EFFCFF);" value="" vertex="1">
+          <mxGeometry height="150" width="615" x="75" y="630" as="geometry" />
+        </mxCell>
+        <mxCell id="RZ6BMhslj8wrz7knngCg-44" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="&lt;span style=&quot;color: light-dark(rgb(0, 0, 0), rgb(0, 0, 0));&quot;&gt;&lt;b&gt;DELIVERY AND RECIPIENT VERIFICATION&lt;/b&gt;&lt;/span&gt;" vertex="1">
+          <mxGeometry height="20" width="275" x="237.5" y="460" as="geometry" />
+        </mxCell>
+        <mxCell id="RZ6BMhslj8wrz7knngCg-59" edge="1" parent="1" source="RZ6BMhslj8wrz7knngCg-47" style="edgeStyle=none;curved=1;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontSize=12;startSize=8;endSize=8;strokeColor=light-dark(#000000,#080808);" target="RZ6BMhslj8wrz7knngCg-49">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="RZ6BMhslj8wrz7knngCg-47" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=none;strokeWidth=2;strokeColor=light-dark(#000000,#66B2FF);" value="&lt;span style=&quot;color: light-dark(rgb(0, 0, 0), rgb(3, 3, 3));&quot;&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;Delivery Request&lt;/font&gt;&lt;/span&gt;" vertex="1">
+          <mxGeometry height="60" width="60" x="60" y="490" as="geometry" />
+        </mxCell>
+        <mxCell id="RZ6BMhslj8wrz7knngCg-50" edge="1" parent="1" source="RZ6BMhslj8wrz7knngCg-49" style="edgeStyle=none;curved=1;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=12;startSize=8;endSize=8;" target="RZ6BMhslj8wrz7knngCg-44" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="RZ6BMhslj8wrz7knngCg-60" edge="1" parent="1" source="RZ6BMhslj8wrz7knngCg-49" style="edgeStyle=none;curved=1;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=12;startSize=8;endSize=8;" target="RZ6BMhslj8wrz7knngCg-52" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="RZ6BMhslj8wrz7knngCg-61" edge="1" parent="1" source="RZ6BMhslj8wrz7knngCg-49" style="edgeStyle=none;curved=1;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=12;startSize=8;endSize=8;strokeColor=light-dark(#000000,#080808);" target="RZ6BMhslj8wrz7knngCg-51">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="RZ6BMhslj8wrz7knngCg-49" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=none;strokeWidth=2;strokeColor=light-dark(#000000,#66B2FF);" value="&lt;font style=&quot;color: light-dark(rgb(3, 3, 3), rgb(0, 0, 0)); font-size: 10px;&quot;&gt;Destination Selection&lt;/font&gt;" vertex="1">
+          <mxGeometry height="60" width="75" x="137" y="490" as="geometry" />
+        </mxCell>
+        <mxCell id="RZ6BMhslj8wrz7knngCg-62" edge="1" parent="1" source="RZ6BMhslj8wrz7knngCg-51" style="edgeStyle=none;curved=1;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontSize=12;startSize=8;endSize=8;strokeColor=light-dark(#000000,#000000);" target="RZ6BMhslj8wrz7knngCg-52">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="RZ6BMhslj8wrz7knngCg-51" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=none;strokeWidth=2;strokeColor=light-dark(#000000,#66B2FF);" value="&lt;font style=&quot;color: light-dark(rgb(0, 0, 0), rgb(10, 10, 10)); font-size: 10px;&quot;&gt;Autonomous Navigation&lt;/font&gt;" vertex="1">
+          <mxGeometry height="60" width="75" x="231" y="490" as="geometry" />
+        </mxCell>
+        <mxCell id="RZ6BMhslj8wrz7knngCg-53" edge="1" parent="1" source="RZ6BMhslj8wrz7knngCg-52" style="edgeStyle=none;curved=1;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=12;startSize=8;endSize=8;" target="RZ6BMhslj8wrz7knngCg-44" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="RZ6BMhslj8wrz7knngCg-63" edge="1" parent="1" source="RZ6BMhslj8wrz7knngCg-52" style="edgeStyle=none;curved=1;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontSize=12;startSize=8;endSize=8;strokeColor=light-dark(#000000,#000000);" target="RZ6BMhslj8wrz7knngCg-54">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="RZ6BMhslj8wrz7knngCg-52" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=none;strokeWidth=2;strokeColor=light-dark(#000000,#66B2FF);" value="&lt;font style=&quot;color: light-dark(rgb(10, 10, 10), rgb(0, 0, 0)); font-size: 10px;&quot;&gt;Arrived at Destination&lt;/font&gt;" vertex="1">
+          <mxGeometry height="60" width="75" x="324" y="490" as="geometry" />
+        </mxCell>
+        <mxCell id="RZ6BMhslj8wrz7knngCg-58" edge="1" parent="1" source="RZ6BMhslj8wrz7knngCg-54" style="edgeStyle=none;curved=1;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=1;exitDx=0;exitDy=0;fontSize=12;startSize=8;endSize=8;" target="RZ6BMhslj8wrz7knngCg-42">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="RZ6BMhslj8wrz7knngCg-54" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=none;strokeWidth=2;strokeColor=light-dark(#000000,#66B2FF);" value="&lt;font style=&quot;color: light-dark(rgb(0, 0, 0), rgb(10, 10, 10)); font-size: 10px;&quot;&gt;Face Verification&lt;/font&gt;&lt;div&gt;&lt;font style=&quot;color: light-dark(rgb(0, 0, 0), rgb(10, 10, 10)); font-size: 10px;&quot;&gt;(face-api.js)&lt;/font&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="60" width="75" x="414" y="490" as="geometry" />
+        </mxCell>
+        <mxCell id="RZ6BMhslj8wrz7knngCg-55" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=light-dark(#FFFFFF,#CCFFCC);strokeWidth=2;strokeColor=light-dark(#000000,#66FF66);" value="&lt;font style=&quot;color: light-dark(rgb(10, 10, 10), rgb(18, 18, 18)); font-size: 10px;&quot;&gt;&amp;nbsp;Verified (Unlock Compartment)&lt;/font&gt;" vertex="1">
+          <mxGeometry height="30" width="97" x="508" y="480" as="geometry" />
+        </mxCell>
+        <mxCell id="RZ6BMhslj8wrz7knngCg-56" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=light-dark(#FFFFFF,#FFCCCC);strokeWidth=2;strokeColor=light-dark(#000000,#FF3333);" value="&lt;span style=&quot;color: light-dark(rgb(0, 0, 0), rgb(15, 15, 15));&quot;&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;Not Verified (Access Denied)&lt;/font&gt;&lt;/span&gt;" vertex="1">
+          <mxGeometry height="30" width="97" x="508" y="530" as="geometry" />
+        </mxCell>
+        <mxCell id="RZ6BMhslj8wrz7knngCg-57" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=none;strokeWidth=2;strokeColor=light-dark(#000000,#66B2FF);" value="&lt;font style=&quot;color: light-dark(rgb(0, 0, 0), rgb(0, 0, 0)); font-size: 10px;&quot;&gt;Delivery Completed&lt;/font&gt;" vertex="1">
+          <mxGeometry height="60" width="75" x="627" y="490" as="geometry" />
+        </mxCell>
+        <mxCell id="RZ6BMhslj8wrz7knngCg-67" edge="1" parent="1" source="RZ6BMhslj8wrz7knngCg-66" style="edgeStyle=none;curved=1;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;fontSize=12;startSize=8;endSize=8;" target="RZ6BMhslj8wrz7knngCg-54">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="RZ6BMhslj8wrz7knngCg-70" edge="1" parent="1" source="RZ6BMhslj8wrz7knngCg-66" style="edgeStyle=none;curved=1;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontSize=12;startSize=8;endSize=8;exitX=1;exitY=0;exitDx=0;exitDy=0;exitPerimeter=0;strokeColor=light-dark(#000000,#000000);" target="RZ6BMhslj8wrz7knngCg-55">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="RZ6BMhslj8wrz7knngCg-71" edge="1" parent="1" source="RZ6BMhslj8wrz7knngCg-66" style="edgeStyle=none;curved=1;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontSize=12;startSize=8;endSize=8;exitX=1;exitY=1;exitDx=0;exitDy=0;exitPerimeter=0;strokeColor=light-dark(#000000,#000000);" target="RZ6BMhslj8wrz7knngCg-56">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="RZ6BMhslj8wrz7knngCg-66" parent="1" style="strokeWidth=2;html=1;shape=mxgraph.flowchart.annotation_2;align=left;labelPosition=right;pointerEvents=1;strokeColor=light-dark(#000000,#000000);" value="" vertex="1">
+          <mxGeometry height="50" width="11" x="489" y="495" as="geometry" />
+        </mxCell>
+        <mxCell id="RZ6BMhslj8wrz7knngCg-74" edge="1" parent="1" source="RZ6BMhslj8wrz7knngCg-72" style="edgeStyle=none;curved=1;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontSize=12;startSize=8;endSize=8;strokeColor=light-dark(#000000,#000000);strokeWidth=2;" target="RZ6BMhslj8wrz7knngCg-57">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="RZ6BMhslj8wrz7knngCg-72" parent="1" style="strokeWidth=2;html=1;shape=mxgraph.flowchart.annotation_2;align=left;labelPosition=right;pointerEvents=1;rotation=-180;strokeColor=light-dark(#000000,#000000);" value="" vertex="1">
+          <mxGeometry height="50" width="11" x="605" y="495" as="geometry" />
+        </mxCell>
+        <mxCell id="RZ6BMhslj8wrz7knngCg-106" edge="1" parent="1" source="RZ6BMhslj8wrz7knngCg-78" style="edgeStyle=none;curved=1;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=12;startSize=8;endSize=8;" target="RZ6BMhslj8wrz7knngCg-105" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="RZ6BMhslj8wrz7knngCg-78" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="&lt;font style=&quot;color: light-dark(rgb(0, 0, 0), rgb(13, 13, 13));&quot;&gt;&lt;b&gt;WEB INTERFACE&lt;/b&gt;&lt;/font&gt;" vertex="1">
+          <mxGeometry height="30" width="170" x="325" y="630" as="geometry" />
+        </mxCell>
+        <mxCell id="RZ6BMhslj8wrz7knngCg-79" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=none;strokeWidth=2;strokeColor=light-dark(#000000,#66B2FF);" value="" vertex="1">
+          <mxGeometry height="100" width="253" x="85" y="660" as="geometry" />
+        </mxCell>
+        <mxCell id="RZ6BMhslj8wrz7knngCg-80" parent="1" style="html=1;verticalLabelPosition=bottom;align=center;labelBackgroundColor=#ffffff;verticalAlign=top;strokeWidth=2;strokeColor=light-dark(#0080F0,#000000);shadow=0;dashed=0;shape=mxgraph.ios7.icons.bell;" value="" vertex="1">
+          <mxGeometry height="23.099999999999998" width="24" x="107" y="690" as="geometry" />
+        </mxCell>
+        <mxCell id="RZ6BMhslj8wrz7knngCg-82" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="&lt;span style=&quot;color: light-dark(rgb(0, 0, 0), rgb(0, 0, 0));&quot;&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;Notification&lt;/font&gt;&lt;/span&gt;" vertex="1">
+          <mxGeometry height="30" width="60" x="89" y="716.55" as="geometry" />
+        </mxCell>
+        <mxCell id="RZ6BMhslj8wrz7knngCg-83" parent="1" style="image;aspect=fixed;html=1;points=[];align=center;fontSize=12;image=img/lib/azure2/ai_machine_learning/Face_APIs.svg;" value="" vertex="1">
+          <mxGeometry height="30" width="30" x="171.5" y="686.55" as="geometry" />
+        </mxCell>
+        <mxCell id="RZ6BMhslj8wrz7knngCg-84" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="&lt;span style=&quot;color: light-dark(rgb(0, 0, 0), rgb(0, 0, 0));&quot;&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;Face&lt;/font&gt;&lt;/span&gt;&lt;div&gt;&lt;span style=&quot;color: light-dark(rgb(0, 0, 0), rgb(0, 0, 0));&quot;&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;Verification&lt;/font&gt;&lt;/span&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="30" width="60" x="156.5" y="716.55" as="geometry" />
+        </mxCell>
+        <mxCell id="RZ6BMhslj8wrz7knngCg-85" parent="1" style="shape=image;html=1;verticalAlign=top;verticalLabelPosition=bottom;labelBackgroundColor=#ffffff;imageAspect=0;aspect=fixed;image=https://icons.diagrams.net/icon-cache1/Woothemes_Ultimate_Icon_Set-2035/parcel-721.png" value="" vertex="1">
+          <mxGeometry height="30" width="30" x="232.5" y="686.55" as="geometry" />
+        </mxCell>
+        <mxCell id="RZ6BMhslj8wrz7knngCg-86" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="&lt;font style=&quot;font-size: 10px; color: light-dark(rgb(0, 0, 0), rgb(3, 3, 3));&quot;&gt;Delivery&lt;/font&gt;&lt;div&gt;&lt;font style=&quot;font-size: 10px; color: light-dark(rgb(0, 0, 0), rgb(3, 3, 3));&quot;&gt;Status&lt;/font&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="30" width="60" x="217.5" y="716.55" as="geometry" />
+        </mxCell>
+        <mxCell id="RZ6BMhslj8wrz7knngCg-88" parent="1" style="sketch=0;aspect=fixed;pointerEvents=1;shadow=0;dashed=0;html=1;strokeColor=none;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;align=center;fillColor=#00188D;shape=mxgraph.mscae.enterprise.lock_unlocked" value="" vertex="1">
+          <mxGeometry height="23.1" width="17.1" x="294" y="686.55" as="geometry" />
+        </mxCell>
+        <mxCell id="RZ6BMhslj8wrz7knngCg-90" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="&lt;font&gt;&lt;span style=&quot;font-size: 10px; color: light-dark(rgb(3, 3, 3), rgb(31, 31, 31));&quot;&gt;Access&lt;/span&gt;&lt;/font&gt;&lt;div&gt;&lt;font&gt;&lt;span style=&quot;font-size: 10px; color: light-dark(rgb(3, 3, 3), rgb(31, 31, 31));&quot;&gt;Compartment&lt;/span&gt;&lt;/font&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="30" width="60" x="272.55" y="716.55" as="geometry" />
+        </mxCell>
+        <mxCell id="RZ6BMhslj8wrz7knngCg-91" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=none;strokeWidth=2;strokeColor=light-dark(#000000,#66B2FF);" value="" vertex="1">
+          <mxGeometry height="100" width="131.5" x="362.5" y="660" as="geometry" />
+        </mxCell>
+        <mxCell id="RZ6BMhslj8wrz7knngCg-92" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=none;strokeWidth=2;strokeColor=light-dark(#000000,#66B2FF);" value="" vertex="1">
+          <mxGeometry height="100" width="146.5" x="518.5" y="660" as="geometry" />
+        </mxCell>
+        <mxCell id="RZ6BMhslj8wrz7knngCg-93" parent="1" style="shape=image;html=1;verticalAlign=top;verticalLabelPosition=bottom;labelBackgroundColor=#ffffff;imageAspect=0;aspect=fixed;image=https://icons.diagrams.net/icon-cache1/Ionicons_Fill_Vol_2-2187/logo-firebase-1471.svg" value="" vertex="1">
+          <mxGeometry height="30" width="30" x="371.5" y="670" as="geometry" />
+        </mxCell>
+        <mxCell id="RZ6BMhslj8wrz7knngCg-94" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="&lt;font&gt;&lt;span style=&quot;font-size: 10px; color: light-dark(rgb(0, 0, 0), rgb(0, 0, 0));&quot;&gt;&lt;b style=&quot;&quot;&gt;Firebase&lt;/b&gt;&lt;/span&gt;&lt;/font&gt;" vertex="1">
+          <mxGeometry height="30" width="60" x="395" y="660" as="geometry" />
+        </mxCell>
+        <mxCell id="RZ6BMhslj8wrz7knngCg-96" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;rounded=0;" value="&lt;font&gt;&lt;span style=&quot;font-size: 10px; color: light-dark(rgb(3, 3, 3), rgb(0, 0, 0));&quot;&gt;Authentication&lt;/span&gt;&lt;/font&gt;&lt;div&gt;&lt;font&gt;&lt;span style=&quot;font-size: 10px; color: light-dark(rgb(3, 3, 3), rgb(0, 0, 0));&quot;&gt;Firesbase Database&lt;/span&gt;&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font&gt;&lt;span style=&quot;font-size: 10px; color: light-dark(rgb(3, 3, 3), rgb(0, 0, 0));&quot;&gt;Delivery Status&lt;/span&gt;&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font&gt;&lt;span style=&quot;font-size: 10px; color: light-dark(rgb(3, 3, 3), rgb(0, 0, 0));&quot;&gt;User Management&lt;/span&gt;&lt;/font&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="50" width="85" x="401.5" y="696.55" as="geometry" />
+        </mxCell>
+        <mxCell id="RZ6BMhslj8wrz7knngCg-97" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="&lt;span style=&quot;color: light-dark(rgb(0, 0, 0), rgb(0, 0, 0));&quot;&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;&lt;b&gt;Recipient Interface (Web)&lt;/b&gt;&lt;/font&gt;&lt;/span&gt;" vertex="1">
+          <mxGeometry height="30" width="155.5" x="138.5" y="656.55" as="geometry" />
+        </mxCell>
+        <mxCell id="RZ6BMhslj8wrz7knngCg-98" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="&lt;span style=&quot;color: light-dark(rgb(0, 0, 0), rgb(0, 0, 0));&quot;&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;&lt;b&gt;Sender Interface (Web)&lt;/b&gt;&lt;/font&gt;&lt;/span&gt;" vertex="1">
+          <mxGeometry height="30" width="170" x="508.5" y="656.55" as="geometry" />
+        </mxCell>
+        <mxCell id="RZ6BMhslj8wrz7knngCg-99" parent="1" style="shape=image;html=1;verticalAlign=top;verticalLabelPosition=bottom;labelBackgroundColor=#ffffff;imageAspect=0;aspect=fixed;image=https://icons.diagrams.net/icon-cache1/Tweet_Scotty-2186/twitterbot-561.png" value="" vertex="1">
+          <mxGeometry height="30" width="30" x="537" y="690" as="geometry" />
+        </mxCell>
+        <mxCell id="RZ6BMhslj8wrz7knngCg-100" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="&lt;font&gt;&lt;span style=&quot;font-size: 10px; color: light-dark(rgb(31, 31, 31), rgb(0, 0, 0));&quot;&gt;Robot Status&lt;/span&gt;&lt;/font&gt;" vertex="1">
+          <mxGeometry height="30" width="60" x="522.5" y="720" as="geometry" />
+        </mxCell>
+        <mxCell id="RZ6BMhslj8wrz7knngCg-101" parent="1" style="outlineConnect=0;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;shape=mxgraph.aws3.requester;fillColor=#ACACAC;gradientColor=none;" value="" vertex="1">
+          <mxGeometry height="30" width="30" x="618.75" y="690" as="geometry" />
+        </mxCell>
+        <mxCell id="RZ6BMhslj8wrz7knngCg-102" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="&lt;font&gt;&lt;span style=&quot;font-size: 10px; color: light-dark(rgb(0, 0, 0), rgb(0, 0, 0));&quot;&gt;Delivery Request&lt;/span&gt;&lt;/font&gt;" vertex="1">
+          <mxGeometry height="30" width="60" x="604" y="720" as="geometry" />
+        </mxCell>
+        <mxCell id="RZ6BMhslj8wrz7knngCg-105" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="&lt;font style=&quot;color: light-dark(rgb(0, 0, 0), rgb(13, 13, 13));&quot;&gt;&lt;b&gt;WEB INTERFACE&lt;/b&gt;&lt;/font&gt;" vertex="1">
+          <mxGeometry height="30" width="170" x="325" y="780" as="geometry" />
+        </mxCell>
+        <mxCell id="RZ6BMhslj8wrz7knngCg-111" edge="1" parent="1" source="RZ6BMhslj8wrz7knngCg-42" style="edgeStyle=none;curved=1;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.345;entryY=-0.033;entryDx=0;entryDy=0;entryPerimeter=0;fontSize=12;startSize=8;endSize=8;strokeWidth=3;" target="RZ6BMhslj8wrz7knngCg-78">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
