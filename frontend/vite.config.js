@@ -14,7 +14,8 @@ export default defineConfig({
             "barbara-samples-mild-urge.trycloudflare.com",
             "excess-circular-valentine-fifth.trycloudflare.com",
             "pushed-exotic-involves-pointing.trycloudflare.com",
-            "theorem-bright-louisiana-stay.trycloudflare.com"
+            "theorem-bright-louisiana-stay.trycloudflare.com",
+            "fire-faq-metals-explained.trycloudflare.com"
         ]
     }
 })

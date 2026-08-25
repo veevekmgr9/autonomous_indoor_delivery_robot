@@ -4,12 +4,13 @@ import {
     doc,
     getDoc,
     updateDoc,
+    setDoc,
     serverTimestamp,
     query,
     where,
+    orderBy,
     onSnapshot,
-    getDocs,
-    setDoc
+    getDocs
 } from "firebase/firestore";
 
 import { db } from "./firebase";
@@ -449,122 +450,86 @@ export async function updateDeliveryStatus(
     status
 ) {
 
-    const deliveryRef =
-        doc(
-            db,
-            "deliveries",
-            deliveryId
-        );
-
+    const deliveryRef = doc(
+        db,
+        "deliveries",
+        deliveryId
+    );
 
     const update = {
         status
     };
 
-
-    // --------------------------------------------------------
-    // ARRIVED
-    // --------------------------------------------------------
-
-    if (
-        status === "ARRIVED"
-    ) {
-
-        update.arrivedAt =
-            serverTimestamp();
+    if (status === "ARRIVED") {
+        update.arrivedAt = serverTimestamp();
     }
 
-
-    // --------------------------------------------------------
-    // VERIFIED
-    // --------------------------------------------------------
-
-    if (
-        status === "VERIFIED"
-    ) {
-
-        update.verifiedAt =
-            serverTimestamp();
+    if (status === "VERIFIED") {
+        update.verifiedAt = serverTimestamp();
     }
 
-
-    // --------------------------------------------------------
-    // DOOR OPENED
-    // --------------------------------------------------------
-
-    if (
-        status === "DOOR_OPENED"
-    ) {
-
-        update.doorOpenedAt =
-            serverTimestamp();
+    if (status === "DOOR_OPENED") {
+        update.doorOpenedAt = serverTimestamp();
     }
 
-
-    // --------------------------------------------------------
-    // COMPLETED
-    // --------------------------------------------------------
-
-    if (
-        status === "COMPLETED"
-    ) {
-
-        update.completedAt =
-            serverTimestamp();
+    if (status === "COMPLETED") {
+        update.completedAt = serverTimestamp();
     }
 
-
-    // --------------------------------------------------------
-    // Update delivery
-    // --------------------------------------------------------
-
+    // Update delivery document
     await updateDoc(
         deliveryRef,
         update
     );
 
 
-    // --------------------------------------------------------
-    // Update robot state
-    // --------------------------------------------------------
+    // =================================================
+    // KEEP ROBOT STATE SYNCHRONISED
+    // =================================================
 
     if (
-        status === "COMPLETED"
+        status === "VERIFIED"
     ) {
 
-        // Robot becomes available
-        await setDoc(
-            ROBOT_STATE_DOC,
-            {
-                activeDeliveryId: null,
-                ticketId: null,
-                status: "IDLE",
-                robotId: null,
-                updatedAt:
-                    serverTimestamp()
-            },
-            {
-                merge: true
-            }
-        );
+        const deliverySnapshot =
+            await getDoc(
+                deliveryRef
+            );
 
-    } else {
+        if (
+            deliverySnapshot.exists()
+        ) {
 
-        // Robot continues handling this delivery
-        await setDoc(
-            ROBOT_STATE_DOC,
-            {
-                activeDeliveryId:
-                    deliveryId,
+            const delivery =
+                deliverySnapshot.data();
 
-                status,
+            await setDoc(
+                doc(
+                    db,
+                    "robotState",
+                    "current"
+                ),
+                {
+                    activeDeliveryId:
+                        deliveryId,
 
-                updatedAt:
-                    serverTimestamp()
-            },
-            {
-                merge: true
-            }
-        );
+                    ticketId:
+                        delivery.ticketId,
+
+                    status:
+                        "VERIFIED",
+
+                    updatedAt:
+                        serverTimestamp()
+                },
+                {
+                    merge: true
+                }
+            );
+
+            console.log(
+                `🤖 Robot state updated: ${delivery.ticketId} → VERIFIED`
+            );
+        }
     }
 }

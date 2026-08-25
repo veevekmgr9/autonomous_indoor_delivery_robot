@@ -382,25 +382,33 @@ function SenderDashboard({
                             </div>
 
 
-                            <div className="form-group">
+                        <div className="form-group">
 
-                                <label>
-                                    Destination
-                                </label>
+                            <label>
+                                Destination
+                            </label>
 
-                                <input
-                                    type="text"
-                                    placeholder="e.g. Room 204"
-                                    value={destination}
-                                    onChange={(e) =>
-                                        setDestination(
-                                            e.target.value
-                                        )
-                                    }
-                                    required
-                                />
+                            <select
+                                value={destination}
+                                onChange={(e) =>
+                                    setDestination(e.target.value)
+                                }
+                                required
+                            >
+                                <option value="">
+                                    Select destination
+                                </option>
 
-                            </div>
+                                <option value="Room A">
+                                    Room A
+                                </option>
+
+                                <option value="Room B">
+                                    Room B
+                                </option>
+                            </select>
+
+                        </div>
 
                         </div>
 

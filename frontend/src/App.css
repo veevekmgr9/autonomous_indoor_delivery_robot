@@ -854,6 +854,67 @@ body {
     color: #217b4b;
 }
 
+/* Delivery FOrm */
+/* ============================================
+   DESTINATION SELECT
+   ============================================ */
+
+.form-group select {
+    width: 100%;
+    padding: 12px 14px;
+
+    border: 1px solid #d9dee7;
+    border-radius: 8px;
+
+    background-color: #ffffff;
+
+    font-size: 14px;
+    font-family: inherit;
+
+    color: #1f2937;
+
+    outline: none;
+
+    cursor: pointer;
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+
+/* Placeholder option */
+
+.form-group select:invalid {
+    color: #9ca3af;
+}
+
+
+/* When user focuses the dropdown */
+
+.form-group select:focus {
+    border-color: #2563eb;
+
+    box-shadow:
+        0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+
+/* Hover */
+
+.form-group select:hover {
+    border-color: #9ca3eb;
+}
+
+
+/* Dropdown options */
+
+.form-group select option {
+    color: #1f2937;
+    background: #ffffff;
+
+    padding: 10px;
+}
 
 /* =================================
    DELIVERY DETAILS

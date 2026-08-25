@@ -143,10 +143,68 @@ export async function updateDeliveryStatus(
         update.completedAt = serverTimestamp();
     }
 
+
+    // ================================================
+    // UPDATE DELIVERY
+    // ================================================
+
     await updateDoc(
         deliveryRef,
         update
     );
+
+
+    // ================================================
+    // UPDATE ROBOT STATE
+    // ================================================
+
+    if (status === "VERIFIED") {
+
+        const deliverySnapshot =
+            await getDoc(
+                deliveryRef
+            );
+
+        if (!deliverySnapshot.exists()) {
+
+            throw new Error(
+                "Delivery document not found."
+            );
+        }
+
+        const delivery =
+            deliverySnapshot.data();
+
+
+        await setDoc(
+            doc(
+                db,
+                "robotState",
+                "current"
+            ),
+            {
+                activeDeliveryId:
+                    deliveryId,
+
+                ticketId:
+                    delivery.ticketId,
+
+                status:
+                    "VERIFIED",
+
+                updatedAt:
+                    serverTimestamp()
+            },
+            {
+                merge: true
+            }
+        );
+
+
+        console.log(
+            `🤖 Robot state updated: ${delivery.ticketId} → VERIFIED`
+        );
+    }
 }
 
 export async function reportAuthenticationFailure(
