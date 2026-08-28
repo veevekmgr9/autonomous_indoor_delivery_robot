@@ -322,9 +322,6 @@ export default function FaceVerification({
 
             /*
             * Initial threshold.
-            *
-            * We will test this with your
-            * actual phone/camera.
             */
 
             const THRESHOLD = 0.50;
@@ -718,20 +715,6 @@ export default function FaceVerification({
             "Delivery:",
             delivery
         );
-
-
-        /*
-         * IMPORTANT:
-         *
-         * We intentionally do NOT call
-         * onVerified() yet.
-         *
-         * A detected face does NOT mean
-         * the person is authorised.
-         *
-         * Actual recognition will be
-         * implemented next.
-         */
     }
 
 
