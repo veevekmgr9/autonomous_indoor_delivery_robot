@@ -21,7 +21,7 @@ class SafetyNode(Node):
         # =====================================================
 
         # LiDAR stop distance
-        self.stop_distance = 0.20 
+        self.stop_distance = 0.20
 
 
         # Ultrasonic stop distance
@@ -29,7 +29,7 @@ class SafetyNode(Node):
 
 
         # LiDAR front angle
-        self.front_angle = math.radians(25.0)
+        self.front_angle = math.radians(35.0)
 
 
         # Ultrasonic sensor timeout
@@ -164,59 +164,38 @@ class SafetyNode(Node):
 
         valid_front_ranges = []
 
-
-        for i, distance in enumerate(
-            scan.ranges
-        ):
+        for i, distance in enumerate(scan.ranges):
 
             angle = (
                 scan.angle_min +
                 i * scan.angle_increment
             )
 
-
-            # Normalize angle to [-pi, pi]
-
             angle = math.atan2(
                 math.sin(angle),
                 math.cos(angle)
             )
 
-
-            # Only front +/-25 degrees
-
+            # Look at the front ±35 degrees
             if abs(angle) > self.front_angle:
-
                 continue
 
-
-            # Invalid values
-
-            if not math.isfinite(
-                distance
-            ):
-
+            # Ignore invalid readings
+            if not math.isfinite(distance):
                 continue
 
-
-            if distance <= scan.range_min:
-
+            if distance < scan.range_min:
                 continue
 
-
-            if distance >= scan.range_max:
-
+            if distance > scan.range_max:
                 continue
 
-
-            valid_front_ranges.append(
-                distance
-            )
+            valid_front_ranges.append(distance)
 
 
-        # =====================================================
-        # LIDAR OBSTACLE
-        # =====================================================
+        # -------------------------------------------------
+        # Check front obstacle
+        # -------------------------------------------------
 
         if valid_front_ranges:
 
@@ -224,17 +203,22 @@ class SafetyNode(Node):
                 valid_front_ranges
             )
 
-
             self.obstacle_front = (
-                minimum_distance <
+                minimum_distance <=
                 self.stop_distance
             )
 
+            # Debug output only when obstacle detected
+            if self.obstacle_front:
+
+                self.get_logger().warn(
+                    f"LiDAR obstacle: "
+                    f"{minimum_distance:.2f} m"
+                )
 
         else:
 
             self.obstacle_front = False
-
 
     # =========================================================
     # ULTRASONIC CALLBACK

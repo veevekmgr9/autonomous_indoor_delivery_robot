@@ -1,6 +1,20 @@
 import { useEffect, useState } from "react";
 
 import {
+    doc,
+    updateDoc,
+    serverTimestamp,
+    collection,
+    getDocs,
+    query,
+    where
+} from "firebase/firestore";
+
+import {
+    db
+} from "../services/firebase";
+
+import {
     createDelivery,
     listenToSenderDeliveries
 } from "../services/delivery";
@@ -16,14 +30,15 @@ function SenderDashboard({
 
     const [receiverEmail, setReceiverEmail] = useState("");
     const [item, setItem] = useState("");
+    const [pickupLocation, setPickupLocation] = useState("");
     const [destination, setDestination] = useState("");
 
     const [message, setMessage] = useState("");
     const [loading, setLoading] = useState(false);
 
+    const [receiverUsers, setReceiverUsers] = useState([]);
 
     useEffect(() => {
-
         const unsubscribe =
             listenToSenderDeliveries(
                 user.uid,
@@ -31,8 +46,39 @@ function SenderDashboard({
             );
 
         return unsubscribe;
-
     }, [user.uid]);
+
+    useEffect(() => {
+        const loadReceivers = async () => {
+            try {
+                const receiversQuery = query(
+                    collection(db, "users"),
+                    where("role", "==", "receiver")
+                );
+
+                const snapshot = await getDocs(
+                    receiversQuery
+                );
+
+                const receivers = snapshot.docs.map(
+                    (doc) => ({
+                        id: doc.id,
+                        ...doc.data()
+                    })
+                );
+
+                setReceiverUsers(receivers);
+
+            } catch (error) {
+                console.error(
+                    "Error loading receivers:",
+                    error
+                );
+            }
+        };
+
+        loadReceivers();
+    }, []);
 
 
     const handleCreateDelivery = async (e) => {
@@ -47,22 +93,20 @@ function SenderDashboard({
             await createDelivery({
 
                 senderId: user.uid,
-
                 senderName:
                     profile?.name || user.email,
 
                 receiverId: receiverEmail,
-
                 receiverEmail,
-
                 item,
-
+                pickupLocation,
                 destination
             });
 
 
             setReceiverEmail("");
             setItem("");
+            setPickupLocation("");
             setDestination("");
 
             setMessage(
@@ -87,19 +131,129 @@ function SenderDashboard({
 
     const totalDeliveries = deliveries.length;
 
-    const pendingDeliveries =
-        deliveries.filter(
-            d =>
-                d.status === "PENDING" ||
-                d.status === "ASSIGNED" ||
-                d.status === "OUT_FOR_DELIVERY"
-        ).length;
+        const pendingDeliveries =
+            deliveries.filter(
+                d =>
+                    d.status === "PENDING" ||
+                    d.status === "ASSIGNED" ||
+                    d.status === "OUT_FOR_DELIVERY"
+            ).length;
 
-    const completedDeliveries =
-        deliveries.filter(
-            d => d.status === "COMPLETED"
-        ).length;
+        const completedDeliveries =
+            deliveries.filter(
+                d => d.status === "COMPLETED"
+            ).length;
 
+        const handleStopAndReturnHome = async (delivery) => {
+        const confirmed = window.confirm(
+            "Stop this delivery and return the robot to HOME?"
+        );
+
+        if (!confirmed) {
+            return;
+        }
+
+        try {
+            setMessage("Stopping delivery and returning robot home...");
+
+            // Mark the delivery as cancelled
+            await updateDoc(
+                doc(db, "deliveries", delivery.id),
+                {
+                    status: "CANCELLED",
+                    cancelledBy: user.uid,
+                    cancelledAt: serverTimestamp(),
+                    cancellationReason:
+                        "Sender requested stop and return home"
+                }
+            );
+
+            // Command robot to return HOME
+            await updateDoc(
+                doc(db, "robotState", "current"),
+                {
+                    status: "RETURN_HOME",
+                    activeDeliveryId: delivery.id,
+                    ticketId: delivery.ticketId,
+                    updatedAt: serverTimestamp()
+                }
+            );
+
+            setMessage(
+                "Delivery stopped. Robot is returning HOME."
+            );
+
+        } catch (error) {
+
+            console.error(
+                "Stop and return home error:",
+                error
+            );
+
+            setMessage(
+                error.message ||
+                "Unable to stop the delivery."
+            );
+        }
+    };
+    const handleSendToReceiver = async (delivery) => {
+
+        const confirmed = window.confirm(
+            "Package has been picked up. Send the robot to the receiver?"
+        );
+
+        if (!confirmed) {
+            return;
+        }
+
+        try {
+
+            setMessage(
+                "Sending robot to receiver..."
+            );
+
+            // Update delivery status
+            await updateDoc(
+                doc(db, "deliveries", delivery.id),
+                {
+                    status: "SEND_TO_RECEIVER",
+                    pickupConfirmed: true,
+                    pickupConfirmedAt:
+                        serverTimestamp()
+                }
+            );
+
+            // Command ROS 2 robot
+            await updateDoc(
+                doc(db, "robotState", "current"),
+                {
+                    status: "SEND_TO_RECEIVER",
+                    activeDeliveryId:
+                        delivery.id,
+                    ticketId:
+                        delivery.ticketId,
+                    updatedAt:
+                        serverTimestamp()
+                }
+            );
+
+            setMessage(
+                "Robot is now travelling to the receiver."
+            );
+
+        } catch (error) {
+
+            console.error(
+                "Send to receiver error:",
+                error
+            );
+
+            setMessage(
+                error.message ||
+                "Unable to send robot to receiver."
+            );
+        }
+    };
 
     return (
 
@@ -237,7 +391,7 @@ function SenderDashboard({
                     <div>
 
                         <h2>
-                            Good morning,{" "}
+                            Hello,{" "}
                             {profile?.name || "there"} 👋
                         </h2>
 
@@ -283,7 +437,6 @@ function SenderDashboard({
                                 {pendingDeliveries}
                             </strong>
                         </div>
-
                     </div>
 
 
@@ -344,9 +497,7 @@ function SenderDashboard({
                                 Receiver Email
                             </label>
 
-                            <input
-                                type="email"
-                                placeholder="receiver@example.com"
+                            <select
                                 value={receiverEmail}
                                 onChange={(e) =>
                                     setReceiverEmail(
@@ -354,8 +505,23 @@ function SenderDashboard({
                                     )
                                 }
                                 required
-                            />
+                            >
+                                <option value="">
+                                    Select receiver
+                                </option>
 
+                                {receiverUsers.map((receiver) => (
+                                    <option
+                                        key={receiver.id}
+                                        value={
+                                            receiver.email
+                                        }
+                                    >
+                                        {receiver.name ? `${receiver.name} (${receiver.email})` : receiver.email}
+                                    </option>
+                                ))}
+
+                            </select>
                         </div>
 
 
@@ -381,11 +547,42 @@ function SenderDashboard({
 
                             </div>
 
+                        <div className="form-group">
+
+                            <label>
+                                Pickup Location
+                            </label>
+
+                            <select
+                                value={pickupLocation}
+                                onChange={(e) =>
+                                    setPickupLocation(e.target.value)
+                                }
+                                required
+                            >
+                                <option value="">
+                                    Select pickup location
+                                </option>
+
+                                <option value="Room A">
+                                    Room A
+                                </option>
+
+                                <option value="Room B">
+                                    Room B
+                                </option>
+
+                                <option value="HOME">
+                                    Home
+                                </option>
+                            </select>
+
+                        </div>
 
                         <div className="form-group">
 
                             <label>
-                                Destination
+                                Receiver Location
                             </label>
 
                             <select
@@ -396,7 +593,7 @@ function SenderDashboard({
                                 required
                             >
                                 <option value="">
-                                    Select destination
+                                    Select receiver location
                                 </option>
 
                                 <option value="Room A">
@@ -521,7 +718,19 @@ function SenderDashboard({
                                             </span>
 
                                         </div>
+                                        <div>
 
+                                            <span className="row-label">
+                                                Pickup
+                                            </span>
+
+                                            <span>
+                                                {
+                                                    delivery.pickupLocation
+                                                }
+                                            </span>
+
+                                        </div>
 
                                         <div>
 
@@ -544,6 +753,32 @@ function SenderDashboard({
                                                 {delivery.status}
                                             </span>
 
+                                        </div>
+                                        
+                                        <div>
+                                            {delivery.status ===
+                                                "ARRIVED_AT_PICKUP" && (
+
+                                                    <button
+                                                        className="primary-button" style={{ marginRight: "10px" }}
+                                                        onClick={() =>
+                                                            handleSendToReceiver(delivery)
+                                                        }
+                                                    >
+                                                        Send to Receiver →
+                                                    </button>
+
+                                            )}
+                                        </div>
+                                        <div>
+                                            {!["DELIVERED", "CANCELLED", "HOME"].includes(delivery.status) && (
+                                                <button
+                                                    className="stop-button"
+                                                    onClick={() => handleStopAndReturnHome(delivery)}
+                                                >
+                                                    Stop & Return Home
+                                                </button>
+                                            )}
                                         </div>
 
                                     </div>

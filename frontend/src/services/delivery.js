@@ -99,7 +99,8 @@ export async function createDelivery({
     senderName,
     receiverEmail,
     item,
-    destination
+    destination,
+    pickupLocation
 }) {
 
     // --------------------------------------------------------
@@ -185,6 +186,7 @@ export async function createDelivery({
         // Delivery information
         item,
         destination,
+        pickupLocation,
 
         // Robot
         robotId: null,

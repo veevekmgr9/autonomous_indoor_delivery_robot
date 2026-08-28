@@ -717,6 +717,23 @@ class FirebaseRobotMonitor(Node):
                     )
 
 
+        if status == "ARRIVED_AT_PICKUP":
+            with self.processing_lock:
+                if delivery_id in self.processed_arrivals:
+                    return
+
+                self.processed_arrivals.add(delivery_id)
+
+            self.get_logger().info(
+                f"📦 {ticket_id}: "
+                f"Pickup reached - turning LED ON"
+            )
+
+            self.delivery_arrived(
+                delivery_id,
+                ticket_id
+            )
+
         # =================================================
         # ARRIVED
         # =================================================

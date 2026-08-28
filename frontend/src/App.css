@@ -492,8 +492,6 @@ body {
 
 
 .panel-header {
-    display: flex;
-
     justify-content: space-between;
 
     align-items: center;
@@ -1071,6 +1069,26 @@ body {
     color: #777080;
 
     font-size: 11px;
+}
+
+/* =================================
+   STOP BUtTON
+================================= */
+.stop-button {
+    background: #dc2626;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.stop-button:hover {
+    background: #b91c1c;
+}
+
+.stop-button:active {
+    transform: scale(0.98);
 }
 
 

@@ -33,14 +33,15 @@ planner_server:
     GridBased:
       plugin: "nav2_navfn_planner::NavfnPlanner"
 
-      # Allows the planner to find a nearby reachable goal
-      # when the exact goal cell is difficult to reach.
+      # Allows NavFn to find a path when the exact goal
+      # cell is occupied or difficult to reach.
       tolerance: 0.15
 
-      # A* provides efficient global planning.
+      # A* is normally more efficient than Dijkstra,
+      # while still producing good paths for this robot.
       use_astar: true
 
-      # Do not plan through unknown map regions.
+      # Do not plan through unknown areas.
       allow_unknown: false
 
 
@@ -53,13 +54,14 @@ controller_server:
 
     use_sim_time: false
 
-    # Controller update frequency.
+    # Match the EKF output rate.
     controller_frequency: 15.0
 
     min_x_velocity_threshold: 0.001
     min_y_velocity_threshold: 0.001
     min_theta_velocity_threshold: 0.001
 
+    # Allow some tolerance before declaring controller failure.
     failure_tolerance: 0.3
 
 
@@ -74,12 +76,11 @@ controller_server:
 
       plugin: "nav2_controller::SimpleProgressChecker"
 
-      # Slightly easier for the small differential-drive robot
-      # to satisfy while turning or manoeuvring.
-      required_movement_radius: 0.05
+      # Robot must make meaningful movement.
+      required_movement_radius: 0.06
 
-      # Give the robot more time before considering it stuck.
-      movement_time_allowance: 20.0
+      # Give the robot more time when negotiating obstacles.
+      movement_time_allowance: 12.0
 
 
     # --------------------------------------------------------
@@ -95,11 +96,10 @@ controller_server:
 
       stateful: true
 
-      # Realistic tolerance for the physical platform.
-      xy_goal_tolerance: 0.10
+      # Small but realistic tolerance for your indoor robot.
+      xy_goal_tolerance: 0.07
 
-      # Approximately 11.5 degrees.
-      yaw_goal_tolerance: 0.20
+      yaw_goal_tolerance: 0.10
 
 
     # --------------------------------------------------------
@@ -121,16 +121,17 @@ controller_server:
 
       min_vel_x: 0.0
 
-      # Conservative maximum speed for stable indoor travel.
-      max_vel_x: 0.25
+      # Slightly increased from your old configuration,
+      # but still conservative.
+      max_vel_x: 0.18
 
       min_vel_y: 0.0
       max_vel_y: 0.0
 
-      max_vel_theta: 1.5
+      max_vel_theta: 1.0
 
       min_speed_xy: 0.0
-      max_speed_xy: 0.28
+      max_speed_xy: 0.16
 
       min_speed_theta: 0.0
 
@@ -150,16 +151,17 @@ controller_server:
       # SAMPLING
       # ======================================================
 
-      # Slightly more trajectory candidates for smoother
-      # local trajectory selection.
-      vx_samples: 12
-      vtheta_samples: 24
+      # More samples = better trajectory selection.
+      vx_samples: 10
+      vtheta_samples: 20
 
 
       # ======================================================
       # TRAJECTORY SIMULATION
       # ======================================================
 
+      # Look slightly further ahead when evaluating
+      # obstacle avoidance.
       sim_time: 1.2
 
       linear_granularity: 0.025
@@ -172,9 +174,10 @@ controller_server:
       # STOPPING / GOAL
       # ======================================================
 
-      xy_goal_tolerance: 0.10
+      xy_goal_tolerance: 0.07
 
       trans_stopped_velocity: 0.02
+
 
       short_circuit_trajectory_evaluation: true
 
@@ -201,16 +204,16 @@ controller_server:
       # OBSTACLE CLEARANCE
       # ------------------------------------------------------
 
-      # Give obstacle avoidance importance without making
-      # the controller excessively conservative.
-      BaseObstacle.scale: 0.10
+      # Increased significantly from the online example.
+      # This makes DWB care more about clearance.
+      BaseObstacle.scale: 0.08
 
 
       # ------------------------------------------------------
       # PATH ALIGNMENT
       # ------------------------------------------------------
 
-      PathAlign.scale: 12.0
+      PathAlign.scale: 20.0
 
       PathAlign.forward_point_distance: 0.12
 
@@ -219,7 +222,7 @@ controller_server:
       # GOAL ALIGNMENT
       # ------------------------------------------------------
 
-      GoalAlign.scale: 4.0
+      GoalAlign.scale: 6.0
 
       GoalAlign.forward_point_distance: 0.12
 
@@ -228,14 +231,14 @@ controller_server:
       # DISTANCE FROM PATH
       # ------------------------------------------------------
 
-      PathDist.scale: 10.0
+      PathDist.scale: 15.0
 
 
       # ------------------------------------------------------
       # DISTANCE FROM GOAL
       # ------------------------------------------------------
 
-      GoalDist.scale: 10.0
+      GoalDist.scale: 12.0
 
 
       # ------------------------------------------------------
@@ -268,18 +271,18 @@ local_costmap:
 
       update_frequency: 5.0
 
-      publish_frequency: 2.0
+      publish_frequency:  2.0
 
 
       # ======================================================
       # FRAMES
       # ======================================================
 
-      global_frame: odom
+      global_frame: odom  
 
       robot_base_frame: base_link
 
-      # Allows reasonable tolerance for TF timing.
+      # Helps with your previously observed TF timing jitter.
       transform_tolerance: 1.0
 
 
@@ -299,16 +302,24 @@ local_costmap:
       # ======================================================
       # ROBOT FOOTPRINT
       # ======================================================
+      #
+      # Slightly enlarged to account for your side wires.
+      #
+      # Approximately:
+      #
+      #       0.19 m
+      #   <------------>
+      #
+      #       0.15 m
+      #
+      # ======================================================
 
-      # Approximate effective footprint of the small robot.
-      # Keep local and global footprints consistent.
+      robot_radius: 0.11
 
-      robot_radius: 0.15
-
-      footprint: "[[0.15, 0.15],
-                   [0.15, -0.15],
-                   [-0.15, -0.15],
-                   [-0.15, 0.15]]"
+      footprint: "[[0.15, 0.25],
+                   [0.15, -0.25],
+                   [-0.15, -0.25],
+                   [-0.15, 0.25]]"
 
       footprint_padding: 0.02
 
@@ -367,6 +378,7 @@ local_costmap:
           raytrace_min_range: 0.10
 
 
+          # Your robot operates indoors.
           min_obstacle_height: 0.0
 
           max_obstacle_height: 0.80
@@ -385,13 +397,16 @@ local_costmap:
 
         enabled: true
 
+
+        # Your ultrasonic topic.
         topics:
           - /ultrasonic
 
 
-        # Ultrasonic detection cone.
+        # Ultrasonic cone.
         phi: 1.0
 
+        # Expand the detected region.
         inflate_cone: 1.0
 
 
@@ -399,11 +414,14 @@ local_costmap:
         no_readings_timeout: 0.5
 
 
+        # Probability thresholds.
         clear_threshold: 0.20
 
         mark_threshold: 0.80
 
+
         clear_on_max_reading: true
+
 
         input_sensor_type: "VARIABLE"
 
@@ -418,13 +436,11 @@ local_costmap:
 
         enabled: true
 
-        # Reduced from 0.30 m to prevent narrow routes
-        # from becoming unnecessarily blocked.
-        inflation_radius: 0.20
+        # Larger clearance around obstacles.
+        inflation_radius: 0.30
 
-        # Higher scaling gives a stronger cost gradient
-        # around obstacles.
-        cost_scaling_factor: 5.0
+        # Smooth cost field.
+        cost_scaling_factor: 4.0
 
         inflate_unknown: false
 
@@ -484,12 +500,12 @@ global_costmap:
       # ROBOT FOOTPRINT
       # ======================================================
 
-      robot_radius: 0.15
+      robot_radius: 0.11
 
-      footprint: "[[0.15, 0.15],
-                   [0.15, -0.15],
-                   [-0.15, -0.15],
-                   [-0.15, 0.15]]"
+      footprint: "[[0.15, 0.25],
+                   [0.115, -0.25],
+                   [-0.15, -0.25],
+                   [-0.15, 0.25]]"
 
       footprint_padding: 0.01
 
@@ -581,9 +597,9 @@ global_costmap:
 
         enabled: true
 
-        inflation_radius: 0.20
+        inflation_radius: 0.30
 
-        cost_scaling_factor: 5.0
+        cost_scaling_factor: 4.0
 
         inflate_unknown: false
 
@@ -602,22 +618,17 @@ global_costmap:
 # ============================================================
 
 bt_navigator:
-
   ros__parameters:
 
     use_sim_time: false
 
     global_frame: map
-
     robot_base_frame: base_link
-
     odom_topic: /odometry/filtered
 
     default_nav_to_pose_bt_xml: "/opt/ros/jazzy/share/nav2_bt_navigator/behavior_trees/navigate_to_pose_w_replanning_and_recovery.xml"
 
     default_nav_through_poses_bt_xml: "/opt/ros/jazzy/share/nav2_bt_navigator/behavior_trees/navigate_through_poses_w_replanning_and_recovery.xml"
-
-
 # ============================================================
 # BEHAVIOR SERVER
 # ============================================================
@@ -681,9 +692,12 @@ velocity_smoother:
 
     use_sim_time: false
 
+
     smoothing_frequency: 20.0
 
+
     scale_velocities: false
+
 
     feedback: "OPEN_LOOP"
 
@@ -724,6 +738,7 @@ velocity_smoother:
     # ========================================================
 
     velocity_timeout: 1.0
+
 
     # Arduino bridge expects Twist.
     enable_stamped_cmd_vel: false
