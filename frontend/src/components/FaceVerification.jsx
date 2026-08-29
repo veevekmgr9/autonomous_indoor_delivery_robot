@@ -36,9 +36,9 @@ export default function FaceVerification({
         useState(
             "Loading face recognition models..."
         );
-    
+
     const [recognitionResult, setRecognitionResult] =
-    useState(null);
+        useState(null);
 
     const [recognitionDistance, setRecognitionDistance] =
         useState(null);
@@ -46,13 +46,7 @@ export default function FaceVerification({
     const [recognizing, setRecognizing] =
         useState(false);
 
-
-    /*
-     * =========================================
-     * LOAD ALL FACE MODELS
-     * =========================================
-     */
-
+    //LOAD ALL FACE MODELS
     async function loadFaceModels() {
 
         try {
@@ -63,11 +57,9 @@ export default function FaceVerification({
                 "Loading face detection model..."
             );
 
-
             /*
              * Tiny Face Detector
              */
-
             await faceapi.nets.tinyFaceDetector.loadFromUri(
                 "/models"
             );
@@ -76,11 +68,9 @@ export default function FaceVerification({
                 "✓ Tiny Face Detector loaded"
             );
 
-
             /*
              * 68-point facial landmark model
              */
-
             setMessage(
                 "Loading facial landmark model..."
             );
@@ -93,11 +83,9 @@ export default function FaceVerification({
                 "✓ Face Landmark model loaded"
             );
 
-
             /*
              * Face recognition model
              */
-
             setMessage(
                 "Loading face recognition model..."
             );
@@ -110,11 +98,9 @@ export default function FaceVerification({
                 "✓ Face Recognition model loaded"
             );
 
-
             /*
              * Everything loaded successfully
              */
-
             setModelsLoaded(true);
 
             setMessage(
@@ -142,13 +128,7 @@ export default function FaceVerification({
         }
     }
 
-
-    /*
-     * =========================================
-     * FACE DETECTION
-     * =========================================
-     */
-
+    //FACE DETECTION
     async function detectFace() {
 
         if (
@@ -158,7 +138,6 @@ export default function FaceVerification({
         ) {
             return;
         }
-
 
         try {
 
@@ -171,11 +150,9 @@ export default function FaceVerification({
                     })
                 );
 
-
             /*
              * FACE FOUND
              */
-
             if (detection) {
 
                 const confidence =
@@ -183,25 +160,18 @@ export default function FaceVerification({
                         detection.score * 100
                     );
 
-
                 setFaceDetected(true);
 
                 setFaceConfidence(
                     confidence
                 );
 
-
                 setMessage(
                     `Face detected — ${confidence}% confidence`
                 );
-
             }
 
-
-            /*
-             * NO FACE
-             */
-
+            //NO FACE
             else {
 
                 setFaceDetected(false);
@@ -222,11 +192,7 @@ export default function FaceVerification({
         }
     }
 
-    /*
-     * =========================================
-     * FACE RECOGNITION
-     * =========================================
-     */
+    //FACE RECOGNITION
     async function recognizeFace() {
 
         setError("");
@@ -249,22 +215,10 @@ export default function FaceVerification({
         );
 
         try {
-
-            /*
-            * Get current receiver's registered
-            * face descriptor from Firebase.
-            */
-
             const registeredDescriptor =
                 await getRegisteredFaceDescriptor(
                     delivery.receiverId
                 );
-
-
-            /*
-            * Generate descriptor from
-            * the face currently in the camera.
-            */
 
             const result =
                 await faceapi
@@ -278,7 +232,6 @@ export default function FaceVerification({
                     .withFaceLandmarks()
                     .withFaceDescriptor();
 
-
             if (!result) {
 
                 throw new Error(
@@ -286,46 +239,30 @@ export default function FaceVerification({
                 );
             }
 
-
-            /*
-            * Convert Firebase array to
-            * Float32Array.
-            */
-
+            //Convert Firebase array to Float32Array.
             const storedDescriptor =
                 new Float32Array(
                     registeredDescriptor
                 );
 
-
-            /*
-            * Calculate Euclidean distance.
-            */
-
+            //Calculate Euclidean distance.
             const distance =
                 faceapi.euclideanDistance(
                     result.descriptor,
                     storedDescriptor
                 );
 
-
             setRecognitionDistance(
                 distance
             );
-
 
             console.log(
                 "Face recognition distance:",
                 distance
             );
 
-
-            /*
-            * Initial threshold.
-            */
-
+            //Initial threshold.
             const THRESHOLD = 0.50;
-
 
             if (distance <= THRESHOLD) {
 
@@ -341,18 +278,11 @@ export default function FaceVerification({
                     "✅ FACE MATCH"
                 );
 
-
-                /*
-                * Update Firebase delivery status.
-                *
-                * Robot is NOT involved yet.
-                */
-
+                //Update Firebase delivery status.
                 await updateDeliveryStatus(
                     delivery.id,
                     "VERIFIED"
                 );
-
 
                 setMessage(
                     "Identity verified successfully. Delivery authenticated."
@@ -363,9 +293,6 @@ export default function FaceVerification({
                 );
 
                 stopCamera();
-                /*
-                * Notify parent dashboard.
-                */
 
                 if (onVerified) {
                     onVerified();
@@ -375,7 +302,7 @@ export default function FaceVerification({
                     onClose();
                 }
 
-            }  else {
+            } else {
 
                 setRecognitionResult(
                     "NO_MATCH"
@@ -430,23 +357,13 @@ export default function FaceVerification({
         }
     }
 
-
-    /*
-     * =========================================
-     * START CAMERA
-     * =========================================
-     */
-
+    //START CAMERA
     async function startCamera() {
 
         setError("");
 
         try {
-
-            /*
-             * Camera access requires HTTPS.
-             */
-
+            //Camera access requires HTTPS.
             if (!window.isSecureContext) {
 
                 throw new Error(
@@ -454,11 +371,7 @@ export default function FaceVerification({
                 );
             }
 
-
-            /*
-             * Check browser support.
-             */
-
+            //Check browser support
             if (
                 !navigator.mediaDevices ||
                 !navigator.mediaDevices.getUserMedia
@@ -469,11 +382,7 @@ export default function FaceVerification({
                 );
             }
 
-
-            /*
-             * Request front-facing camera.
-             */
-
+            //Request front-facing camera.
             const stream =
                 await navigator.mediaDevices.getUserMedia({
 
@@ -495,15 +404,10 @@ export default function FaceVerification({
 
                 });
 
-
             streamRef.current =
                 stream;
 
-
-            /*
-             * Attach stream to video.
-             */
-
+            //Attach stream to video.
             if (videoRef.current) {
 
                 videoRef.current.srcObject =
@@ -512,20 +416,13 @@ export default function FaceVerification({
                 await videoRef.current.play();
             }
 
-
             setCameraStarted(true);
 
             setMessage(
                 "Camera started. Position your face inside the frame."
             );
 
-
-            /*
-             * Start face detection.
-             *
-             * Every 500ms.
-             */
-
+            //Start face detection
             detectionIntervalRef.current =
                 setInterval(
                     detectFace,
@@ -538,7 +435,6 @@ export default function FaceVerification({
                 "Camera error:",
                 err
             );
-
 
             if (
                 err.name ===
@@ -583,19 +479,10 @@ export default function FaceVerification({
         }
     }
 
-
-    /*
-     * =========================================
-     * STOP CAMERA
-     * =========================================
-     */
-
+    //STOP CAMERA
     function stopCamera() {
 
-        /*
-         * Stop detection timer.
-         */
-
+        //Stop detection timer
         if (
             detectionIntervalRef.current
         ) {
@@ -608,11 +495,7 @@ export default function FaceVerification({
                 null;
         }
 
-
-        /*
-         * Stop camera tracks.
-         */
-
+        //Stop camera tracks.
         if (streamRef.current) {
 
             streamRef.current
@@ -627,22 +510,15 @@ export default function FaceVerification({
                 null;
         }
 
-
-        /*
-         * Clear video.
-         */
-
+        //Clear video
         if (videoRef.current) {
 
             videoRef.current.srcObject =
                 null;
         }
 
-
         setCameraStarted(false);
-
         setFaceDetected(false);
-
         setFaceConfidence(0);
 
         setMessage(
@@ -650,44 +526,22 @@ export default function FaceVerification({
         );
     }
 
-
-    /*
-     * =========================================
-     * CLOSE VERIFICATION
-     * =========================================
-     */
-
+    //CLOSE VERIFICATION
     function handleClose() {
 
         stopCamera();
 
         if (onClose) {
-
             onClose();
-
         }
     }
 
-
-    /*
-     * =========================================
-     * TEMPORARY TEST
-     *
-     * This ONLY tests face detection.
-     *
-     * It does NOT authenticate the user.
-     * =========================================
-     */
-
+    //TEMPORARY TEST
     function handleTestVerification() {
 
         setError("");
 
-
-        /*
-         * No face
-         */
-
+        //No face
         if (!faceDetected) {
 
             setError(
@@ -697,15 +551,10 @@ export default function FaceVerification({
             return;
         }
 
-
-        /*
-         * Face detected
-         */
-
+        //Face detected
         setMessage(
             `Face detection successful — ${faceConfidence}% confidence.`
         );
-
 
         console.log(
             "Face detection test successful."
@@ -717,29 +566,15 @@ export default function FaceVerification({
         );
     }
 
-
-    /*
-     * =========================================
-     * LOAD MODELS WHEN COMPONENT OPENS
-     * =========================================
-     */
-
+    //LOAD MODELS WHEN COMPONENT OPENS
     useEffect(() => {
 
         loadFaceModels();
 
-
-        /*
-         * Cleanup when component closes.
-         */
-
+        //Cleanup when component closes.
         return () => {
 
-
-            /*
-             * Stop detection timer.
-             */
-
+            //Stop detection timer.
             if (
                 detectionIntervalRef.current
             ) {
@@ -752,36 +587,22 @@ export default function FaceVerification({
                     null;
             }
 
-
-            /*
-             * Stop camera.
-             */
-
+            //Stop camera
             if (streamRef.current) {
 
                 streamRef.current
                     .getTracks()
                     .forEach((track) => {
-
                         track.stop();
-
                     });
 
                 streamRef.current =
                     null;
             }
-
         };
-
     }, []);
 
-
-    /*
-     * =========================================
-     * USER INTERFACE
-     * =========================================
-     */
-
+    //USER INTERFACE
     return (
 
         <div className="verification-overlay">
@@ -789,9 +610,7 @@ export default function FaceVerification({
             <div className="verification-card">
 
 
-                {/* ================================
-                    HEADER
-                ================================= */}
+                {/* HEADER */}
 
                 <div className="verification-header">
 
@@ -808,7 +627,6 @@ export default function FaceVerification({
 
                     </div>
 
-
                     <button
                         className="close-button"
                         onClick={handleClose}
@@ -818,21 +636,11 @@ export default function FaceVerification({
 
                 </div>
 
-
-                {/* ================================
-                    CONTENT
-                ================================= */}
-
+                {/* CONTENT */}
                 <div className="verification-content">
 
-
-                    {/* ================================
-                        CAMERA AREA
-                    ================================= */}
-
+                    {/* CAMERA AREA */}
                     <div className="camera-container">
-
-
                         {/* CAMERA NOT STARTED */}
 
                         {!cameraStarted && (
@@ -843,18 +651,15 @@ export default function FaceVerification({
                                     📷
                                 </div>
 
-
                                 <h3>
                                     Face Verification
                                 </h3>
-
 
                                 <p>
                                     Your phone camera
                                     will be used to
                                     verify your identity.
                                 </p>
-
 
                                 {!modelsLoaded && (
 
@@ -865,7 +670,6 @@ export default function FaceVerification({
                                     </p>
 
                                 )}
-
 
                                 <button
                                     className="primary-button"
@@ -883,14 +687,10 @@ export default function FaceVerification({
                                     }
 
                                 </button>
-
                             </div>
-
                         )}
 
-
                         {/* LIVE CAMERA */}
-
                         <video
                             ref={videoRef}
                             className={
@@ -902,7 +702,6 @@ export default function FaceVerification({
                             playsInline
                             muted
                         />
-
 
                         {/* FACE FRAME */}
 
@@ -936,9 +735,7 @@ export default function FaceVerification({
 
                         )}
 
-
                         {/* FACE STATUS */}
-
                         {cameraStarted && (
 
                             <div className="face-status">
@@ -954,10 +751,7 @@ export default function FaceVerification({
 
                     </div>
 
-
-                    {/* ================================
-                        ERROR
-                    ================================= */}
+                    {/* ERROR */}
 
                     {error && (
 
@@ -969,10 +763,7 @@ export default function FaceVerification({
 
                     )}
 
-
-                    {/* ================================
-                        STATUS MESSAGE
-                    ================================= */}
+                    {/* STATUS MESSAGE */}
 
                     <div className="verification-message">
                         {recognitionResult === "MATCH" && (
@@ -999,7 +790,6 @@ export default function FaceVerification({
                                 )}
 
                             </div>
-
                         )}
 
                         {recognitionResult === "NO_MATCH" && (
@@ -1040,18 +830,11 @@ export default function FaceVerification({
 
                     </div>
 
-
-                    {/* ================================
-                        ACTION BUTTONS
-                    ================================= */}
-
+                    {/* ACTION BUTTONS */}
                     {cameraStarted && (
-
                         <div className="verification-actions">
 
-
                             {/* STOP CAMERA */}
-
                             <button
                                 className="secondary-button"
                                 onClick={
@@ -1061,9 +844,7 @@ export default function FaceVerification({
                                 Stop Camera
                             </button>
 
-
                             {/* TEST FACE */}
-
                             <button
                                 className="primary-button"
                                 onClick={
@@ -1080,13 +861,9 @@ export default function FaceVerification({
                             </button>
 
                         </div>
-
                     )}
-
                 </div>
-
             </div>
-
         </div>
     );
 }

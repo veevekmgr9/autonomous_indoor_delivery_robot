@@ -3,12 +3,7 @@ import cv2
 import numpy as np
 import insightface
 import time
-
-
-# ============================================================
 # INSIGHTFACE
-# ============================================================
-
 app = insightface.app.FaceAnalysis(
     name="buffalo_l",
     providers=["CPUExecutionProvider"]
@@ -21,11 +16,7 @@ app.prepare(
 
 print("InsightFace ready")
 
-
-# ============================================================
 # CAMERA
-# ============================================================
-
 camera_process = subprocess.Popen(
     [
         "rpicam-vid",
@@ -83,10 +74,7 @@ try:
 
             frame_count += 1
 
-            # ====================================================
             # ONLY RUN FACE AI EVERY 10 FRAMES
-            # ====================================================
-
             if frame_count % 10 == 0:
 
                 now = time.time()
@@ -102,11 +90,7 @@ try:
                         f"Faces detected: {len(faces)}"
                     )
 
-
-            # ====================================================
             # DRAW LAST DETECTION
-            # ====================================================
-
             for face in faces:
 
                 x1, y1, x2, y2 = face.bbox.astype(int)

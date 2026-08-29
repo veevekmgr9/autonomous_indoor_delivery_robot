@@ -14,28 +14,17 @@ from nav_msgs.msg import Odometry
 from sensor_msgs.msg import LaserScan, Imu
 from std_msgs.msg import String, Int32MultiArray
 
-
-# ============================================================
-# FLASK
-# ============================================================
-
+# FLAS
 app = Flask(__name__)
 
-
-# ============================================================
 # ROS 2 CONTROL NODE
-# ============================================================
-
 class RobotControl(Node):
 
     def __init__(self):
 
         super().__init__("phone_dashboard")
 
-        # ----------------------------------------------------
         # PUBLISHERS
-        # ----------------------------------------------------
-
         self.cmd_pub = self.create_publisher(
             Twist,
             "/cmd_vel",
@@ -48,10 +37,7 @@ class RobotControl(Node):
             10
         )
 
-        # ----------------------------------------------------
         # SUBSCRIBERS
-        # ----------------------------------------------------
-
         self.create_subscription(
             Odometry,
             "/odometry/filtered",
@@ -80,10 +66,7 @@ class RobotControl(Node):
             10
         )
 
-        # ----------------------------------------------------
         # SPEED SETTINGS
-        # -------0---------------------------------------------
-
         # Slow speed is recommended while testing SLAM
         self.speed = 0.05
         self.turn = 0.08
@@ -94,10 +77,7 @@ class RobotControl(Node):
         self.min_turn = 0.08
         self.max_turn = 0.60
 
-        # ----------------------------------------------------
         # CONTROL STATE
-        # ----------------------------------------------------
-
         self.current_command = "stop"
 
         self.valid_commands = {
@@ -110,10 +90,7 @@ class RobotControl(Node):
 
         self.command_lock = threading.Lock()
 
-        # ----------------------------------------------------
         # SENSOR STATE
-        # ----------------------------------------------------
-
         self.x = 0.0
         self.y = 0.0
 
@@ -130,10 +107,7 @@ class RobotControl(Node):
 
         self.front_distance = None
 
-        # ----------------------------------------------------
         # CONTROL TIMER
-        # ----------------------------------------------------
-
         # Publish cmd_vel at 100 Hz
         self.timer = self.create_timer(
             0.01,
@@ -144,10 +118,7 @@ class RobotControl(Node):
             "Phone dashboard ROS node started"
         )
 
-    # ========================================================
     # COMMAND
-    # ========================================================
-
     def move(self, command):
 
         if command not in self.valid_commands:
@@ -163,10 +134,7 @@ class RobotControl(Node):
 
         return True
 
-    # ========================================================
     # SPEED
-    # ========================================================
-
     def set_speed(self, value):
 
         try:
@@ -184,10 +152,7 @@ class RobotControl(Node):
 
             return False
 
-    # ========================================================
     # PUBLISH MOTOR COMMAND
-    # ========================================================
-
     def publish_command(self):
 
         msg = Twist()
@@ -195,20 +160,6 @@ class RobotControl(Node):
         with self.command_lock:
 
             command = self.current_command
-
-            # ------------------------------------------------
-            # STANDARD ROS DIFFERENTIAL DRIVE CONVENTION
-            # ------------------------------------------------
-            #
-            # linear.x positive  = forward
-            # linear.x negative  = backward
-            #
-            # angular.z positive = turn LEFT
-            # angular.z negative = turn RIGHT
-            #
-            # Motor direction/wheel wiring correction should
-            # be handled by the Arduino motor controller.
-            # ------------------------------------------------
 
             if command == "forward":
 
@@ -242,10 +193,7 @@ class RobotControl(Node):
 
         self.motion_pub.publish(state)
 
-    # ========================================================
     # ODOMETRY
-    # ========================================================
-
     def odom_callback(self, msg):
 
         self.x = msg.pose.pose.position.x
@@ -261,40 +209,19 @@ class RobotControl(Node):
 
         self.last_odom_time = time.time()
 
-    # ========================================================
     # ENCODERS
-    # ========================================================
-
     def encoder_callback(self, msg):
 
         if len(msg.data) >= 2:
-
-            # Arduino should publish:
-            #
-            # data[0] = LEFT wheel encoder
-            # data[1] = RIGHT wheel encoder
-            #
-            # Since the motor/wheel mapping was corrected
-            # in the Arduino code, do NOT swap them again
-            # in this dashboard.
-
             self.left_ticks = msg.data[0]
             self.right_ticks = msg.data[1]
 
             self.last_encoder_time = time.time()
 
-    # ========================================================
     # LIDAR
-    # ========================================================
-
     def scan_callback(self, msg):
 
         self.last_scan_time = time.time()
-
-        # Find the minimum valid LiDAR distance
-        # approximately in front of the robot.
-        #
-        # +/- 0.35 rad is approximately +/- 20 degrees.
 
         valid = []
 
@@ -321,23 +248,12 @@ class RobotControl(Node):
         else:
             self.front_distance = None
 
-    # ========================================================
     # IMU
-    # ========================================================
-
     def imu_callback(self, msg):
-
-        # Monitor raw MPU6050 data.
-        #
-        # IMU is currently not being used directly
-        # for dashboard control.
 
         self.last_imu_time = time.time()
 
-    # ========================================================
     # SENSOR HEALTH
-    # ========================================================
-
     def alive(self, timestamp, timeout=1.5):
 
         if timestamp == 0.0:
@@ -347,10 +263,7 @@ class RobotControl(Node):
             time.time() - timestamp
         ) < timeout
 
-    # ========================================================
     # STATUS
-    # ========================================================
-
     def get_status(self):
 
         return {
@@ -414,12 +327,8 @@ class RobotControl(Node):
         }
 
 
-# ============================================================
 # CAMERA
-# ============================================================
-
 camera_process = None
-
 
 def start_camera():
 
@@ -536,11 +445,7 @@ def camera_frames():
 
             time.sleep(0.1)
 
-
-# ============================================================
 # WEB PAGE
-# ============================================================
-
 PAGE = """
 
 <!DOCTYPE html>
@@ -853,11 +758,7 @@ Space = STOP.
 
 let currentSpeed = 0.10;
 
-
-// ==========================================================
 // MOVEMENT
-// ==========================================================
-
 function send(cmd) {
 
     fetch("/move/" + cmd)
@@ -872,21 +773,13 @@ function send(cmd) {
         });
 }
 
-
-// ==========================================================
 // EMERGENCY STOP
-// ==========================================================
-
 function emergencyStop() {
 
     send("stop");
 }
 
-
-// ==========================================================
 // KEYBOARD CONTROL
-// ==========================================================
-
 document.addEventListener(
     "keydown",
     function(event) {
@@ -954,11 +847,7 @@ document.addEventListener(
     }
 );
 
-
-// ----------------------------------------------------------
 // Stop robot if browser loses focus
-// ----------------------------------------------------------
-
 window.addEventListener(
     "blur",
     emergencyStop
@@ -976,11 +865,7 @@ document.addEventListener(
     }
 );
 
-
-// ==========================================================
 // SPEED
-// ==========================================================
-
 function changeSpeed(delta) {
 
     currentSpeed += delta;
@@ -1005,11 +890,7 @@ function changeSpeed(delta) {
         currentSpeed.toFixed(2);
 }
 
-
-// ==========================================================
 // SENSOR HEALTH
-// ==========================================================
-
 function setHealth(id, ok) {
 
     let element =
@@ -1030,11 +911,7 @@ function setHealth(id, ok) {
     }
 }
 
-
-// ==========================================================
 // STATUS
-// ==========================================================
-
 function updateStatus() {
 
     fetch("/status")
@@ -1162,25 +1039,16 @@ updateStatus();
 
 """
 
-
-# ============================================================
 # GLOBAL ROS NODE
-# ============================================================
-
 robot = None
 
-
-# ============================================================
 # FLASK ROUTES
-# ============================================================
-
 @app.route("/")
 def home():
 
     return render_template_string(
         PAGE
     )
-
 
 @app.route("/camera")
 def camera():
@@ -1192,7 +1060,6 @@ def camera():
             "boundary=frame"
         )
     )
-
 
 @app.route("/move/<cmd>")
 def move(cmd):
@@ -1207,7 +1074,6 @@ def move(cmd):
 
     return "OK"
 
-
 @app.route("/speed/<value>")
 def speed(value):
 
@@ -1220,7 +1086,6 @@ def speed(value):
         return "Invalid speed", 400
 
     return "OK"
-
 
 @app.route("/status")
 def status():
@@ -1235,11 +1100,7 @@ def status():
         robot.get_status()
     )
 
-
-# ============================================================
 # ROS THREAD
-# ============================================================
-
 def ros_thread():
 
     try:
@@ -1252,11 +1113,7 @@ def ros_thread():
             f"ROS thread error: {e}"
         )
 
-
-# ============================================================
 # MAIN
-# ============================================================
-
 def main():
 
     global robot
@@ -1278,13 +1135,7 @@ def main():
 
     print("")
     print(
-        "===================================="
-    )
-    print(
         " AUTONOMOUS DELIVERY ROBOT DASHBOARD"
-    )
-    print(
-        "===================================="
     )
     print("")
     print(
@@ -1305,11 +1156,7 @@ def main():
         )
 
     finally:
-
-        # ----------------------------------------------------
         # STOP ROBOT BEFORE SHUTDOWN
-        # ----------------------------------------------------
-
         if robot is not None:
 
             robot.move("stop")

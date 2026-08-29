@@ -6,7 +6,6 @@ import {
     listenToReceiverDeliveries
 } from "../services/delivery";
 
-
 function ReceiverDashboard({
     user,
     profile,
@@ -16,15 +15,12 @@ function ReceiverDashboard({
     const [deliveries, setDeliveries] = useState([]);
 
     const [verificationDelivery, setVerificationDelivery] =
-    useState(null);
+        useState(null);
 
     const [showFaceRegistration, setShowFaceRegistration] =
-    useState(false);
+        useState(false);
 
-
-    /*
-     * Listen for receiver deliveries in real time
-     */
+    //Listen for receiver deliveries in real time
     useEffect(() => {
 
         const unsubscribe =
@@ -37,13 +33,9 @@ function ReceiverDashboard({
 
     }, [user.uid]);
 
-
-    /*
-     * Statistics
-     */
+    //Statistics
     const totalDeliveries =
         deliveries.length;
-
 
     const activeDeliveries =
         deliveries.filter(
@@ -51,17 +43,13 @@ function ReceiverDashboard({
                 delivery.status !== "COMPLETED"
         ).length;
 
-
     const completedDeliveries =
         deliveries.filter(
             delivery =>
                 delivery.status === "COMPLETED"
         ).length;
 
-
-    /*
-     * Display friendly status
-     */
+    //Display status
     const getStatusText = (status) => {
 
         switch (status) {
@@ -95,10 +83,7 @@ function ReceiverDashboard({
         }
     };
 
-
-    /*
-     * Open verification camera
-     */
+    //Open verification camera
     const openVerification =
         (delivery) => {
 
@@ -112,7 +97,6 @@ function ReceiverDashboard({
             );
         };
 
-
     /*
      * Close verification
      */
@@ -122,14 +106,11 @@ function ReceiverDashboard({
             setVerificationDelivery(null);
         };
 
-
     return (
 
         <div className="app-layout">
 
-            {/* ================================
-                SIDEBAR
-            ================================= */}
+            {/* SIDEBAR */}
 
             <aside className="sidebar">
 
@@ -180,7 +161,6 @@ function ReceiverDashboard({
 
 
                 {/* ROBOT STATUS */}
-
                 <div className="sidebar-bottom">
 
                     <div className="robot-status">
@@ -206,15 +186,10 @@ function ReceiverDashboard({
             </aside>
 
 
-            {/* ================================
-                MAIN CONTENT
-            ================================= */}
-
+            {/* MAIN CONTENT */}
             <main className="main-content">
 
-
                 {/* TOP BAR */}
-
                 <header className="topbar">
 
                     <div>
@@ -274,10 +249,7 @@ function ReceiverDashboard({
                 </header>
 
 
-                {/* ================================
-                    WELCOME
-                ================================= */}
-
+                {/* WELCOME */}
                 <section className="welcome-section">
 
                     <div>
@@ -298,45 +270,41 @@ function ReceiverDashboard({
 
                 </section>
                 {!profile?.faceRegistered && (
-                <section className="panel security-panel">
+                    <section className="panel security-panel">
 
-                    <div className="security-icon">
-                        🔐
-                    </div>
+                        <div className="security-icon">
+                            🔐
+                        </div>
 
-                    <div style={{ flex: 1 }}>
+                        <div style={{ flex: 1 }}>
 
-                        <h3>
-                            Identity Verification
-                        </h3>
+                            <h3>
+                                Identity Verification
+                            </h3>
 
-                        <p>
-                            Register your face to securely
-                            collect autonomous robot deliveries.
-                        </p>
+                            <p>
+                                Register your face to securely
+                                collect autonomous robot deliveries.
+                            </p>
 
-                    </div>
+                        </div>
 
-                    <button
-                        className="primary-button"
-                        onClick={() =>
-                            setShowFaceRegistration(true)
-                        }
-                    >
-                        {profile?.faceRegistered
-                            ? "Update Face"
-                            : "Register Face"
-                        }
-                    </button>
+                        <button
+                            className="primary-button"
+                            onClick={() =>
+                                setShowFaceRegistration(true)
+                            }
+                        >
+                            {profile?.faceRegistered
+                                ? "Update Face"
+                                : "Register Face"
+                            }
+                        </button>
 
-                </section>
+                    </section>
                 )}
 
-
-                {/* ================================
-                    STATISTICS
-                ================================= */}
-
+                {/* STATISTICS */}
                 <section className="stats-grid">
 
                     <div className="stat-card">
@@ -403,11 +371,7 @@ function ReceiverDashboard({
 
                 </section>
 
-
-                {/* ================================
-                    DELIVERY PANEL
-                ================================= */}
-
+                {/* DELIVERY PANEL */}
                 <section className="panel">
 
                     <div className="panel-header">
@@ -431,7 +395,6 @@ function ReceiverDashboard({
                         </span>
 
                     </div>
-
 
                     {deliveries.length === 0 ? (
 
@@ -500,9 +463,7 @@ function ReceiverDashboard({
 
                                         </div>
 
-
                                         {/* DELIVERY DETAILS */}
-
                                         <div className="delivery-details">
 
                                             <div>
@@ -551,142 +512,126 @@ function ReceiverDashboard({
 
                                         </div>
 
-
-                                        {/* ================================
-                                            ARRIVED
-                                        ================================= */}
-
+                                        {/* ARRIVED */}
                                         {delivery.status ===
                                             "ARRIVED" && (
 
-                                            <div className="arrival-notice">
+                                                <div className="arrival-notice">
 
-                                                <div>
+                                                    <div>
 
-                                                    <strong>
-                                                        🚚 Your delivery
-                                                        has arrived
-                                                    </strong>
+                                                        <strong>
+                                                            🚚 Your delivery
+                                                            has arrived
+                                                        </strong>
 
-                                                    <p>
-                                                        The robot is
-                                                        waiting for
-                                                        identity
-                                                        verification.
-                                                    </p>
+                                                        <p>
+                                                            The robot is
+                                                            waiting for
+                                                            identity
+                                                            verification.
+                                                        </p>
+
+                                                    </div>
+
+
+                                                    <button
+                                                        className="primary-button"
+                                                        onClick={() =>
+                                                            openVerification(
+                                                                delivery
+                                                            )
+                                                        }
+                                                    >
+                                                        Verify & Open Door →
+                                                    </button>
 
                                                 </div>
 
+                                            )}
 
-                                                <button
-                                                    className="primary-button"
-                                                    onClick={() =>
-                                                        openVerification(
-                                                            delivery
-                                                        )
-                                                    }
-                                                >
-                                                    Verify & Open Door →
-                                                </button>
-
-                                            </div>
-
-                                        )}
-
-
-                                        {/* ================================
-                                            VERIFYING
-                                        ================================= */}
-
+                                        {/* VERIFYING */}
                                         {delivery.status ===
                                             "VERIFYING" && (
 
-                                            <div className="verification-notice">
+                                                <div className="verification-notice">
 
-                                                <span>
-                                                    🔐
-                                                </span>
+                                                    <span>
+                                                        🔐
+                                                    </span>
 
-                                                <div>
+                                                    <div>
 
-                                                    <strong>
-                                                        Identity
-                                                        verification
-                                                        required
-                                                    </strong>
+                                                        <strong>
+                                                            Identity
+                                                            verification
+                                                            required
+                                                        </strong>
 
-                                                    <p>
-                                                        Open your
-                                                        camera to
-                                                        verify your
-                                                        identity.
-                                                    </p>
+                                                        <p>
+                                                            Open your
+                                                            camera to
+                                                            verify your
+                                                            identity.
+                                                        </p>
+
+                                                    </div>
 
                                                 </div>
 
-                                            </div>
+                                            )}
 
-                                        )}
-
-
-                                        {/* ================================
-                                            VERIFIED
-                                        ================================= */}
-
+                                        {/* VERIFIED */}
                                         {delivery.status ===
                                             "VERIFIED" && (
 
-                                            <div className="verified-notice">
+                                                <div className="verified-notice">
 
-                                                ✓
+                                                    ✓
 
-                                                <div>
+                                                    <div>
 
-                                                    <strong>
-                                                        Identity
-                                                        verified
-                                                    </strong>
+                                                        <strong>
+                                                            Identity
+                                                            verified
+                                                        </strong>
 
-                                                    <p>
-                                                        Door access
-                                                        is being
-                                                        authorised.
-                                                    </p>
+                                                        <p>
+                                                            Door access
+                                                            is being
+                                                            authorised.
+                                                        </p>
+
+                                                    </div>
 
                                                 </div>
 
-                                            </div>
+                                            )}
 
-                                        )}
-
-
-                                        {/* ================================
-                                            DOOR OPENED
-                                        ================================= */}
-
+                                        {/* DOOR OPENED */}
                                         {delivery.status ===
                                             "DOOR_OPENED" && (
 
-                                            <div className="verified-notice">
+                                                <div className="verified-notice">
 
-                                                🚪
+                                                    🚪
 
-                                                <div>
+                                                    <div>
 
-                                                    <strong>
-                                                        Door opened
-                                                    </strong>
+                                                        <strong>
+                                                            Door opened
+                                                        </strong>
 
-                                                    <p>
-                                                        Please collect
-                                                        your delivery.
-                                                    </p>
+                                                        <p>
+                                                            Please collect
+                                                            your delivery.
+                                                        </p>
+
+                                                    </div>
 
                                                 </div>
 
-                                            </div>
-
-                                        )}
+                                            )}
 
                                     </div>
 
@@ -699,11 +644,7 @@ function ReceiverDashboard({
 
                 </section>
 
-
-                {/* ================================
-                    SECURITY PANEL
-                ================================= */}
-
+                {/* SECURITY PANEL */}
                 <section className="panel security-panel">
 
                     <div className="security-icon">
@@ -731,12 +672,7 @@ function ReceiverDashboard({
             </main>
 
 
-            {/* ========================================
-                FACE VERIFICATION MODAL
-
-                IMPORTANT:
-                This MUST be inside the return.
-            ========================================= */}
+            {/* FACE VERIFICATION MODAL */}
 
             {verificationDelivery && (
 

@@ -1,25 +1,3 @@
-# ============================================================
-# NAV2 PARAMETERS
-# Autonomous Indoor Delivery Robot
-# ROS 2 Jazzy
-#
-# Sensors:
-#   LiDAR      -> /scan
-#   Ultrasonic -> /ultrasonic
-#   IMU        -> /imu/data_raw
-#
-# Odometry:
-#   EKF        -> /odometry/filtered
-#
-# Frames:
-#   map -> odom -> base_link
-# ============================================================
-
-
-# ============================================================
-# PLANNER SERVER
-# ============================================================
-
 planner_server:
   ros__parameters:
 
@@ -44,11 +22,7 @@ planner_server:
       # Do not plan through unknown areas.
       allow_unknown: false
 
-
-# ============================================================
 # CONTROLLER SERVER
-# ============================================================
-
 controller_server:
   ros__parameters:
 
@@ -64,11 +38,7 @@ controller_server:
     # Allow some tolerance before declaring controller failure.
     failure_tolerance: 0.3
 
-
-    # --------------------------------------------------------
     # PROGRESS CHECKER
-    # --------------------------------------------------------
-
     progress_checker_plugins:
       - progress_checker
 
@@ -82,11 +52,7 @@ controller_server:
       # Give the robot more time when negotiating obstacles.
       movement_time_allowance: 12.0
 
-
-    # --------------------------------------------------------
     # GOAL CHECKER
-    # --------------------------------------------------------
-
     goal_checker_plugins:
       - goal_checker
 
@@ -101,24 +67,15 @@ controller_server:
 
       yaw_goal_tolerance: 0.10
 
-
-    # --------------------------------------------------------
     # CONTROLLER
-    # --------------------------------------------------------
-
     controller_plugins:
       - FollowPath
-
 
     FollowPath:
 
       plugin: "dwb_core::DWBLocalPlanner"
 
-
-      # ======================================================
       # VELOCITY
-      # ======================================================
-
       min_vel_x: 0.0
 
       # Slightly increased from your old configuration,
@@ -135,31 +92,19 @@ controller_server:
 
       min_speed_theta: 0.0
 
-
-      # ======================================================
       # ACCELERATION
-      # ======================================================
-
       acc_lim_x: 0.30
       decel_lim_x: -0.40
 
       acc_lim_theta: 0.90
       decel_lim_theta: -1.10
 
-
-      # ======================================================
       # SAMPLING
-      # ======================================================
-
       # More samples = better trajectory selection.
       vx_samples: 10
       vtheta_samples: 20
 
-
-      # ======================================================
       # TRAJECTORY SIMULATION
-      # ======================================================
-
       # Look slightly further ahead when evaluating
       # obstacle avoidance.
       sim_time: 1.2
@@ -169,25 +114,16 @@ controller_server:
 
       transform_tolerance: 0.3
 
-
-      # ======================================================
       # STOPPING / GOAL
-      # ======================================================
-
       xy_goal_tolerance: 0.07
 
       trans_stopped_velocity: 0.02
-
 
       short_circuit_trajectory_evaluation: true
 
       stateful: true
 
-
-      # ======================================================
       # DWB CRITICS
-      # ======================================================
-
       critics:
         [
           "RotateToGoal",
@@ -199,135 +135,63 @@ controller_server:
           "GoalDist"
         ]
 
-
-      # ------------------------------------------------------
       # OBSTACLE CLEARANCE
-      # ------------------------------------------------------
-
       # Increased significantly from the online example.
       # This makes DWB care more about clearance.
       BaseObstacle.scale: 0.08
 
-
-      # ------------------------------------------------------
       # PATH ALIGNMENT
-      # ------------------------------------------------------
-
       PathAlign.scale: 20.0
-
       PathAlign.forward_point_distance: 0.12
 
-
-      # ------------------------------------------------------
       # GOAL ALIGNMENT
-      # ------------------------------------------------------
-
       GoalAlign.scale: 6.0
 
       GoalAlign.forward_point_distance: 0.12
 
-
-      # ------------------------------------------------------
       # DISTANCE FROM PATH
-      # ------------------------------------------------------
-
       PathDist.scale: 15.0
 
-
-      # ------------------------------------------------------
       # DISTANCE FROM GOAL
-      # ------------------------------------------------------
-
       GoalDist.scale: 12.0
 
-
-      # ------------------------------------------------------
       # FINAL ROTATION
-      # ------------------------------------------------------
-
       RotateToGoal.scale: 2.5
-
       RotateToGoal.slowing_factor: 5.0
-
       RotateToGoal.lookahead_time: -1.0
 
-
-# ============================================================
 # LOCAL COSTMAP
-# ============================================================
-
 local_costmap:
-
   local_costmap:
-
     ros__parameters:
-
       use_sim_time: false
 
-
-      # ======================================================
       # UPDATE RATES
-      # ======================================================
-
       update_frequency: 5.0
-
       publish_frequency:  2.0
 
-
-      # ======================================================
       # FRAMES
-      # ======================================================
-
       global_frame: odom  
-
       robot_base_frame: base_link
 
       # Helps with your previously observed TF timing jitter.
       transform_tolerance: 1.0
 
-
-      # ======================================================
       # ROLLING WINDOW
-      # ======================================================
-
       rolling_window: true
-
       width: 3
-
       height: 3
-
       resolution: 0.05
 
-
-      # ======================================================
       # ROBOT FOOTPRINT
-      # ======================================================
-      #
-      # Slightly enlarged to account for your side wires.
-      #
-      # Approximately:
-      #
-      #       0.19 m
-      #   <------------>
-      #
-      #       0.15 m
-      #
-      # ======================================================
-
       robot_radius: 0.11
-
       footprint: "[[0.15, 0.25],
                    [0.15, -0.25],
                    [-0.15, -0.25],
                    [-0.15, 0.25]]"
-
       footprint_padding: 0.02
 
-
-      # ======================================================
       # COSTMAP PLUGINS
-      # ======================================================
-
       plugins:
         [
           "obstacle_layer",
@@ -335,73 +199,41 @@ local_costmap:
           "inflation_layer"
         ]
 
-
-      # ======================================================
       # LIDAR OBSTACLE LAYER
-      # ======================================================
-
       obstacle_layer:
-
         plugin: "nav2_costmap_2d::ObstacleLayer"
-
         enabled: true
-
         footprint_clearing_enabled: true
-
         combination_method: 1
-
         observation_sources: scan
 
-
         scan:
-
           topic: /scan
-
           data_type: LaserScan
-
           marking: true
-
           clearing: true
-
           inf_is_valid: false
-
 
           # LiDAR obstacle detection.
           obstacle_max_range: 8.0
-
           obstacle_min_range: 0.10
-
 
           # Ray tracing / clearing.
           raytrace_max_range: 8.0
-
           raytrace_min_range: 0.10
 
-
-          # Your robot operates indoors.
           min_obstacle_height: 0.0
-
           max_obstacle_height: 0.80
-
 
           observation_persistence: 0.0
 
-
-      # ======================================================
       # ULTRASONIC RANGE LAYER
-      # ======================================================
-
       range_layer:
-
         plugin: "nav2_costmap_2d::RangeSensorLayer"
-
         enabled: true
 
-
-        # Your ultrasonic topic.
         topics:
           - /ultrasonic
-
 
         # Ultrasonic cone.
         phi: 1.0
@@ -409,31 +241,18 @@ local_costmap:
         # Expand the detected region.
         inflate_cone: 1.0
 
-
         # Sensor timeout.
         no_readings_timeout: 0.5
 
-
         # Probability thresholds.
         clear_threshold: 0.20
-
         mark_threshold: 0.80
-
-
         clear_on_max_reading: true
-
-
         input_sensor_type: "VARIABLE"
 
-
-      # ======================================================
       # INFLATION
-      # ======================================================
-
       inflation_layer:
-
         plugin: "nav2_costmap_2d::InflationLayer"
-
         enabled: true
 
         # Larger clearance around obstacles.
@@ -441,79 +260,40 @@ local_costmap:
 
         # Smooth cost field.
         cost_scaling_factor: 4.0
-
         inflate_unknown: false
-
         inflate_around_unknown: false
 
-
-      # ======================================================
       # PUBLISHING
-      # ======================================================
-
       always_send_full_costmap: true
 
-
-# ============================================================
 # GLOBAL COSTMAP
-# ============================================================
-
 global_costmap:
-
   global_costmap:
-
     ros__parameters:
-
       use_sim_time: false
 
-
-      # ======================================================
       # UPDATE
-      # ======================================================
-
       update_frequency: 3.0
-
       publish_frequency: 2.0
 
-
-      # ======================================================
       # FRAMES
-      # ======================================================
-
       global_frame: map
-
       robot_base_frame: base_link
-
       transform_tolerance: 1.0
 
-
-      # ======================================================
       # MAP
-      # ======================================================
-
       resolution: 0.05
-
       track_unknown_space: true
 
-
-      # ======================================================
       # ROBOT FOOTPRINT
-      # ======================================================
-
       robot_radius: 0.11
-
       footprint: "[[0.15, 0.25],
                    [0.115, -0.25],
                    [-0.15, -0.25],
                    [-0.15, 0.25]]"
-
       footprint_padding: 0.01
 
-
-      # ======================================================
       # PLUGINS
-      # ======================================================
-
       plugins:
         [
           "static_layer",
@@ -521,102 +301,53 @@ global_costmap:
           "inflation_layer"
         ]
 
-
-      # ======================================================
       # STATIC MAP
-      # ======================================================
-
       static_layer:
-
         plugin: "nav2_costmap_2d::StaticLayer"
-
         enabled: true
-
         map_subscribe_transient_local: true
-
         subscribe_to_updates: true
-
         footprint_clearing_enabled: true
 
-
-      # ======================================================
       # LIDAR OBSTACLE LAYER
-      # ======================================================
-
       obstacle_layer:
-
         plugin: "nav2_costmap_2d::ObstacleLayer"
-
         enabled: true
-
         footprint_clearing_enabled: true
-
         combination_method: 1
-
         observation_sources: scan
 
-
         scan:
-
           topic: /scan
-
           data_type: LaserScan
-
           marking: true
-
           clearing: true
-
           inf_is_valid: false
 
-
           obstacle_max_range: 8.0
-
           obstacle_min_range: 0.10
 
-
           raytrace_max_range: 8.0
-
           raytrace_min_range: 0.10
 
-
           min_obstacle_height: 0.0
-
           max_obstacle_height: 0.80
-
 
           observation_persistence: 0.0
 
-
-      # ======================================================
       # GLOBAL INFLATION
-      # ======================================================
-
       inflation_layer:
-
         plugin: "nav2_costmap_2d::InflationLayer"
-
         enabled: true
-
         inflation_radius: 0.30
-
         cost_scaling_factor: 4.0
-
         inflate_unknown: false
-
         inflate_around_unknown: false
 
-
-      # ======================================================
       # PUBLISHING
-      # ======================================================
-
       always_send_full_costmap: true
 
-
-# ============================================================
 # BT NAVIGATOR
-# ============================================================
-
 bt_navigator:
   ros__parameters:
 
@@ -629,116 +360,64 @@ bt_navigator:
     default_nav_to_pose_bt_xml: "/opt/ros/jazzy/share/nav2_bt_navigator/behavior_trees/navigate_to_pose_w_replanning_and_recovery.xml"
 
     default_nav_through_poses_bt_xml: "/opt/ros/jazzy/share/nav2_bt_navigator/behavior_trees/navigate_through_poses_w_replanning_and_recovery.xml"
-# ============================================================
+
 # BEHAVIOR SERVER
-# ============================================================
-
 behavior_server:
-
   ros__parameters:
-
     use_sim_time: false
-
     global_frame: odom
-
     robot_base_frame: base_link
-
     cycle_frequency: 10.0
-
 
     behavior_plugins:
       - spin
       - backup
       - wait
 
-
     spin:
-
       plugin: "nav2_behaviors::Spin"
 
-
     backup:
-
       plugin: "nav2_behaviors::BackUp"
 
-
     wait:
-
       plugin: "nav2_behaviors::Wait"
 
-
-# ============================================================
 # WAYPOINT FOLLOWER
-# ============================================================
-
 waypoint_follower:
-
   ros__parameters:
-
     use_sim_time: false
-
     loop_rate: 20
-
     stop_on_failure: true
 
-
-# ============================================================
 # VELOCITY SMOOTHER
-# ============================================================
-
 velocity_smoother:
-
   ros__parameters:
-
     use_sim_time: false
-
-
     smoothing_frequency: 20.0
-
-
     scale_velocities: false
-
-
     feedback: "OPEN_LOOP"
 
-
-    # ========================================================
     # VELOCITY LIMITS
-    # ========================================================
-
     max_velocity:
       [0.18, 0.0, 0.10]
 
     min_velocity:
       [-0.18, 0.0, -0.10]
 
-
-    # ========================================================
     # ACCELERATION
-    # ========================================================
-
     max_accel:
       [0.30, 0.0, 0.90]
 
     max_decel:
       [-0.40, 0.0, -1.10]
 
-
-    # ========================================================
     # ODOMETRY
-    # ========================================================
-
     odom_topic: /odometry/filtered
-
     odom_duration: 0.1
 
-
-    # ========================================================
     # TIMEOUT
-    # ========================================================
-
     velocity_timeout: 1.0
-
 
     # Arduino bridge expects Twist.
     enable_stamped_cmd_vel: false

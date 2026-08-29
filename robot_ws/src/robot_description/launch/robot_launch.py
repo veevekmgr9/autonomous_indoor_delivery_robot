@@ -81,20 +81,8 @@ def generate_launch_description():
             )
         )
     )
-    # ekf_pkg = get_package_share_directory('robot_bringup')
 
-    # ekf_config = os.path.join(ekf_pkg, 'config', 'ekf.yaml')
-
-    # ---- Launch arguments ----
-    # slam_arg = DeclareLaunchArgument(
-    #     'slam',
-    #     default_value='false',
-    #     description='Set true to also launch slam_toolbox for mapping'
-    # )
-
-    # use_slam = LaunchConfiguration('slam')
     return LaunchDescription([
-        # slam_arg,
         rsp,
         bridge,
         odom,
@@ -102,5 +90,4 @@ def generate_launch_description():
         ekf,
         rplidar_node,
         teleop,
-        # slam,
     ])

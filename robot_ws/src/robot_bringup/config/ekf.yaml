@@ -1,23 +1,15 @@
 ekf_filter_node:
   ros__parameters:
 
-    # ==========================================================
     # EKF UPDATE
-    # ==========================================================
-
     frequency: 15.0
     sensor_timeout: 0.5
 
     two_d_mode: true
-
     publish_tf: true
     publish_acceleration: false
 
-
-    # ==========================================================
     # FRAMES
-    # ==========================================================
-
     map_frame: map
     odom_frame: odom
     base_link_frame: base_link
@@ -25,21 +17,8 @@ ekf_filter_node:
     # For wheel + IMU odometry, EKF publishes odom -> base_link
     world_frame: odom
 
-
-    # ==========================================================
     # WHEEL ENCODER ODOMETRY
-    # ==========================================================
-
     odom0: /wheel/odom
-
-    # State order:
-    #
-    # [x, y, z,
-    #  roll, pitch, yaw,
-    #  vx, vy, vz,
-    #  vroll, vpitch, vyaw,
-    #  ax, ay, az]
-
     odom0_config: [
       true,  true,  false,
       false, false, true,
@@ -47,35 +26,13 @@ ekf_filter_node:
       false, false, true,
       false, false, false
     ]
-
     odom0_queue_size: 10
-
     odom0_nodelay: false
-
     odom0_differential: false
-
     odom0_relative: false
 
-
-    # ==========================================================
     # IMU
-    # ==========================================================
-
     imu0: /imu/data_raw
-
-    # Use ONLY IMU angular velocity around Z.
-    #
-    # This gives the EKF an additional measurement of
-    # rotational velocity without trusting raw acceleration.
-    #
-    # State order:
-    #
-    # [x, y, z,
-    #  roll, pitch, yaw,
-    #  vx, vy, vz,
-    #  vroll, vpitch, vyaw,
-    #  ax, ay, az]
-
     imu0_config: [
       false, false, false,
       false, false, false,
@@ -83,30 +40,11 @@ ekf_filter_node:
       false, false, true,
       false, false, false
     ]
-
     imu0_queue_size: 10
-
     imu0_nodelay: false
-
     imu0_differential: false
-
     imu0_relative: false
-
     imu0_remove_gravitational_acceleration: false
 
-
-    # ==========================================================
-    # SENSOR PRIORITIES
-    # ==========================================================
-
-    # Do not use acceleration from IMU.
-    # Wheel odometry remains responsible for x/y movement.
-    #
-    # IMU contributes yaw-rate information only.
-
-
-    # ==========================================================
     # DIAGNOSTICS
-    # ==========================================================
-
     print_diagnostics: false

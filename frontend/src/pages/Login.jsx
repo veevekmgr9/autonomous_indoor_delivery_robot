@@ -8,7 +8,6 @@ function Login({ onLogin }) {
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
 
-
     const handleLogin = async (e) => {
 
         e.preventDefault();
@@ -39,7 +38,6 @@ function Login({ onLogin }) {
 
         }
     };
-
 
     return (
         <div className="auth-container">

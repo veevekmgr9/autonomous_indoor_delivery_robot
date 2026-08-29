@@ -3,11 +3,7 @@ import cv2
 import numpy as np
 import insightface
 
-
-# ============================================================
 # INSIGHTFACE
-# ============================================================
-
 app = insightface.app.FaceAnalysis(
     name="buffalo_l",
     providers=["CPUExecutionProvider"]
@@ -20,11 +16,7 @@ app.prepare(
 
 print("InsightFace ready")
 
-
-# ============================================================
 # CAMERA
-# ============================================================
-
 camera_process = subprocess.Popen(
     [
         "rpicam-vid",
@@ -43,13 +35,8 @@ camera_process = subprocess.Popen(
 
 print("Camera started")
 
-
-# ============================================================
 # MJPEG BUFFER
-# ============================================================
-
 buffer = b""
-
 
 try:
 
@@ -80,18 +67,10 @@ try:
             if frame is None:
                 continue
 
-
-            # ====================================================
             # FACE DETECTION
-            # ====================================================
-
             faces = app.get(frame)
 
-
-            # ====================================================
             # DRAW RESULTS
-            # ====================================================
-
             for face in faces:
 
                 x1, y1, x2, y2 = face.bbox.astype(int)
@@ -114,12 +93,10 @@ try:
                     2
                 )
 
-
             cv2.imshow(
                 "Face Detection",
                 frame
             )
-
 
             if cv2.waitKey(1) & 0xFF == ord("q"):
                 break

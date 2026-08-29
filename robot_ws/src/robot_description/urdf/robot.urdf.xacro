@@ -4,10 +4,7 @@
        xmlns:xacro="http://www.ros.org/wiki/xacro">
 
 
-  <!-- ========================================================== -->
-  <!-- BASE LINK                                                   -->
-  <!-- ========================================================== -->
-
+  <!-- BASE LINK -->
   <link name="base_link">
 
     <visual>
@@ -42,11 +39,7 @@
 
   </link>
 
-
-  <!-- ========================================================== -->
-  <!-- ULTRASONIC SENSOR                                          -->
-  <!-- ========================================================== -->
-
+  <!-- ULTRASONIC SENSOR -->
   <link name="ultrasonic_link"/>
 
 
@@ -57,25 +50,13 @@
 
     <child link="ultrasonic_link"/>
 
-    
-      <!-- Ultrasonic sensor position relative to base_link
-
-      X = 12.0 cm forward
-      Y = 6.0 cm left
-      Z = 8.6 cm above floor -->
-
-
     <origin
       xyz="0.120 0.060 0.086"
       rpy="0 0 0"/>
 
   </joint>
 
-
-  <!-- ========================================================== -->
-  <!-- RPLIDAR A1                                                 -->
-  <!-- ========================================================== -->
-
+  <!-- RPLIDAR A1 -->
   <link name="laser">
 
     <visual>
@@ -92,7 +73,6 @@
 
   </link>
 
-
   <joint name="base_link_to_laser"
          type="fixed">
 
@@ -106,11 +86,7 @@
 
   </joint>
 
-
-  <!-- ========================================================== -->
-  <!-- MPU6050                                                     -->
-  <!-- ========================================================== -->
-
+  <!-- MPU6050 -->
   <link name="imu_link">
 
     <visual>
@@ -125,7 +101,6 @@
 
   </link>
 
-
   <joint name="base_link_to_imu"
          type="fixed">
 
@@ -139,11 +114,7 @@
 
   </joint>
 
-
-  <!-- ========================================================== -->
-  <!-- CAMERA                                                      -->
-  <!-- ========================================================== -->
-
+  <!-- CAMERA -->
   <link name="camera_link">
 
     <visual>
@@ -158,7 +129,6 @@
 
   </link>
 
-
   <joint name="base_link_to_camera"
          type="fixed">
 
@@ -171,6 +141,5 @@
       rpy="0 0 0"/>
 
   </joint>
-
 
 </robot>

@@ -15,22 +15,14 @@ import {
 
 import { db } from "./firebase";
 
-
-// ============================================================
 // ROBOT STATE
-// ============================================================
-
 const ROBOT_STATE_DOC = doc(
     db,
     "robotState",
     "current"
 );
 
-
-// ============================================================
 // FIND USER BY EMAIL
-// ============================================================
-
 export async function findUserByEmail(email) {
 
     const usersRef = collection(
@@ -64,11 +56,7 @@ export async function findUserByEmail(email) {
     };
 }
 
-
-// ============================================================
 // GET CURRENT ROBOT STATE
-// ============================================================
-
 export async function getRobotState() {
 
     const snapshot =
@@ -89,11 +77,7 @@ export async function getRobotState() {
     return snapshot.data();
 }
 
-
-// ============================================================
 // CREATE DELIVERY
-// ============================================================
-
 export async function createDelivery({
     senderId,
     senderName,
@@ -103,15 +87,11 @@ export async function createDelivery({
     pickupLocation
 }) {
 
-    // --------------------------------------------------------
     // Find receiver
-    // --------------------------------------------------------
-
     const receiver =
         await findUserByEmail(
             receiverEmail
         );
-
 
     if (!receiver) {
 
@@ -120,11 +100,7 @@ export async function createDelivery({
         );
     }
 
-
-    // --------------------------------------------------------
     // Make sure receiver has correct role
-    // --------------------------------------------------------
-
     if (
         receiver.role !== "receiver"
     ) {
@@ -134,11 +110,7 @@ export async function createDelivery({
         );
     }
 
-
-    // --------------------------------------------------------
     // Check robot state
-    // --------------------------------------------------------
-
     const robotState =
         await getRobotState();
 
@@ -148,17 +120,12 @@ export async function createDelivery({
     ) {
 
         throw new Error(
-            `The robot is currently handling delivery ${
-                robotState.ticketId || ""
+            `The robot is currently handling delivery ${robotState.ticketId || ""
             }. Please wait until it is completed.`
         );
     }
 
-
-    // --------------------------------------------------------
     // Generate ticket
-    // --------------------------------------------------------
-
     const ticketId =
         "DLV-" +
         Math.random()
@@ -166,11 +133,7 @@ export async function createDelivery({
             .substring(2, 8)
             .toUpperCase();
 
-
-    // --------------------------------------------------------
     // Delivery document
-    // --------------------------------------------------------
-
     const delivery = {
 
         ticketId,
@@ -207,11 +170,7 @@ export async function createDelivery({
         completedAt: null
     };
 
-
-    // --------------------------------------------------------
     // Create delivery
-    // --------------------------------------------------------
-
     const docRef =
         await addDoc(
             collection(
@@ -221,11 +180,7 @@ export async function createDelivery({
             delivery
         );
 
-
-    // --------------------------------------------------------
     // Set robot as busy
-    // --------------------------------------------------------
-
     await setDoc(
         ROBOT_STATE_DOC,
         {
@@ -246,18 +201,13 @@ export async function createDelivery({
         }
     );
 
-
     return {
         id: docRef.id,
         ...delivery
     };
 }
 
-
-// ============================================================
 // LISTEN TO SENDER ACTIVE DELIVERY
-// ============================================================
-
 export function listenToSenderDeliveries(
     senderId,
     callback
@@ -266,7 +216,6 @@ export function listenToSenderDeliveries(
     console.log(
         "Sender active delivery listener started"
     );
-
 
     const q = query(
         collection(
@@ -281,18 +230,14 @@ export function listenToSenderDeliveries(
         )
     );
 
-
     return onSnapshot(
-
         q,
-
         async (snapshot) => {
 
             try {
 
                 const robotState =
                     await getRobotState();
-
 
                 // No active delivery
                 if (
@@ -303,7 +248,6 @@ export function listenToSenderDeliveries(
 
                     return;
                 }
-
 
                 const activeDelivery =
                     snapshot.docs
@@ -316,7 +260,6 @@ export function listenToSenderDeliveries(
                                 delivery.id ===
                                 robotState.activeDeliveryId
                         );
-
 
                 callback(
                     activeDelivery
@@ -345,11 +288,7 @@ export function listenToSenderDeliveries(
     );
 }
 
-
-// ============================================================
 // LISTEN TO RECEIVER ACTIVE DELIVERY
-// ============================================================
-
 export function listenToReceiverDeliveries(
     receiverId,
     callback
@@ -364,7 +303,6 @@ export function listenToReceiverDeliveries(
         receiverId
     );
 
-
     const q = query(
         collection(
             db,
@@ -378,18 +316,13 @@ export function listenToReceiverDeliveries(
         )
     );
 
-
     return onSnapshot(
-
         q,
-
         async (snapshot) => {
 
             try {
-
                 const robotState =
                     await getRobotState();
-
 
                 // No active delivery
                 if (
@@ -400,7 +333,6 @@ export function listenToReceiverDeliveries(
 
                     return;
                 }
-
 
                 const activeDelivery =
                     snapshot.docs
@@ -413,7 +345,6 @@ export function listenToReceiverDeliveries(
                                 delivery.id ===
                                 robotState.activeDeliveryId
                         );
-
 
                 callback(
                     activeDelivery
@@ -442,11 +373,7 @@ export function listenToReceiverDeliveries(
     );
 }
 
-
-// ============================================================
 // UPDATE DELIVERY STATUS
-// ============================================================
-
 export async function updateDeliveryStatus(
     deliveryId,
     status
@@ -484,11 +411,7 @@ export async function updateDeliveryStatus(
         update
     );
 
-
-    // =================================================
     // KEEP ROBOT STATE SYNCHRONISED
-    // =================================================
-
     if (
         status === "VERIFIED"
     ) {
@@ -530,7 +453,7 @@ export async function updateDeliveryStatus(
             );
 
             console.log(
-                `🤖 Robot state updated: ${delivery.ticketId} → VERIFIED`
+                `Robot state updated: ${delivery.ticketId} → VERIFIED`
             );
         }
     }

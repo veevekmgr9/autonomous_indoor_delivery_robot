@@ -11,7 +11,6 @@ function Register({ onRegister }) {
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
 
-
     const handleRegister = async (e) => {
 
         e.preventDefault();

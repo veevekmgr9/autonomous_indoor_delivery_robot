@@ -14,7 +14,6 @@ import {
 
 import { auth, db } from "./firebase";
 
-
 export async function registerUser(
     name,
     email,
@@ -143,21 +142,13 @@ export async function updateDeliveryStatus(
         update.completedAt = serverTimestamp();
     }
 
-
-    // ================================================
     // UPDATE DELIVERY
-    // ================================================
-
     await updateDoc(
         deliveryRef,
         update
     );
 
-
-    // ================================================
     // UPDATE ROBOT STATE
-    // ================================================
-
     if (status === "VERIFIED") {
 
         const deliverySnapshot =
@@ -202,7 +193,7 @@ export async function updateDeliveryStatus(
 
 
         console.log(
-            `🤖 Robot state updated: ${delivery.ticketId} → VERIFIED`
+            `Robot state updated: ${delivery.ticketId} → VERIFIED`
         );
     }
 }

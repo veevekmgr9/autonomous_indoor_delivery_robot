@@ -40,14 +40,12 @@ class WasdTeleop(Node):
         self.timer = self.create_timer(0.5, self.publish_command)
 
         self.get_logger().info("")
-        self.get_logger().info("====== WASDX TELEOP ======")
         self.get_logger().info("W : Forward")
         self.get_logger().info("X : Backward")
         self.get_logger().info("A : Left")
         self.get_logger().info("D : Right")
         self.get_logger().info("S : Stop")
         self.get_logger().info("Q : Quit")
-        self.get_logger().info("==========================")
 
         self.keyboard_thread = threading.Thread(target=self.keyboard_loop)
         self.keyboard_thread.daemon = True

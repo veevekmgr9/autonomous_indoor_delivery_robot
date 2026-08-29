@@ -10,7 +10,6 @@ import {
     saveFaceDescriptor
 } from "../services/auth";
 
-
 export default function FaceRegistration({
     user,
     onComplete,
@@ -46,15 +45,8 @@ export default function FaceRegistration({
             "Loading face recognition models..."
         );
 
-
-    /*
-     * =========================================
-     * LOAD MODELS
-     * =========================================
-     */
-
+    //LOAD MODELS
     async function loadModels() {
-
         try {
 
             setMessage(
@@ -69,7 +61,6 @@ export default function FaceRegistration({
                 "✓ Tiny Face Detector loaded"
             );
 
-
             setMessage(
                 "Loading facial landmark model..."
             );
@@ -81,7 +72,6 @@ export default function FaceRegistration({
             console.log(
                 "✓ Face Landmark model loaded"
             );
-
 
             setMessage(
                 "Loading face recognition model..."
@@ -95,13 +85,11 @@ export default function FaceRegistration({
                 "✓ Face Recognition model loaded"
             );
 
-
             setModelsLoaded(true);
 
             setMessage(
                 "Models ready. Start the camera."
             );
-
 
             console.log(
                 "✓ ALL FACE MODELS LOADED"
@@ -124,13 +112,7 @@ export default function FaceRegistration({
         }
     }
 
-
-    /*
-     * =========================================
-     * START CAMERA
-     * =========================================
-     */
-
+    //START CAMERA
     async function startCamera() {
 
         setError("");
@@ -144,7 +126,6 @@ export default function FaceRegistration({
                 );
             }
 
-
             if (
                 !navigator.mediaDevices ||
                 !navigator.mediaDevices.getUserMedia
@@ -154,7 +135,6 @@ export default function FaceRegistration({
                     "Camera access is not supported."
                 );
             }
-
 
             const stream =
                 await navigator.mediaDevices.getUserMedia({
@@ -177,10 +157,8 @@ export default function FaceRegistration({
 
                 });
 
-
             streamRef.current =
                 stream;
-
 
             if (videoRef.current) {
 
@@ -189,7 +167,6 @@ export default function FaceRegistration({
 
                 await videoRef.current.play();
             }
-
 
             setCameraStarted(true);
 
@@ -203,7 +180,6 @@ export default function FaceRegistration({
                 "Camera error:",
                 err
             );
-
 
             if (
                 err.name ===
@@ -233,13 +209,7 @@ export default function FaceRegistration({
         }
     }
 
-
-    /*
-     * =========================================
-     * GET FACE DESCRIPTOR
-     * =========================================
-     */
-
+    //GET FACE DESCRIPTOR
     async function getFaceDescriptor() {
 
         if (
@@ -249,7 +219,6 @@ export default function FaceRegistration({
 
             return null;
         }
-
 
         const result =
             await faceapi
@@ -263,25 +232,17 @@ export default function FaceRegistration({
                 .withFaceLandmarks()
                 .withFaceDescriptor();
 
-
         if (!result) {
 
             return null;
         }
-
 
         return Array.from(
             result.descriptor
         );
     }
 
-
-    /*
-     * =========================================
-     * CHECK FACE
-     * =========================================
-     */
-
+    //CHECK FACE
     async function checkFace() {
 
         if (
@@ -292,12 +253,10 @@ export default function FaceRegistration({
             return;
         }
 
-
         try {
 
             const descriptor =
                 await getFaceDescriptor();
-
 
             if (descriptor) {
 
@@ -315,7 +274,6 @@ export default function FaceRegistration({
                     "No face detected. Position your face inside the frame."
                 );
             }
-
         } catch (err) {
 
             console.error(
@@ -325,18 +283,11 @@ export default function FaceRegistration({
         }
     }
 
-
-    /*
-     * =========================================
-     * CAPTURE ONE SAMPLE
-     * =========================================
-     */
-
+    //CAPTURE ONE SAMPLE
     async function captureSample() {
 
         const descriptor =
             await getFaceDescriptor();
-
 
         if (!descriptor) {
 
@@ -351,15 +302,8 @@ export default function FaceRegistration({
         return descriptor;
     }
 
-
-    /*
-     * =========================================
-     * CAPTURE 5 SAMPLES
-     * =========================================
-     */
-
+    //CAPTURE 5 SAMPLES
     async function registerFace() {
-
         setError("");
 
         setCapturing(true);
@@ -368,9 +312,7 @@ export default function FaceRegistration({
             "Preparing face registration..."
         );
 
-
         const capturedSamples = [];
-
 
         try {
 
@@ -384,12 +326,6 @@ export default function FaceRegistration({
                     `Look directly at the camera. Capturing sample ${i + 1} of 5...`
                 );
 
-
-                /*
-                 * Wait slightly between
-                 * captures.
-                 */
-
                 await new Promise(
                     resolve =>
                         setTimeout(
@@ -398,10 +334,8 @@ export default function FaceRegistration({
                         )
                 );
 
-
                 const descriptor =
                     await captureSample();
-
 
                 if (!descriptor) {
 
@@ -410,26 +344,18 @@ export default function FaceRegistration({
                     );
                 }
 
-
                 capturedSamples.push(
                     descriptor
                 );
-
 
                 setSamples([
                     ...capturedSamples
                 ]);
             }
 
-
-            /*
-             * Average all descriptors.
-             */
-
             setMessage(
                 "Processing face data..."
             );
-
 
             const descriptorLength =
                 capturedSamples[0].length;
@@ -439,7 +365,6 @@ export default function FaceRegistration({
                 new Array(
                     descriptorLength
                 ).fill(0);
-
 
             for (
                 const descriptor
@@ -457,7 +382,6 @@ export default function FaceRegistration({
                 }
             }
 
-
             for (
                 let i = 0;
                 i < descriptorLength;
@@ -468,41 +392,28 @@ export default function FaceRegistration({
                     capturedSamples.length;
             }
 
-
-            /*
-             * Save to Firebase.
-             */
-
+            //Save to Firebase.
             setMessage(
                 "Saving your face registration..."
             );
-
 
             await saveFaceDescriptor(
                 user.uid,
                 averageDescriptor
             );
 
-
             setMessage(
                 "Face registration completed successfully."
             );
-
 
             console.log(
                 "Face registration successful."
             );
 
-
-            /*
-             * Tell parent component.
-             */
-
             if (onComplete) {
 
                 onComplete();
             }
-
 
         } catch (err) {
 
@@ -521,18 +432,11 @@ export default function FaceRegistration({
             );
 
         } finally {
-
             setCapturing(false);
         }
     }
 
-
-    /*
-     * =========================================
-     * STOP CAMERA
-     * =========================================
-     */
-
+    //STOP CAMERA
     function stopCamera() {
 
         if (streamRef.current) {
@@ -549,36 +453,25 @@ export default function FaceRegistration({
                 null;
         }
 
-
         if (videoRef.current) {
 
             videoRef.current.srcObject =
                 null;
         }
 
-
         setCameraStarted(false);
 
         setFaceDetected(false);
     }
 
-
-    /*
-     * =========================================
-     * CLOSE
-     * =========================================
-     */
-
+    //CLOSE
     function handleClose() {
-
         if (capturing) {
 
             return;
         }
 
-
         stopCamera();
-
 
         if (onClose) {
 
@@ -586,17 +479,10 @@ export default function FaceRegistration({
         }
     }
 
-
-    /*
-     * =========================================
-     * LOAD MODELS
-     * =========================================
-     */
-
+    //LOAD MODELS
     useEffect(() => {
 
         loadModels();
-
 
         return () => {
 
@@ -610,18 +496,10 @@ export default function FaceRegistration({
 
                     });
             }
-
         };
-
     }, []);
 
-
-    /*
-     * =========================================
-     * FACE CHECK TIMER
-     * =========================================
-     */
-
+    //FACE CHECK TIMER
     useEffect(() => {
 
         if (!cameraStarted) {
@@ -629,13 +507,11 @@ export default function FaceRegistration({
             return;
         }
 
-
         const interval =
             setInterval(
                 checkFace,
                 500
             );
-
 
         return () => {
 
@@ -650,19 +526,12 @@ export default function FaceRegistration({
         capturing
     ]);
 
-
-    /*
-     * =========================================
-     * UI
-     * =========================================
-     */
-
+    //UI
     return (
 
         <div className="verification-overlay">
 
             <div className="verification-card">
-
 
                 {/* HEADER */}
 
@@ -681,7 +550,6 @@ export default function FaceRegistration({
 
                     </div>
 
-
                     <button
                         className="close-button"
                         onClick={handleClose}
@@ -689,19 +557,13 @@ export default function FaceRegistration({
                     >
                         ×
                     </button>
-
                 </div>
 
-
                 {/* CONTENT */}
-
                 <div className="verification-content">
 
-
                     {/* CAMERA */}
-
                     <div className="camera-container">
-
 
                         {!cameraStarted && (
 
@@ -711,11 +573,9 @@ export default function FaceRegistration({
                                     🔐
                                 </div>
 
-
                                 <h3>
                                     Face Registration
                                 </h3>
-
 
                                 <p>
                                     We will capture
@@ -725,7 +585,6 @@ export default function FaceRegistration({
                                     profile.
                                 </p>
 
-
                                 {!modelsLoaded && (
 
                                     <p>
@@ -734,7 +593,6 @@ export default function FaceRegistration({
                                     </p>
 
                                 )}
-
 
                                 <button
                                     className="primary-button"
@@ -753,11 +611,8 @@ export default function FaceRegistration({
                                     }
 
                                 </button>
-
                             </div>
-
                         )}
-
 
                         <video
                             ref={videoRef}
@@ -771,7 +626,6 @@ export default function FaceRegistration({
                             muted
                         />
 
-
                         {cameraStarted && (
 
                             <div
@@ -781,21 +635,13 @@ export default function FaceRegistration({
                                         : "face-frame"
                                 }
                             >
-
                                 <div className="face-corner top-left" />
-
                                 <div className="face-corner top-right" />
-
                                 <div className="face-corner bottom-left" />
-
                                 <div className="face-corner bottom-right" />
-
                             </div>
-
                         )}
-
                     </div>
-
 
                     {/* ERROR */}
 
@@ -809,9 +655,7 @@ export default function FaceRegistration({
 
                     )}
 
-
                     {/* STATUS */}
-
                     <div className="verification-message">
 
                         {faceDetected && (
@@ -824,9 +668,7 @@ export default function FaceRegistration({
 
                     </div>
 
-
                     {/* SAMPLE COUNTER */}
-
                     {cameraStarted && (
 
                         <div className="sample-progress">
@@ -844,13 +686,13 @@ export default function FaceRegistration({
                                             key={index}
                                             className={
                                                 index <
-                                                samples.length
+                                                    samples.length
                                                     ? "sample-dot complete"
                                                     : "sample-dot"
                                             }
                                         >
                                             {index <
-                                            samples.length
+                                                samples.length
                                                 ? "✓"
                                                 : index + 1}
                                         </span>
@@ -861,16 +703,13 @@ export default function FaceRegistration({
                             </div>
 
                         </div>
-
                     )}
 
 
                     {/* ACTIONS */}
-
                     {cameraStarted && (
 
                         <div className="verification-actions">
-
 
                             <button
                                 className="secondary-button"
@@ -883,7 +722,6 @@ export default function FaceRegistration({
                             >
                                 Stop Camera
                             </button>
-
 
                             <button
                                 className="primary-button"
@@ -902,15 +740,10 @@ export default function FaceRegistration({
                                 }
 
                             </button>
-
                         </div>
-
                     )}
-
                 </div>
-
             </div>
-
         </div>
     );
 }

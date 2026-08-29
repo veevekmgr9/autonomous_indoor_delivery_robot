@@ -15,10 +15,7 @@ class DeliveryMission(Node):
     def __init__(self):
         super().__init__('delivery_mission')
 
-        # =====================================================
         # MISSION SETTINGS
-        # =====================================================
-
         # Number of attempts for each destination
         self.max_retries = 2
 
@@ -28,52 +25,32 @@ class DeliveryMission(Node):
         # Maximum time allowed for one navigation goal
         self.goal_timeout = 120.0
 
-        # =====================================================
-        # SAVED MAP LOCATIONS
-        # =====================================================
-
-        # -----------------------------------------------------
         # HOME
-        # -----------------------------------------------------
-
         self.home = {
             'x': -0.852895,
             'y': -2.22339,
             'yaw': 0.0
         }
 
-        # -----------------------------------------------------
         # PICKUP A
-        # -----------------------------------------------------
-
         self.pickup_a = {
             'x': -1.56899,
             'y': -1.10715,
             'yaw': 0.70110
         }
 
-        # -----------------------------------------------------
         # PICKUP B
-        # -----------------------------------------------------
-
         self.pickup_b = {
             'x': -2.799,
             'y': 1.801,
             'yaw': 0.768
         }
 
-        # =====================================================
         # NAV2 ACTION CLIENT
-        # =====================================================
-
         self.nav_to_pose = ActionClient(
             self,
             NavigateToPose,
             '/navigate_to_pose'
-        )
-
-        self.get_logger().info(
-            '=========================================='
         )
 
         self.get_logger().info(
@@ -84,14 +61,7 @@ class DeliveryMission(Node):
             'Mission: HOME -> A -> B -> A -> HOME'
         )
 
-        self.get_logger().info(
-            '=========================================='
-        )
-
-    # =========================================================
     # CREATE NAV2 GOAL
-    # =========================================================
-
     def make_goal(self, location):
 
         goal = NavigateToPose.Goal()
@@ -129,10 +99,7 @@ class DeliveryMission(Node):
 
         return goal
 
-    # =========================================================
     # WAIT FOR NAV2
-    # =========================================================
-
     def wait_for_nav2(self):
 
         self.get_logger().info(
@@ -160,15 +127,8 @@ class DeliveryMission(Node):
 
         return True
 
-    # =========================================================
     # SEND ONE GOAL
-    # =========================================================
-
     def send_goal(self, name, location):
-
-        self.get_logger().info(
-            '------------------------------------------'
-        )
 
         self.get_logger().info(
             f'Going to {name}'
@@ -183,10 +143,7 @@ class DeliveryMission(Node):
 
         goal = self.make_goal(location)
 
-        # -----------------------------------------------------
         # Send goal
-        # -----------------------------------------------------
-
         send_future = (
             self.nav_to_pose.send_goal_async(goal)
         )
@@ -218,10 +175,7 @@ class DeliveryMission(Node):
             f'Goal accepted: {name}'
         )
 
-        # -----------------------------------------------------
         # Wait for result
-        # -----------------------------------------------------
-
         result_future = (
             goal_handle.get_result_async()
         )
@@ -240,10 +194,7 @@ class DeliveryMission(Node):
                 start_time
             )
 
-            # -------------------------------------------------
             # Timeout
-            # -------------------------------------------------
-
             if elapsed > self.goal_timeout:
 
                 self.get_logger().warn(
@@ -270,10 +221,7 @@ class DeliveryMission(Node):
 
                 return False
 
-        # -----------------------------------------------------
         # Get result
-        # -----------------------------------------------------
-
         result = result_future.result()
 
         if result is None:
@@ -287,10 +235,7 @@ class DeliveryMission(Node):
 
         status = result.status
 
-        # -----------------------------------------------------
         # Success
-        # -----------------------------------------------------
-
         if status == GoalStatus.STATUS_SUCCEEDED:
 
             self.get_logger().info(
@@ -299,10 +244,7 @@ class DeliveryMission(Node):
 
             return True
 
-        # -----------------------------------------------------
         # Cancelled
-        # -----------------------------------------------------
-
         if status == GoalStatus.STATUS_CANCELED:
 
             self.get_logger().warn(
@@ -311,10 +253,7 @@ class DeliveryMission(Node):
 
             return False
 
-        # -----------------------------------------------------
         # Failed
-        # -----------------------------------------------------
-
         self.get_logger().error(
             f'Navigation to {name} failed.'
         )
@@ -325,20 +264,13 @@ class DeliveryMission(Node):
 
         return False
 
-    # =========================================================
     # GO TO LOCATION WITH RETRIES
-    # =========================================================
-
     def go_to(self, name, location):
 
         for attempt in range(
             1,
             self.max_retries + 1
         ):
-
-            self.get_logger().info(
-                '=========================================='
-            )
 
             self.get_logger().info(
                 f'{name}: attempt '
@@ -356,10 +288,7 @@ class DeliveryMission(Node):
                     f'{name} completed successfully.'
                 )
 
-                # -------------------------------------------------
                 # Small pause after reaching destination
-                # -------------------------------------------------
-
                 self.get_logger().info(
                     f'Waiting '
                     f'{self.wait_between_goals:.1f}s '
@@ -372,10 +301,7 @@ class DeliveryMission(Node):
 
                 return True
 
-            # -----------------------------------------------------
             # Failed attempt
-            # -----------------------------------------------------
-
             if attempt < self.max_retries:
 
                 self.get_logger().warn(
@@ -397,15 +323,8 @@ class DeliveryMission(Node):
 
         return False
 
-    # =========================================================
     # COMPLETE DELIVERY MISSION
-    # =========================================================
-
     def run_mission(self):
-
-        self.get_logger().info(
-            '=========================================='
-        )
 
         self.get_logger().info(
             'STARTING DELIVERY MISSION'
@@ -416,14 +335,7 @@ class DeliveryMission(Node):
             'PICKUP A -> HOME'
         )
 
-        self.get_logger().info(
-            '=========================================='
-        )
-
-        # -----------------------------------------------------
         # Check Nav2
-        # -----------------------------------------------------
-
         if not self.wait_for_nav2():
 
             self.get_logger().error(
@@ -432,11 +344,8 @@ class DeliveryMission(Node):
             )
 
             return False
-
-        # =====================================================
+        
         # 1. HOME -> PICKUP A
-        # =====================================================
-
         if not self.go_to(
             'PICKUP A',
             self.pickup_a
@@ -458,10 +367,7 @@ class DeliveryMission(Node):
 
         time.sleep(2.0)
 
-        # =====================================================
         # 2. PICKUP A -> PICKUP B
-        # =====================================================
-
         if not self.go_to(
             'PICKUP B',
             self.pickup_b
@@ -483,10 +389,7 @@ class DeliveryMission(Node):
 
         time.sleep(2.0)
 
-        # =====================================================
         # 3. PICKUP B -> PICKUP A
-        # =====================================================
-
         if not self.go_to(
             'PICKUP A',
             self.pickup_a
@@ -502,10 +405,7 @@ class DeliveryMission(Node):
             'Returned successfully to PICKUP A.'
         )
 
-        # =====================================================
         # 4. PICKUP A -> HOME
-        # =====================================================
-
         if not self.go_to(
             'HOME',
             self.home
@@ -517,33 +417,18 @@ class DeliveryMission(Node):
 
             return False
 
-        # =====================================================
         # COMPLETE
-        # =====================================================
-
         self.get_logger().info(
-            '=========================================='
-        )
-
-        self.get_logger().info(
-            '✓ DELIVERY MISSION COMPLETE'
+            'DELIVERY MISSION COMPLETE'
         )
 
         self.get_logger().info(
             'HOME -> A -> B -> A -> HOME'
         )
 
-        self.get_logger().info(
-            '=========================================='
-        )
-
         return True
-
-
-# =============================================================
+    
 # MAIN
-# =============================================================
-
 def main(args=None):
 
     rclpy.init(args=args)
@@ -551,17 +436,14 @@ def main(args=None):
     node = DeliveryMission()
 
     try:
-
         success = node.run_mission()
 
         if success:
-
             node.get_logger().info(
                 'Mission finished successfully.'
             )
 
         else:
-
             node.get_logger().error(
                 'Mission finished with errors.'
             )
@@ -579,11 +461,9 @@ def main(args=None):
         )
 
     finally:
-
         node.destroy_node()
 
         if rclpy.ok():
-
             rclpy.shutdown()
 
 

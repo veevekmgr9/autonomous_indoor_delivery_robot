@@ -3,10 +3,7 @@
 
 const int MPU_addr = 0x68;
 
-
-// =====================================================
 // MOTOR PINS
-// =====================================================
 
 #define PWMA 5
 #define PWMB 6
@@ -28,10 +25,7 @@ const int MPU_addr = 0x68;
 #define RGB_PIN 4
 #define RGB_COUNT 1
 
-
-// =====================================================
 // MOTOR SPEED SETTINGS
-// =====================================================
 
 // Normal forward speed
 #define FORWARD_PWM 140
@@ -42,116 +36,66 @@ const int MPU_addr = 0x68;
 // Extra power for turning on rough surfaces
 #define ROTATION_PWM 250
 
-
-// =====================================================
 // MOTOR CONTROL
-// =====================================================
 
 float WHEEL_BASE = 0.125;          // metres
 float MAX_LINEAR_SPEED = 0.20;     // m/s
 
-
-// =====================================================
 // ENCODERS
-// =====================================================
-
 volatile long leftTicks = 0;
 volatile long rightTicks = 0;
-
-
-// Direction is taken from the motor command.
-// +1 = forward
-// -1 = reverse
-//  0 = stopped
 
 volatile int leftEncoderDirection = 0;
 volatile int rightEncoderDirection = 0;
 
-
 // Previous PORT C state
 volatile byte lastPortC;
-
 
 // Encoder stream rate
 unsigned long lastEncoderTime = 0;
 
 const unsigned long ENCODER_INTERVAL = 50;
-// 20 Hz
 
-
-// =====================================================
 // ULTRASONIC SENSOR
-// =====================================================
-
 unsigned long lastUltrasonicTrigger = 0;
-
 const unsigned long ULTRASONIC_INTERVAL = 100;
-// 10 Hz
-
-
 enum UltrasonicState
 {
     ULTRA_IDLE,
     ULTRA_WAIT_RISE,
     ULTRA_WAIT_FALL
 };
-
 UltrasonicState ultrasonicState = ULTRA_IDLE;
-
 unsigned long ultrasonicEchoStart = 0;
-
 float ultrasonicDistance = -1.0;
-
 const unsigned long ULTRASONIC_TIMEOUT = 25000;
-// 25 ms
 
-
-// =====================================================
 // IMU
-// =====================================================
-
 int16_t ax, ay, az;
 int16_t gx, gy, gz;
 
 unsigned long lastImuTime = 0;
 
 const unsigned long IMU_INTERVAL = 20;
-// 50 Hz
 
-
-// =====================================================
 // SERIAL
-// =====================================================
-
 String inputBuffer = "";
 
 bool rosConnected = false;
 
-
-// =====================================================
 // RGB LED
-// =====================================================
-
 Adafruit_NeoPixel rgb(
     RGB_COUNT,
     RGB_PIN,
     NEO_GRB + NEO_KHZ800
 );
 
-
 // Authentication LED state
-
 unsigned long ledStateStartedAt = 0;
-
 const unsigned long AUTH_LED_DURATION = 5000;
-
 bool temporaryLedState = false;
 
-
-// =====================================================
 // I2C BUS RECOVERY
-// =====================================================
-
 void i2cBusRecovery()
 {
     pinMode(A5, INPUT);
@@ -174,18 +118,12 @@ void i2cBusRecovery()
     }
 }
 
-
-// =====================================================
 // SETUP
-// =====================================================
-
 void setup()
 {
     Serial.begin(115200);
 
-
     // I2C
-
     i2cBusRecovery();
 
     Wire.begin();
@@ -195,9 +133,7 @@ void setup()
         true
     );
 
-
     // MPU6050
-
     Wire.beginTransmission(MPU_addr);
 
     Wire.write(0x6B);
@@ -205,9 +141,7 @@ void setup()
 
     Wire.endTransmission(true);
 
-
     // Motor pins
-
     pinMode(PWMA, OUTPUT);
     pinMode(PWMB, OUTPUT);
 
@@ -223,9 +157,7 @@ void setup()
 
     stopRobot();
 
-
     // Encoders
-
     pinMode(
         LEFT_ENCODER,
         INPUT_PULLUP
@@ -249,9 +181,7 @@ void setup()
     leftTicks = 0;
     rightTicks = 0;
 
-
     // Ultrasonic
-
     pinMode(
         ULTRASONIC_TRIG,
         OUTPUT
@@ -270,9 +200,7 @@ void setup()
     ultrasonicState = ULTRA_IDLE;
     ultrasonicDistance = -1.0;
 
-
     // RGB LED
-
     rgb.begin();
 
     rgb.setBrightness(50);
@@ -283,23 +211,15 @@ void setup()
 
     setWaitingLED();
 
-
     rosConnected = false;
 
     Serial.println("READY");
 }
 
-
-// =====================================================
 // MAIN LOOP
-// =====================================================
-
 void loop()
 {
-    // -------------------------------------------------
     // Read commands from Raspberry Pi
-    // -------------------------------------------------
-
     while (Serial.available() > 0)
     {
         char c = (char)Serial.read();
@@ -310,7 +230,6 @@ void loop()
         )
         {
             inputBuffer.trim();
-
             if (inputBuffer.length() > 0)
             {
                 processCommand(inputBuffer);
@@ -324,11 +243,7 @@ void loop()
         }
     }
 
-
-    // -------------------------------------------------
     // IMU
-    // -------------------------------------------------
-
     if (
         rosConnected &&
         millis() - lastImuTime >= IMU_INTERVAL
@@ -339,11 +254,7 @@ void loop()
         sendIMU();
     }
 
-
-    // -------------------------------------------------
     // Encoders
-    // -------------------------------------------------
-
     if (
         rosConnected &&
         millis() - lastEncoderTime >= ENCODER_INTERVAL
@@ -354,21 +265,13 @@ void loop()
         sendEncoders();
     }
 
-
-    // -------------------------------------------------
     // Ultrasonic
-    // -------------------------------------------------
-
     if (rosConnected)
     {
         updateUltrasonic();
     }
 
-
-    // -------------------------------------------------
     // Temporary authentication LED
-    // -------------------------------------------------
-
     if (
         temporaryLedState &&
         millis() - ledStateStartedAt >=
@@ -381,17 +284,10 @@ void loop()
     }
 }
 
-
-// =====================================================
 // COMMAND PROCESSOR
-// =====================================================
-
 void processCommand(String cmd)
 {
-    // -------------------------------------------------
     // START
-    // -------------------------------------------------
-
     if (cmd == "START")
     {
         resetMPU();
@@ -414,17 +310,7 @@ void processCommand(String cmd)
         return;
     }
 
-
-    // -------------------------------------------------
     // VELOCITY COMMAND
-    //
-    // V,linear,angular
-    //
-    // Example:
-    //
-    // V,0.08,0.0
-    // -------------------------------------------------
-
     if (cmd.startsWith("V"))
     {
         int comma1 =
@@ -463,11 +349,7 @@ void processCommand(String cmd)
         return;
     }
 
-
-    // -------------------------------------------------
     // STOP
-    // -------------------------------------------------
-
     if (cmd == "STOP")
     {
         stopRobot();
@@ -475,11 +357,7 @@ void processCommand(String cmd)
         return;
     }
 
-
-    // -------------------------------------------------
     // DELIVERY ARRIVED
-    // -------------------------------------------------
-
     if (cmd == "DELIVERY_ARRIVED")
     {
         setWaitingLED();
@@ -491,11 +369,7 @@ void processCommand(String cmd)
         return;
     }
 
-
-    // -------------------------------------------------
     // AUTHENTICATED
-    // -------------------------------------------------
-
     if (cmd == "AUTHENTICATED")
     {
         setAuthenticatedLED();
@@ -509,11 +383,7 @@ void processCommand(String cmd)
         return;
     }
 
-
-    // -------------------------------------------------
     // AUTHENTICATION FAILED
-    // -------------------------------------------------
-
     if (cmd == "AUTH_FAILED")
     {
         setFailedLED();
@@ -528,11 +398,7 @@ void processCommand(String cmd)
     }
 }
 
-
-// =====================================================
 // MPU RESET
-// =====================================================
-
 void resetMPU()
 {
     Wire.beginTransmission(MPU_addr);
@@ -544,9 +410,7 @@ void resetMPU()
 
     delay(100);
 
-
     // Reset signal paths
-
     Wire.beginTransmission(MPU_addr);
 
     Wire.write(0x68);
@@ -556,9 +420,7 @@ void resetMPU()
 
     delay(100);
 
-
     // Wake MPU
-
     Wire.beginTransmission(MPU_addr);
 
     Wire.write(0x6B);
@@ -567,11 +429,7 @@ void resetMPU()
     Wire.endTransmission(true);
 }
 
-
-// =====================================================
 // IMU STREAM
-// =====================================================
-
 void sendIMU()
 {
     Wire.beginTransmission(MPU_addr);
@@ -607,10 +465,8 @@ void sendIMU()
 
 
         // Skip temperature
-
         Wire.read();
         Wire.read();
-
 
         gx =
             Wire.read() << 8 |
@@ -623,7 +479,6 @@ void sendIMU()
         gz =
             Wire.read() << 8 |
             Wire.read();
-
 
         Serial.print("$IMU,");
 
@@ -648,28 +503,15 @@ void sendIMU()
     }
 }
 
-
-// =====================================================
-// DIFFERENTIAL DRIVE
-// =====================================================
-
+// DIFFERENTIAL DRIV
 void driveRobot(
     float linear,
     float angular
 )
 {
-    // -------------------------------------------------
-    // Reduce the turning response slightly.
-    // This keeps normal navigation smooth.
-    // -------------------------------------------------
-
     angular *= 1.50;
 
-
-    // -------------------------------------------------
     // Calculate wheel speeds
-    // -------------------------------------------------
-
     float leftSpeed =
         linear +
         (
@@ -686,11 +528,7 @@ void driveRobot(
             2.0
         );
 
-
-    // -------------------------------------------------
     // Remember wheel directions for encoders
-    // -------------------------------------------------
-
     if (leftSpeed > 0.001)
     {
         leftEncoderDirection = 1;
@@ -703,7 +541,6 @@ void driveRobot(
     {
         leftEncoderDirection = 0;
     }
-
 
     if (rightSpeed > 0.001)
     {
@@ -718,13 +555,8 @@ void driveRobot(
         rightEncoderDirection = 0;
     }
 
-
-    // -------------------------------------------------
     // Decide which PWM setting to use
-    // -------------------------------------------------
-
     int pwmLimit;
-
 
     // Pure rotation
     if (
@@ -735,13 +567,11 @@ void driveRobot(
         pwmLimit = ROTATION_PWM;
     }
 
-
     // Forward
     else if (linear > 0.01)
     {
         pwmLimit = FORWARD_PWM;
     }
-
 
     // Reverse
     else if (linear < -0.01)
@@ -749,18 +579,13 @@ void driveRobot(
         pwmLimit = REVERSE_PWM;
     }
 
-
     // No movement
     else
     {
         pwmLimit = 0;
     }
 
-
-    // -------------------------------------------------
     // Convert wheel speed to PWM
-    // -------------------------------------------------
-
     int leftPWM = 0;
     int rightPWM = 0;
 
@@ -780,7 +605,6 @@ void driveRobot(
                 pwmLimit
             );
 
-
         leftPWM =
             constrain(
                 leftPWM,
@@ -796,13 +620,9 @@ void driveRobot(
             );
     }
 
-
-    // -------------------------------------------------
     // Motor directions
-    // -------------------------------------------------
 
     // Left motor
-
     if (leftSpeed > 0)
     {
         digitalWrite(
@@ -840,9 +660,7 @@ void driveRobot(
         );
     }
 
-
     // Right motor
-
     if (rightSpeed > 0)
     {
         digitalWrite(
@@ -880,16 +698,8 @@ void driveRobot(
         );
     }
 
-
-    // -------------------------------------------------
     // Minimum PWM
-    //
-    // This helps the motors start moving when the
-    // requested speed is very small.
-    // -------------------------------------------------
-
     const int MIN_PWM = 80;
-
 
     if (
         leftPWM > 0 &&
@@ -899,7 +709,6 @@ void driveRobot(
         leftPWM = MIN_PWM;
     }
 
-
     if (
         rightPWM > 0 &&
         rightPWM < MIN_PWM
@@ -908,11 +717,7 @@ void driveRobot(
         rightPWM = MIN_PWM;
     }
 
-
-    // -------------------------------------------------
     // Apply PWM
-    // -------------------------------------------------
-
     analogWrite(
         PWMA,
         leftPWM
@@ -924,11 +729,7 @@ void driveRobot(
     );
 }
 
-
-// =====================================================
 // STOP ROBOT
-// =====================================================
-
 void stopRobot()
 {
     analogWrite(
@@ -941,7 +742,6 @@ void stopRobot()
         0
     );
 
-
     digitalWrite(
         AIN1,
         LOW
@@ -951,7 +751,6 @@ void stopRobot()
         AIN2,
         LOW
     );
-
 
     digitalWrite(
         BIN1,
@@ -963,23 +762,16 @@ void stopRobot()
         LOW
     );
 
-
     leftEncoderDirection = 0;
     rightEncoderDirection = 0;
 }
 
-
-// =====================================================
 // ENCODER INTERRUPT
-// =====================================================
-
 ISR(PCINT1_vect)
 {
     byte currentPortC = PINC;
 
-
     // Left encoder
-
     if (
         (lastPortC & _BV(PC1)) &&
         !(currentPortC & _BV(PC1))
@@ -988,9 +780,7 @@ ISR(PCINT1_vect)
         leftTicks += leftEncoderDirection;
     }
 
-
     // Right encoder
-
     if (
         (lastPortC & _BV(PC2)) &&
         !(currentPortC & _BV(PC2))
@@ -999,20 +789,14 @@ ISR(PCINT1_vect)
         rightTicks += rightEncoderDirection;
     }
 
-
     lastPortC = currentPortC;
 }
 
-
-// =====================================================
 // ENCODER STREAM
-// =====================================================
-
 void sendEncoders()
 {
     long L;
     long R;
-
 
     noInterrupts();
 
@@ -1021,32 +805,19 @@ void sendEncoders()
 
     interrupts();
 
-
     Serial.print("$ENC,");
-
     Serial.print(L);
-
     Serial.print(",");
-
     Serial.print(R);
-
     Serial.println("*");
 }
 
-
-// =====================================================
 // ULTRASONIC
-// =====================================================
-
 void updateUltrasonic()
 {
     unsigned long now = micros();
 
-
-    // -------------------------------------------------
     // Start a new measurement
-    // -------------------------------------------------
-
     if (ultrasonicState == ULTRA_IDLE)
     {
         if (
@@ -1056,13 +827,10 @@ void updateUltrasonic()
         )
         {
             lastUltrasonicTrigger = millis();
-
-
             digitalWrite(
                 ULTRASONIC_TRIG,
                 LOW
             );
-
             delayMicroseconds(2);
 
             digitalWrite(
@@ -1071,27 +839,19 @@ void updateUltrasonic()
             );
 
             delayMicroseconds(10);
-
             digitalWrite(
                 ULTRASONIC_TRIG,
                 LOW
             );
 
-
             ultrasonicState =
                 ULTRA_WAIT_RISE;
-
             ultrasonicEchoStart = now;
         }
-
         return;
     }
 
-
-    // -------------------------------------------------
     // Wait for echo HIGH
-    // -------------------------------------------------
-
     if (
         ultrasonicState ==
         ULTRA_WAIT_RISE
@@ -1112,7 +872,6 @@ void updateUltrasonic()
             return;
         }
 
-
         if (
             micros() -
             ultrasonicEchoStart >
@@ -1128,15 +887,10 @@ void updateUltrasonic()
 
             return;
         }
-
         return;
     }
 
-
-    // -------------------------------------------------
     // Wait for echo LOW
-    // -------------------------------------------------
-
     if (
         ultrasonicState ==
         ULTRA_WAIT_FALL
@@ -1152,21 +906,16 @@ void updateUltrasonic()
                 micros() -
                 ultrasonicEchoStart;
 
-
             ultrasonicDistance =
                 duration *
                 0.0343 /
                 2.0;
 
-
             ultrasonicState =
                 ULTRA_IDLE;
-
             sendUltrasonic();
-
             return;
         }
-
 
         if (
             micros() -
@@ -1180,22 +929,15 @@ void updateUltrasonic()
                 ULTRA_IDLE;
 
             sendUltrasonic();
-
             return;
         }
     }
 }
 
-
-// =====================================================
 // ULTRASONIC OUTPUT
-// =====================================================
-
 void sendUltrasonic()
 {
     Serial.print("$ULTRA,");
-
-
     if (
         ultrasonicDistance < 0
     )
@@ -1210,15 +952,10 @@ void sendUltrasonic()
         );
     }
 
-
     Serial.println("*");
 }
 
-
-// =====================================================
 // RGB LED
-// =====================================================
-
 void setRobotRGB(
     uint8_t r,
     uint8_t g,
@@ -1233,7 +970,6 @@ void setRobotRGB(
     rgb.show();
 }
 
-
 void setWaitingLED()
 {
     setRobotRGB(
@@ -1242,7 +978,6 @@ void setWaitingLED()
         80
     );
 }
-
 
 void setAuthenticatedLED()
 {
@@ -1253,7 +988,6 @@ void setAuthenticatedLED()
     );
 }
 
-
 void setFailedLED()
 {
     setRobotRGB(
@@ -1262,7 +996,6 @@ void setFailedLED()
         0
     );
 }
-
 
 void setLEDOff()
 {

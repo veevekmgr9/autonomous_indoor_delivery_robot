@@ -19,7 +19,6 @@ import {
     listenToSenderDeliveries
 } from "../services/delivery";
 
-
 function SenderDashboard({
     user,
     profile,
@@ -131,20 +130,20 @@ function SenderDashboard({
 
     const totalDeliveries = deliveries.length;
 
-        const pendingDeliveries =
-            deliveries.filter(
-                d =>
-                    d.status === "PENDING" ||
-                    d.status === "ASSIGNED" ||
-                    d.status === "OUT_FOR_DELIVERY"
-            ).length;
+    const pendingDeliveries =
+        deliveries.filter(
+            d =>
+                d.status === "PENDING" ||
+                d.status === "ASSIGNED" ||
+                d.status === "OUT_FOR_DELIVERY"
+        ).length;
 
-        const completedDeliveries =
-            deliveries.filter(
-                d => d.status === "COMPLETED"
-            ).length;
+    const completedDeliveries =
+        deliveries.filter(
+            d => d.status === "COMPLETED"
+        ).length;
 
-        const handleStopAndReturnHome = async (delivery) => {
+    const handleStopAndReturnHome = async (delivery) => {
         const confirmed = window.confirm(
             "Stop this delivery and return the robot to HOME?"
         );
@@ -547,65 +546,65 @@ function SenderDashboard({
 
                             </div>
 
-                        <div className="form-group">
+                            <div className="form-group">
 
-                            <label>
-                                Pickup Location
-                            </label>
+                                <label>
+                                    Pickup Location
+                                </label>
 
-                            <select
-                                value={pickupLocation}
-                                onChange={(e) =>
-                                    setPickupLocation(e.target.value)
-                                }
-                                required
-                            >
-                                <option value="">
-                                    Select pickup location
-                                </option>
+                                <select
+                                    value={pickupLocation}
+                                    onChange={(e) =>
+                                        setPickupLocation(e.target.value)
+                                    }
+                                    required
+                                >
+                                    <option value="">
+                                        Select pickup location
+                                    </option>
 
-                                <option value="Room A">
-                                    Room A
-                                </option>
+                                    <option value="Room A">
+                                        Room A
+                                    </option>
 
-                                <option value="Room B">
-                                    Room B
-                                </option>
+                                    <option value="Room B">
+                                        Room B
+                                    </option>
 
-                                <option value="HOME">
-                                    Home
-                                </option>
-                            </select>
+                                    <option value="HOME">
+                                        Home
+                                    </option>
+                                </select>
 
-                        </div>
+                            </div>
 
-                        <div className="form-group">
+                            <div className="form-group">
 
-                            <label>
-                                Receiver Location
-                            </label>
+                                <label>
+                                    Receiver Location
+                                </label>
 
-                            <select
-                                value={destination}
-                                onChange={(e) =>
-                                    setDestination(e.target.value)
-                                }
-                                required
-                            >
-                                <option value="">
-                                    Select receiver location
-                                </option>
+                                <select
+                                    value={destination}
+                                    onChange={(e) =>
+                                        setDestination(e.target.value)
+                                    }
+                                    required
+                                >
+                                    <option value="">
+                                        Select receiver location
+                                    </option>
 
-                                <option value="Room A">
-                                    Room A
-                                </option>
+                                    <option value="Room A">
+                                        Room A
+                                    </option>
 
-                                <option value="Room B">
-                                    Room B
-                                </option>
-                            </select>
+                                    <option value="Room B">
+                                        Room B
+                                    </option>
+                                </select>
 
-                        </div>
+                            </div>
 
                         </div>
 
@@ -754,7 +753,7 @@ function SenderDashboard({
                                             </span>
 
                                         </div>
-                                        
+
                                         <div>
                                             {delivery.status ===
                                                 "ARRIVED_AT_PICKUP" && (
@@ -768,7 +767,7 @@ function SenderDashboard({
                                                         Send to Receiver →
                                                     </button>
 
-                                            )}
+                                                )}
                                         </div>
                                         <div>
                                             {!["DELIVERED", "CANCELLED", "HOME"].includes(delivery.status) && (

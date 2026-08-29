@@ -14,11 +14,7 @@ from rclpy.action import ActionClient
 
 from nav2_msgs.action import NavigateToPose
 
-
-# ============================================================
 # CONFIGURATION
-# ============================================================
-
 SERVICE_ACCOUNT = (
     "/home/robot/Project/robot_ws/"
     "robot_credentials/firebase-service-account.json"
@@ -29,11 +25,7 @@ ROBOT_STATE_DOCUMENT = "current"
 
 DELIVERIES_COLLECTION = "deliveries"
 
-
-# ============================================================
 # ROOM NAVIGATION GOALS
-# ============================================================
-
 ROOM_GOALS = {
 
     "HOME": {
@@ -56,11 +48,7 @@ ROOM_GOALS = {
 
 }
 
-
-# ============================================================
 # FIREBASE + NAV2
-# ============================================================
-
 class FirebaseNavigationController(Node):
 
     def __init__(self):
@@ -69,10 +57,7 @@ class FirebaseNavigationController(Node):
             "firebase_navigation_controller"
         )
 
-        # ----------------------------------------------------
         # Prevent duplicate navigation goals
-        # ----------------------------------------------------
-
         self.processing_lock = (
             threading.Lock()
         )
@@ -88,11 +73,7 @@ class FirebaseNavigationController(Node):
         self.current_destination = None
         self.current_phase = None
 
-
-        # ----------------------------------------------------
         # Firebase
-        # ----------------------------------------------------
-
         self.firebase_app = (
             firebase_admin.initialize_app(
                 credentials.Certificate(
@@ -108,11 +89,7 @@ class FirebaseNavigationController(Node):
             "Firebase Admin SDK connected"
         )
 
-
-        # ----------------------------------------------------
         # Nav2 action client
-        # ----------------------------------------------------
-
         self.nav_client = ActionClient(
             self,
             NavigateToPose,
@@ -135,11 +112,7 @@ class FirebaseNavigationController(Node):
             "/navigate_to_pose is available"
         )
 
-
-        # ----------------------------------------------------
         # Firebase robot state listener
-        # ----------------------------------------------------
-
         self.robot_state_ref = (
             self.db
             .collection(
@@ -160,21 +133,15 @@ class FirebaseNavigationController(Node):
             "Firebase robot-state listener started"
         )
 
-
-    # ========================================================
     # ROBOT STATE CALLBACK
-    # ========================================================
-
     def robot_state_callback(
         self,
         document_snapshot,
         changes,
         read_time
     ):
-
         ticket_id = "UNKNOWN"
         active_delivery_id = None
-
         try:
 
             if not document_snapshot:
@@ -182,7 +149,6 @@ class FirebaseNavigationController(Node):
 
 
             snapshot = document_snapshot[0]
-
 
             if not snapshot.exists:
 
@@ -192,50 +158,37 @@ class FirebaseNavigationController(Node):
 
                 return
 
-
             state = snapshot.to_dict()
-
 
             active_delivery_id = state.get(
                 "activeDeliveryId"
             )
-
 
             robot_status = state.get(
                 "status",
                 "IDLE"
             )
 
-
             ticket_id = state.get(
                 "ticketId",
                 active_delivery_id or "UNKNOWN"
             )
 
-
-            # ================================================
             # ROBOT IDLE
-            # ================================================
-
             if not active_delivery_id:
 
                 self.get_logger().info(
-                    "🤖 Robot is IDLE"
+                    "Robot is IDLE"
                 )
 
                 return
 
-
             self.get_logger().info(
-                f"📦 Active delivery: "
+                f"Active delivery: "
                 f"{ticket_id} → {robot_status}"
             )
 
-
-            # ================================================
             # VERIFIED → RETURN HOME
-            # ================================================
-
             if robot_status == "VERIFIED":
 
                 with self.processing_lock:
@@ -250,7 +203,6 @@ class FirebaseNavigationController(Node):
 
                             return
 
-
                     self.current_delivery_id = (
                         active_delivery_id
                     )
@@ -259,18 +211,15 @@ class FirebaseNavigationController(Node):
 
                     self.current_phase = "HOME"
 
-
                 self.get_logger().info(
-                    f"✅ {ticket_id}: "
+                    f"{ticket_id}: "
                     "Receiver verified"
                 )
 
-
                 self.get_logger().info(
-                    f"🏠 {ticket_id}: "
+                    f"{ticket_id}: "
                     "Returning robot HOME"
                 )
-
 
                 self.start_home_navigation(
                     active_delivery_id,
@@ -279,11 +228,7 @@ class FirebaseNavigationController(Node):
 
                 return
 
-
-            # ================================================
             # STATES THAT DO NOT START NAVIGATION
-            # ================================================
-
             if robot_status in (
                 "NAVIGATING",
                 "NAVIGATING_TO_PICKUP",
@@ -300,11 +245,7 @@ class FirebaseNavigationController(Node):
 
                 return
 
-
-            # ================================================
             # GET DELIVERY
-            # ================================================
-
             delivery_ref = (
                 self.db
                 .collection(
@@ -315,11 +256,9 @@ class FirebaseNavigationController(Node):
                 )
             )
 
-
             delivery_snapshot = (
                 delivery_ref.get()
             )
-
 
             if not delivery_snapshot.exists:
 
@@ -332,16 +271,13 @@ class FirebaseNavigationController(Node):
 
                 return
 
-
             delivery = (
                 delivery_snapshot.to_dict()
             )
 
-
             destination = delivery.get(
                 "destination"
             )
-
 
             if not destination:
 
@@ -354,16 +290,11 @@ class FirebaseNavigationController(Node):
 
                 return
 
-
             self.get_logger().info(
-                f"🎯 Destination: {destination}"
+                f"Destination: {destination}"
             )
 
-
-            # ================================================
             # CHECK DESTINATION
-            # ================================================
-
             if destination not in ROOM_GOALS:
 
                 self.get_logger().error(
@@ -376,18 +307,13 @@ class FirebaseNavigationController(Node):
 
                 return
 
-
-            # ================================================
             # PENDING → ASSIGNED
-            # ================================================
-
             if robot_status == "PENDING":
 
                 self.get_logger().info(
-                    f"🤖 {ticket_id}: "
+                    f"{ticket_id}: "
                     "Robot available - assigning delivery"
                 )
-
 
                 self.update_robot_state(
                     active_delivery_id,
@@ -395,22 +321,16 @@ class FirebaseNavigationController(Node):
                     "ASSIGNED"
                 )
 
-
                 self.clear_navigation_state()
 
                 return
 
-
-            # ================================================
             # ASSIGNED → PICKUP
-            # ================================================
-
             if robot_status == "ASSIGNED":
 
                 pickup_location = delivery.get(
                     "pickupLocation"
                 )
-
 
                 if not pickup_location:
 
@@ -422,7 +342,6 @@ class FirebaseNavigationController(Node):
                     self.clear_navigation_state()
 
                     return
-
 
                 if pickup_location not in ROOM_GOALS:
 
@@ -436,7 +355,6 @@ class FirebaseNavigationController(Node):
 
                     return
 
-
                 with self.processing_lock:
 
                     if self.current_goal_handle is not None:
@@ -446,7 +364,6 @@ class FirebaseNavigationController(Node):
                         )
 
                         return
-
 
                     self.current_delivery_id = (
                         active_delivery_id
@@ -458,13 +375,11 @@ class FirebaseNavigationController(Node):
 
                     self.current_phase = "PICKUP"
 
-
                 self.get_logger().info(
                     f"{ticket_id}: "
                     f"Going to pickup location: "
                     f"{pickup_location}"
                 )
-
 
                 self.start_navigation(
                     active_delivery_id,
@@ -472,20 +387,14 @@ class FirebaseNavigationController(Node):
                     pickup_location,
                     "PICKUP"
                 )
-
                 return
 
-
-            # ================================================
             # SEND TO RECEIVER
-            # ================================================
-
             if robot_status == "SEND_TO_RECEIVER":
 
                 destination = delivery.get(
                     "destination"
                 )
-
 
                 if not destination:
 
@@ -497,7 +406,6 @@ class FirebaseNavigationController(Node):
                     self.clear_navigation_state()
 
                     return
-
 
                 if destination not in ROOM_GOALS:
 
@@ -511,7 +419,6 @@ class FirebaseNavigationController(Node):
 
                     return
 
-
                 with self.processing_lock:
 
                     if self.current_goal_handle is not None:
@@ -521,7 +428,6 @@ class FirebaseNavigationController(Node):
                         )
 
                         return
-
 
                     self.current_delivery_id = (
                         active_delivery_id
@@ -533,13 +439,11 @@ class FirebaseNavigationController(Node):
 
                     self.current_phase = "RECEIVER"
 
-
                 self.get_logger().info(
                     f"{ticket_id}: "
                     "Robot is delivering to receiver "
                     f"Destination: {destination}"
                 )
-
 
                 self.start_navigation(
                     active_delivery_id,
@@ -550,11 +454,7 @@ class FirebaseNavigationController(Node):
 
                 return
 
-
-            # ================================================
             # RETURN HOME COMMAND
-            # ================================================
-
             if robot_status == "RETURN_HOME":
 
                 self.get_logger().warn(
@@ -562,33 +462,25 @@ class FirebaseNavigationController(Node):
                     "Return-home command received"
                 )
 
-
-                # ------------------------------------------------
                 # Cancel current delivery goal
-                # ------------------------------------------------
-
                 if self.current_goal_handle is not None:
 
                     self.get_logger().warn(
                         "Cancelling current Nav2 goal..."
                     )
 
-
                     goal_to_cancel = (
                         self.current_goal_handle
                     )
-
 
                     # Clear the normal goal handle first
 
                     self.current_goal_handle = None
 
-
                     cancel_future = (
                         goal_to_cancel
                         .cancel_goal_async()
                     )
-
 
                     cancel_future.add_done_callback(
                         lambda future:
@@ -599,21 +491,16 @@ class FirebaseNavigationController(Node):
                         )
                     )
 
-
                 else:
-
                     # No active delivery goal.
                     # Send HOME directly.
-
                     self.send_home_after_cancel(
                         None,
                         active_delivery_id,
                         ticket_id
                     )
 
-
                 return
-
 
         except Exception as e:
 
@@ -624,11 +511,7 @@ class FirebaseNavigationController(Node):
 
             self.clear_navigation_state()
 
-
-    # ========================================================
     # START NORMAL NAVIGATION
-    # ========================================================
-
     def start_navigation(
         self,
         delivery_id,
@@ -636,17 +519,14 @@ class FirebaseNavigationController(Node):
         destination,
         phase
     ):
-
         goal = ROOM_GOALS[
             destination
         ]
 
-
         self.get_logger().info(
-            f"🚀 Sending robot to "
+            f"Sending robot to "
             f"{destination}"
         )
-
 
         self.get_logger().info(
             f"Goal position: "
@@ -655,27 +535,20 @@ class FirebaseNavigationController(Node):
             f"yaw={goal['yaw']}"
         )
 
-
-        # ----------------------------------------------------
         # Create Nav2 goal
-        # ----------------------------------------------------
-
         goal_msg = (
             NavigateToPose.Goal()
         )
 
-
         goal_msg.pose.header.frame_id = (
             "map"
         )
-
 
         goal_msg.pose.header.stamp = (
             self.get_clock()
             .now()
             .to_msg()
         )
-
 
         goal_msg.pose.pose.position.x = (
             goal["x"]
@@ -689,13 +562,8 @@ class FirebaseNavigationController(Node):
             0.0
         )
 
-
-        # ----------------------------------------------------
         # Convert yaw to quaternion
-        # ----------------------------------------------------
-
         yaw = goal["yaw"]
-
 
         goal_msg.pose.pose.orientation.z = (
             math.sin(yaw / 2.0)
@@ -705,11 +573,7 @@ class FirebaseNavigationController(Node):
             math.cos(yaw / 2.0)
         )
 
-
-        # ----------------------------------------------------
         # Update Firebase
-        # ----------------------------------------------------
-
         if phase == "PICKUP":
 
             navigation_status = (
@@ -717,11 +581,9 @@ class FirebaseNavigationController(Node):
             )
 
         else:
-
             navigation_status = (
                 "NAVIGATING_TO_RECEIVER"
             )
-
 
         self.update_robot_state(
             delivery_id,
@@ -729,11 +591,7 @@ class FirebaseNavigationController(Node):
             navigation_status
         )
 
-
-        # ----------------------------------------------------
         # Send goal to Nav2
-        # ----------------------------------------------------
-
         send_future = (
             self.nav_client
             .send_goal_async(
@@ -743,7 +601,6 @@ class FirebaseNavigationController(Node):
                 )
             )
         )
-
 
         send_future.add_done_callback(
             lambda future:
@@ -755,11 +612,7 @@ class FirebaseNavigationController(Node):
                 )
         )
 
-
-    # ========================================================
     # NAV2 GOAL RESPONSE
-    # ========================================================
-
     def goal_response_callback(
         self,
         future,
@@ -774,14 +627,12 @@ class FirebaseNavigationController(Node):
                 future.result()
             )
 
-
         except Exception as e:
 
             self.get_logger().error(
                 f"{ticket_id}: "
                 f"Nav2 goal error: {e}"
             )
-
 
             self.navigation_failed(
                 delivery_id,
@@ -791,14 +642,12 @@ class FirebaseNavigationController(Node):
 
             return
 
-
         if not goal_handle.accepted:
 
             self.get_logger().error(
                 f"{ticket_id}: "
                 "Nav2 rejected navigation goal"
             )
-
 
             self.navigation_failed(
                 delivery_id,
@@ -808,23 +657,19 @@ class FirebaseNavigationController(Node):
 
             return
 
-
         self.current_goal_handle = (
             goal_handle
         )
 
-
         self.get_logger().info(
-            f"✅ {ticket_id}: "
+            f"{ticket_id}: "
             "Nav2 goal accepted"
         )
-
 
         result_future = (
             goal_handle
             .get_result_async()
         )
-
 
         result_future.add_done_callback(
             lambda future:
@@ -836,11 +681,7 @@ class FirebaseNavigationController(Node):
                 )
         )
 
-
-    # ========================================================
     # NAV2 FEEDBACK
-    # ========================================================
-
     def navigation_feedback(
         self,
         feedback_msg
@@ -850,36 +691,26 @@ class FirebaseNavigationController(Node):
             feedback_msg.feedback
         )
 
-
         distance = (
             feedback.distance_remaining
         )
-
 
         current_pose = (
             feedback.current_pose.pose
         )
 
-
         x = current_pose.position.x
         y = current_pose.position.y
 
-
-        # Uncomment for detailed navigation debugging
-
         # self.get_logger().info(
-        #     f"🤖 Robot position: "
+        #     f"Robot position: "
         #     f"x={x:.2f}, "
         #     f"y={y:.2f}, "
         #     f"distance remaining="
         #     f"{distance:.2f} m"
         # )
 
-
-    # ========================================================
     # NAV2 RESULT
-    # ========================================================
-
     def navigation_result_callback(
         self,
         future,
@@ -894,11 +725,9 @@ class FirebaseNavigationController(Node):
                 future.result()
             )
 
-
             status = (
                 result.status
             )
-
 
             self.get_logger().info(
                 f"{ticket_id}: "
@@ -906,18 +735,13 @@ class FirebaseNavigationController(Node):
                 f"{status}"
             )
 
-
-            # =================================================
             # SUCCESS
-            # =================================================
-
             if status == 4:
 
                 self.get_logger().info(
-                    f"🎯 {ticket_id}: "
+                    f" {ticket_id}: "
                     "Robot reached destination"
                 )
-
 
                 self.navigation_success(
                     delivery_id,
@@ -925,21 +749,18 @@ class FirebaseNavigationController(Node):
                     phase
                 )
 
-
             else:
 
                 self.get_logger().error(
-                    f"❌ {ticket_id}: "
+                    f"{ticket_id}: "
                     "Navigation failed"
                 )
-
 
                 self.navigation_failed(
                     delivery_id,
                     ticket_id,
                     f"Nav2 status {status}"
                 )
-
 
         except Exception as e:
 
@@ -948,18 +769,13 @@ class FirebaseNavigationController(Node):
                 f"Navigation result error: {e}"
             )
 
-
             self.navigation_failed(
                 delivery_id,
                 ticket_id,
                 str(e)
             )
 
-
-    # ========================================================
     # NAVIGATION SUCCESS
-    # ========================================================
-
     def navigation_success(
         self,
         delivery_id,
@@ -972,7 +788,6 @@ class FirebaseNavigationController(Node):
             "Setting delivery ARRIVED"
         )
 
-
         delivery_ref = (
             self.db
             .collection(
@@ -983,18 +798,13 @@ class FirebaseNavigationController(Node):
             )
         )
 
-
-        # ----------------------------------------------------
         # Pickup
-        # ----------------------------------------------------
-
         if phase == "PICKUP":
 
             self.get_logger().info(
                 f"{ticket_id}: "
                 "Robot arrived at pickup location"
             )
-
 
             delivery_ref.update(
                 {
@@ -1004,30 +814,23 @@ class FirebaseNavigationController(Node):
                 }
             )
 
-
             self.update_robot_state(
                 delivery_id,
                 ticket_id,
                 "ARRIVED_AT_PICKUP"
             )
 
-
             self.clear_navigation_state()
 
             return
 
-
-        # ----------------------------------------------------
         # Receiver
-        # ----------------------------------------------------
-
         if phase == "RECEIVER":
 
             self.get_logger().info(
                 f"{ticket_id}: "
                 "Robot arrived at receiver location"
             )
-
 
             delivery_ref.update(
                 {
@@ -1037,30 +840,22 @@ class FirebaseNavigationController(Node):
                 }
             )
 
-
             self.update_robot_state(
                 delivery_id,
                 ticket_id,
                 "ARRIVED"
             )
 
-
             self.clear_navigation_state()
 
             return
 
-
-        # ----------------------------------------------------
         # HOME
-        # ----------------------------------------------------
-
         if phase == "HOME":
-
             self.get_logger().info(
-                f"🏠 {ticket_id}: "
+                f"{ticket_id}: "
                 "Robot successfully returned HOME"
             )
-
 
             delivery_ref.update(
                 {
@@ -1071,36 +866,27 @@ class FirebaseNavigationController(Node):
                 }
             )
 
-
             self.update_robot_state(
                 delivery_id,
                 ticket_id,
                 "HOME"
             )
 
-
             self.clear_navigation_state()
-
             return
 
-
-    # ========================================================
     # NAVIGATION FAILURE
-    # ========================================================
-
     def navigation_failed(
         self,
         delivery_id,
         ticket_id,
         reason
     ):
-
         self.get_logger().error(
             f"❌ {ticket_id}: "
             f"Navigation failed: "
             f"{reason}"
         )
-
 
         self.update_robot_state(
             delivery_id,
@@ -1108,14 +894,9 @@ class FirebaseNavigationController(Node):
             "NAVIGATION_ERROR"
         )
 
-
         self.clear_navigation_state()
 
-
-    # ========================================================
     # UPDATE ROBOT STATE
-    # ========================================================
-
     def update_robot_state(
         self,
         delivery_id,
@@ -1145,7 +926,6 @@ class FirebaseNavigationController(Node):
                 merge=True
             )
 
-
         except Exception as e:
 
             self.get_logger().error(
@@ -1153,11 +933,7 @@ class FirebaseNavigationController(Node):
                 f"{e}"
             )
 
-
-    # ========================================================
     # CLEAR NAVIGATION STATE
-    # ========================================================
-
     def clear_navigation_state(
         self
     ):
@@ -1174,11 +950,7 @@ class FirebaseNavigationController(Node):
 
             self.current_phase = None
 
-
-    # ========================================================
     # HOME RETURN
-    # ========================================================
-
     def start_home_navigation(
         self,
         delivery_id,
@@ -1189,11 +961,9 @@ class FirebaseNavigationController(Node):
             "HOME"
         ]
 
-
         self.get_logger().info(
             f"🏠 Sending robot HOME"
         )
-
 
         self.get_logger().info(
             f"HOME position: "
@@ -1202,27 +972,20 @@ class FirebaseNavigationController(Node):
             f"yaw={goal['yaw']}"
         )
 
-
-        # ----------------------------------------------------
         # Create Nav2 goal
-        # ----------------------------------------------------
-
         goal_msg = (
             NavigateToPose.Goal()
         )
 
-
         goal_msg.pose.header.frame_id = (
             "map"
         )
-
 
         goal_msg.pose.header.stamp = (
             self.get_clock()
             .now()
             .to_msg()
         )
-
 
         goal_msg.pose.pose.position.x = (
             goal["x"]
@@ -1236,13 +999,8 @@ class FirebaseNavigationController(Node):
             0.0
         )
 
-
-        # ----------------------------------------------------
         # Convert yaw to quaternion
-        # ----------------------------------------------------
-
         yaw = goal["yaw"]
-
 
         goal_msg.pose.pose.orientation.z = (
             math.sin(yaw / 2.0)
@@ -1252,22 +1010,14 @@ class FirebaseNavigationController(Node):
             math.cos(yaw / 2.0)
         )
 
-
-        # ----------------------------------------------------
         # Update Firebase
-        # ----------------------------------------------------
-
         self.update_robot_state(
             delivery_id,
             ticket_id,
             "RETURNING_HOME"
         )
 
-
-        # ----------------------------------------------------
         # Send HOME goal
-        # ----------------------------------------------------
-
         send_future = (
             self.nav_client
             .send_goal_async(
@@ -1278,7 +1028,6 @@ class FirebaseNavigationController(Node):
             )
         )
 
-
         send_future.add_done_callback(
             lambda future:
                 self.home_goal_response_callback(
@@ -1288,11 +1037,7 @@ class FirebaseNavigationController(Node):
                 )
         )
 
-
-    # ========================================================
     # HOME NAVIGATION FEEDBACK
-    # ========================================================
-
     def home_navigation_feedback(
         self,
         feedback_msg
@@ -1302,34 +1047,26 @@ class FirebaseNavigationController(Node):
             feedback_msg.feedback
         )
 
-
         distance = (
             feedback.distance_remaining
         )
-
 
         current_pose = (
             feedback.current_pose.pose
         )
 
-
         x = current_pose.position.x
         y = current_pose.position.y
 
-
         self.get_logger().info(
-            f"🏠 Robot returning HOME: "
+            f"Robot returning HOME: "
             f"x={x:.2f}, "
             f"y={y:.2f}, "
             f"distance remaining="
             f"{distance:.2f} m"
         )
 
-
-    # ========================================================
     # HOME GOAL RESPONSE
-    # ========================================================
-
     def home_goal_response_callback(
         self,
         future,
@@ -1343,14 +1080,12 @@ class FirebaseNavigationController(Node):
                 future.result()
             )
 
-
         except Exception as e:
 
             self.get_logger().error(
                 f"{ticket_id}: "
                 f"HOME Nav2 goal error: {e}"
             )
-
 
             self.home_navigation_failed(
                 delivery_id,
@@ -1360,14 +1095,12 @@ class FirebaseNavigationController(Node):
 
             return
 
-
         if not goal_handle.accepted:
 
             self.get_logger().error(
                 f"{ticket_id}: "
                 "Nav2 rejected HOME goal"
             )
-
 
             self.home_navigation_failed(
                 delivery_id,
@@ -1377,25 +1110,20 @@ class FirebaseNavigationController(Node):
 
             return
 
-
         # Store HOME goal separately
-
         self.home_goal_handle = (
             goal_handle
         )
 
-
         self.get_logger().info(
-            f"🏠 {ticket_id}: "
+            f"{ticket_id}: "
             "HOME goal accepted"
         )
-
 
         result_future = (
             goal_handle
             .get_result_async()
         )
-
 
         result_future.add_done_callback(
             lambda future:
@@ -1406,11 +1134,7 @@ class FirebaseNavigationController(Node):
                 )
         )
 
-
-    # ========================================================
     # HOME NAVIGATION RESULT
-    # ========================================================
-
     def home_navigation_result_callback(
         self,
         future,
@@ -1438,35 +1162,30 @@ class FirebaseNavigationController(Node):
 
 
             # ROS action status 4 = SUCCESS
-
             if status == 4:
 
                 self.get_logger().info(
-                    f"🏠 {ticket_id}: "
+                    f"{ticket_id}: "
                     "Robot successfully returned HOME"
                 )
-
 
                 self.complete_delivery(
                     delivery_id,
                     ticket_id
                 )
 
-
             else:
 
                 self.get_logger().error(
-                    f"❌ {ticket_id}: "
+                    f"{ticket_id}: "
                     "Robot failed to return HOME"
                 )
-
 
                 self.home_navigation_failed(
                     delivery_id,
                     ticket_id,
                     f"Nav2 status {status}"
                 )
-
 
         except Exception as e:
 
@@ -1475,18 +1194,13 @@ class FirebaseNavigationController(Node):
                 f"HOME result error: {e}"
             )
 
-
             self.home_navigation_failed(
                 delivery_id,
                 ticket_id,
                 str(e)
             )
 
-
-    # ========================================================
     # COMPLETE DELIVERY
-    # ========================================================
-
     def complete_delivery(
         self,
         delivery_id,
@@ -1494,15 +1208,11 @@ class FirebaseNavigationController(Node):
     ):
 
         self.get_logger().info(
-            f"✅ {ticket_id}: "
+            f"{ticket_id}: "
             "Delivery completed"
         )
 
-
-        # ----------------------------------------------------
         # Update delivery
-        # ----------------------------------------------------
-
         delivery_ref = (
             self.db
             .collection(
@@ -1513,7 +1223,6 @@ class FirebaseNavigationController(Node):
             )
         )
 
-
         delivery_ref.update(
             {
                 "status": "COMPLETED",
@@ -1522,11 +1231,7 @@ class FirebaseNavigationController(Node):
             }
         )
 
-
-        # ----------------------------------------------------
         # Robot becomes IDLE
-        # ----------------------------------------------------
-
         self.robot_state_ref.set(
             {
                 "activeDeliveryId": None,
@@ -1539,24 +1244,17 @@ class FirebaseNavigationController(Node):
             }
         )
 
-
         self.clear_navigation_state()
 
-
         self.get_logger().info(
-            "🤖 Robot is now IDLE"
+            "Robot is now IDLE"
         )
 
-
         self.get_logger().info(
-            "📦 Ready for next delivery"
+            "Ready for next delivery"
         )
 
-
-    # ========================================================
     # HOME NAVIGATION FAILURE
-    # ========================================================
-
     def home_navigation_failed(
         self,
         delivery_id,
@@ -1565,7 +1263,7 @@ class FirebaseNavigationController(Node):
     ):
 
         self.get_logger().error(
-            f"❌ {ticket_id}: "
+            f"{ticket_id}: "
             f"HOME navigation failed: "
             f"{reason}"
         )
@@ -1577,14 +1275,9 @@ class FirebaseNavigationController(Node):
             "HOME_ERROR"
         )
 
-
         self.clear_navigation_state()
 
-
-    # ========================================================
-    # SEND HOME AFTER CANCEL
-    # ========================================================
-
+    # SEND HOME AFTER CANCE
     def send_home_after_cancel(
         self,
         future,
@@ -1597,24 +1290,15 @@ class FirebaseNavigationController(Node):
             "Current navigation goal cancelled."
         )
 
-
         with self.processing_lock:
-
             self.current_goal_handle = None
-
             self.current_delivery_id = (
                 delivery_id
             )
-
             self.current_destination = "HOME"
-
             self.current_phase = "HOME"
 
-
-        # ------------------------------------------------
         # Check HOME exists
-        # ------------------------------------------------
-
         if "HOME" not in ROOM_GOALS:
 
             self.get_logger().error(
@@ -1622,39 +1306,28 @@ class FirebaseNavigationController(Node):
                 "in ROOM_GOALS."
             )
 
-
             self.update_robot_state(
                 delivery_id,
                 ticket_id,
                 "HOME_ERROR"
             )
 
-
             self.clear_navigation_state()
 
             return
 
-
         self.get_logger().info(
-            f"🏠 {ticket_id}: "
+            f"{ticket_id}: "
             "Sending robot back to HOME."
         )
 
-
-        # ------------------------------------------------
         # Use the dedicated HOME navigation function
-        # ------------------------------------------------
-
         self.start_home_navigation(
             delivery_id,
             ticket_id
         )
 
-
-    # ========================================================
     # CLEANUP
-    # ========================================================
-
     def shutdown_firebase(
         self
     ):
@@ -1666,44 +1339,29 @@ class FirebaseNavigationController(Node):
         except Exception:
             pass
 
-
-# ============================================================
 # MAIN
-# ============================================================
-
 def main(args=None):
 
     rclpy.init(
         args=args
     )
 
-
     node = (
         FirebaseNavigationController()
     )
 
-
     try:
-
         rclpy.spin(node)
 
-
     except KeyboardInterrupt:
-
         pass
 
-
     finally:
-
         node.shutdown_firebase()
-
         node.destroy_node()
 
-
         if rclpy.ok():
-
             rclpy.shutdown()
-
 
 if __name__ == "__main__":
 

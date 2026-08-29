@@ -23,7 +23,6 @@ import SenderDashboard
 import ReceiverDashboard
     from "./pages/ReceiverDashboard";
 
-
 function App() {
 
     const [user, setUser] = useState(null);
@@ -37,10 +36,7 @@ function App() {
     const [loading, setLoading] =
         useState(true);
 
-
-    /*
-     * Firebase authentication listener
-     */
+    //Firebase authentication listener
     useEffect(() => {
 
         const unsubscribe =
@@ -73,11 +69,9 @@ function App() {
                 }
             );
 
-
         return unsubscribe;
 
     }, []);
-
 
     if (loading) {
 
@@ -88,10 +82,7 @@ function App() {
         );
     }
 
-
-    /*
-     * Logged in
-     */
+    //Logged in
     if (user) {
 
         const handleLogout =
@@ -125,10 +116,7 @@ function App() {
         );
     }
 
-
-    /*
-     * Registration page
-     */
+    //Registration page
     if (page === "register") {
 
         return (
@@ -155,10 +143,7 @@ function App() {
         );
     }
 
-
-    /*
-     * Login page
-     */
+    //Login page 
     return (
         <>
             <Login

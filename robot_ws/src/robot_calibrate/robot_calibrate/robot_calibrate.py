@@ -27,9 +27,7 @@ class CalibrateRobot(Node):
         time.sleep(0.5)
 
     def run(self):
-        print("\n========================================")
         print("  Elegoo Smart Car Calibration")
-        print("========================================")
         print("\nPlace robot on a flat surface.")
         print("Mark the START position with tape.")
         input("\nPress ENTER to drive FORWARD for 2 seconds...")
@@ -40,12 +38,11 @@ class CalibrateRobot(Node):
         try:
             d = float(distance)
             v = d / 2.0
-            print(f"\n  ✔  Forward speed v = {v:.3f} m/s")
+            print(f"\nForward speed v = {v:.3f} m/s")
         except ValueError:
             v = 0.15
             print("  Invalid input, using default v=0.15")
 
-        print("\n----------------------------------------")
         print("Now measuring ROTATION speed.")
         print("Place a marker on the robot front.")
         input("\nPress ENTER to SPIN LEFT for 3 seconds...")
@@ -57,19 +54,15 @@ class CalibrateRobot(Node):
             import math
             a = float(angle) * math.pi / 180.0
             w = a / 3.0
-            print(f"\n  ✔  Rotation speed w = {w:.3f} rad/s")
+            print(f"\nRotation speed w = {w:.3f} rad/s")
         except ValueError:
             w = 0.6
             print("  Invalid input, using default w=0.6")
 
-        print("\n========================================")
         print("  CALIBRATION RESULT")
-        print("========================================")
         print(f"\nUpdate these values in odom_node.py:\n")
         print(f"  self.v = {v:.3f}   # forward speed m/s")
         print(f"  self.w = {w:.3f}   # rotation speed rad/s")
-        print("\n========================================\n")
-
 
 def main():
     rclpy.init()
@@ -77,7 +70,6 @@ def main():
     node.run()
     node.destroy_node()
     rclpy.shutdown()
-
 
 if __name__ == '__main__':
     main()
